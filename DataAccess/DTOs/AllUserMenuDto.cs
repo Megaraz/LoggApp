@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AppLogic.DTOs
 {
-    public class UserMenuDto
+    public class AllUserMenuDto
     {
         public int Id { get; set; }
         public string Username { get; set; }

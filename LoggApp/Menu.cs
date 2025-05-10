@@ -16,111 +16,32 @@ namespace Presentation
         public enum MenuState { InitMenu, AllUsers, SpecificUser, CreateNewUser, CreateNewDayCard };
         public static MenuState CurrentMenuState { get; set; } = MenuState.InitMenu;
 
-        public static MenuData MenuCollections { get; set; } = new MenuData();
-
-        public static List<T> CurrentMenuData { get; set; } 
-
-
-        //private static readonly string[] s_initMenu = { "[LOG IN]", "[GET ALL USERS]", "[CREATE NEW USER ACCOUNT]" };
+        public static string header = string.Empty;
 
 
 
-
-
-        public static int DisplayMenu(int currentIndex)
+        public static void SetMenuValues(ICollection<T> currentMenuData)
         {
 
-
-            if (currentIndex > currentMenuValues.Count - 1)
+            switch (CurrentMenuState)
             {
-                currentIndex = 0;
+                case MenuState.InitMenu:
+                    header = MenuData.s_InitMenuHeader;
+                    currentMenuData = (ICollection<T>)MenuData.s_InitMenu;
+                    break;
+                case MenuState.SpecificUser:
+                    header = MenuData.s_SpecificUserMenuHeader;
+                    currentMenuData = (ICollection<T>)MenuData.s_SpecificUserMenu;
+                    break;
+                case MenuState.AllUsers:
+                    header = MenuData.s_AllUsersMenuHeader;
+                    currentMenuData = (ICollection<T>)new MenuData().AllUsers;
+                    break;
             }
-            if (currentIndex < 0)
-            {
-                currentIndex = currentMenuValues.Count - 1;
-            }
-            int i = 0;
-            foreach (var item in currentMenuValues)
-            {
 
-                if (currentIndex == i)
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(item);
-                    Console.ResetColor();
-
-                }
-                else
-                {
-                    Console.WriteLine(item);
-                }
-                i++;
-
-            }
-            return currentIndex;
         }
 
-        public static (ConsoleKeyInfo keyPress, int currentMenuIndex) DisplayAndNavigate(Object? obj)
-        {
-            int currentMenuIndex = 0;
-            ConsoleKeyInfo keyPress;
-
-            do
-            {
-                Console.Clear();
-
-                switch (CurrentMenuState)
-                {
-                    case MenuState.InitMenu:
-                        Console.WriteLine("WELCOME TO LOGGAPP\n");
-                        CurrentMenuData = MenuCollections.InitMenu;
-                        break;
-                    case MenuState.SpecificUser:
-                        Console.WriteLine("CHOOSE ACTION FOR user: " + (obj is User user ? user.Username : "") );
-                        CurrentMenuData = MenuCollections.SpecificUserMenu;
-                        break;
-                    case MenuState.AllUsers:
-                        Console.WriteLine("ALL USERS IN DB\n");
-                        break;
-
-                }
 
 
-                currentMenuIndex = DisplayMenu(currentMenuIndex);
-
-                keyPress = Console.ReadKey(true);
-
-                currentMenuIndex = InputHandler(keyPress, currentMenuIndex);
-
-
-            }
-            while (keyPress.Key != ConsoleKey.Escape && keyPress.Key != ConsoleKey.Enter);
-
-            return (keyPress, currentMenuIndex);
-        }
-        public static int InputHandler(ConsoleKeyInfo keyPress, int currentIndex)
-        {
-            switch (keyPress.Key)
-            {
-                case ConsoleKey.DownArrow:
-                    ++currentIndex;
-                    break;
-                case ConsoleKey.UpArrow:
-                    --currentIndex;
-                    break;
-                case ConsoleKey.LeftArrow:
-                    --currentIndex;
-                    break;
-                case ConsoleKey.RightArrow:
-                    ++currentIndex;
-                    break;
-                case ConsoleKey.Escape:
-                    break;
-                case ConsoleKey.Enter:
-                    break;
-                default: break;
-            }
-            return currentIndex;
-        }
     }
 }

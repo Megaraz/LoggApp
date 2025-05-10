@@ -35,7 +35,7 @@ namespace AppLogic.Services
             UserRepository.Create(newUser);
         }
 
-        public static async Task<List<UserMenuDto>> ReadAllUsersAsync()
+        public static async Task<List<AllUserMenuDto>> ReadAllUsersAsync()
         {
             var usersTask = await UserRepository.ReadAllAsync();
             return usersTask.OrderBy(x => x.Id).ToList();

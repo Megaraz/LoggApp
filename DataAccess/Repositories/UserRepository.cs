@@ -66,14 +66,14 @@ namespace DataAccess.Repositories
             }
         }
 
-        public static async Task<List<UserMenuDto>> ReadAllAsync()
+        public static async Task<List<AllUserMenuDto>> ReadAllAsync()
         {
             using (var db = new LoggAppContext())
             {
                 try
                 {
                     return await db.Users
-                        .Select(x => new UserMenuDto
+                        .Select(x => new AllUserMenuDto
                         {
                             Id = x.Id,
                             Username = x.Username!,
