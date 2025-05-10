@@ -26,6 +26,18 @@ namespace LoggApp
 
             string[] createDateMenu = { "[T]ODAYS DATE", "[S]PECIFIED DATE" };
 
+
+            int currentIndex = 0;
+            ConsoleKeyInfo keyPress;
+            do
+            {
+                keyPress = Console.ReadKey(true);
+                Menu.MenuHandler(currentIndex, keyPress);
+                
+            }
+            while (true);
+            
+
         }
 
         private static async Task CreateNewUser()
