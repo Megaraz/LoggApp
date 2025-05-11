@@ -16,7 +16,7 @@ namespace BusinessLogic.Models.Weather
         public TimeOnly? TimeOf { get; set; }
 
         [JsonPropertyName("units")]
-        public string Units { get; set; }
+        public string? Units { get; set; }
 
         [JsonPropertyName("lat")]
         public double? Lat { get; set; }
@@ -39,9 +39,12 @@ namespace BusinessLogic.Models.Weather
         [JsonPropertyName("cloud_cover")]
         public CloudCoverBlock? CloudCover { get; set; }
 
-        // Extra fält från andra API:er (ej med i denna respons)
-        public int? AQI { get; set; } // Air Quality Index
-        public int? UVI { get; set; } // Ultra Violet Index
+
+        public override string ToString()
+        {
+            return $"Date {DayCard.Date.ToString()}"
+                + $"{Temperature}";
+        }
     }
 
 }

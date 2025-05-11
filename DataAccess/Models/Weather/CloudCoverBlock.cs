@@ -9,7 +9,7 @@ namespace BusinessLogic.Models.Weather
 
 
         [JsonPropertyName("afternoon")]
-        public int? Afternoon { get; set; }
+        public double? Afternoon { get; set; }
     }
 
 }

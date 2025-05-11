@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppLogic.Migrations
 {
     [DbContext(typeof(LoggAppContext))]
-    [Migration("20250508134422_Init_test")]
+    [Migration("20250511103638_Init_test")]
     partial class Init_test
     {
         /// <inheritdoc />
@@ -24,6 +24,36 @@ namespace AppLogic.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("AppLogic.Models.Weather.AirQuality.AirQuality", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("DayCardId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("GenerationTime_ms")
+                        .HasColumnType("float")
+                        .HasAnnotation("Relational:JsonPropertyName", "generationtime_ms");
+
+                    b.Property<double?>("Lat")
+                        .HasColumnType("float")
+                        .HasAnnotation("Relational:JsonPropertyName", "latitude");
+
+                    b.Property<double?>("Lon")
+                        .HasColumnType("float")
+                        .HasAnnotation("Relational:JsonPropertyName", "longitude");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DayCardId");
+
+                    b.ToTable("AirQualities");
+                });
 
             modelBuilder.Entity("BusinessLogic.Models.Activity.Activity", b =>
                 {
@@ -234,9 +264,6 @@ namespace AppLogic.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AQI")
-                        .HasColumnType("int");
-
                     b.Property<int?>("DayCardId")
                         .HasColumnType("int");
 
@@ -251,17 +278,15 @@ namespace AppLogic.Migrations
                     b.Property<TimeOnly?>("TimeOf")
                         .HasColumnType("time");
 
-                    b.Property<int?>("UVI")
-                        .HasColumnType("int");
-
                     b.Property<string>("Units")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasAnnotation("Relational:JsonPropertyName", "units");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DayCardId");
+                    b.HasIndex("DayCardId")
+                        .IsUnique()
+                        .HasFilter("[DayCardId] IS NOT NULL");
 
                     b.ToTable("WeatherData");
                 });
@@ -304,6 +329,88 @@ namespace AppLogic.Migrations
                         .HasColumnType("int");
 
                     b.ToTable("Exercises", (string)null);
+                });
+
+            modelBuilder.Entity("AppLogic.Models.Weather.AirQuality.AirQuality", b =>
+                {
+                    b.HasOne("BusinessLogic.Models.DayCard", "DayCard")
+                        .WithMany("AirQualities")
+                        .HasForeignKey("DayCardId");
+
+                    b.OwnsOne("AppLogic.Models.Weather.AirQuality.HourlyBlock", "HourlyBlock", b1 =>
+                        {
+                            b1.Property<int>("AirQualityId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("AQI")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "european_aqi");
+
+                            b1.Property<string>("AlderPollen")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "alder_pollen");
+
+                            b1.Property<string>("BirchPollen")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "birch_pollen");
+
+                            b1.Property<string>("CarbonMonoxide")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "carbon_monoxide");
+
+                            b1.Property<string>("Dust")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "dust");
+
+                            b1.Property<string>("GrassPollen")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "grass_pollen");
+
+                            b1.Property<string>("Marker")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("MugwortPollen")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "mugwort_pollen");
+
+                            b1.Property<string>("NitrogenDioxide")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "nitrogen_dioxide");
+
+                            b1.Property<string>("Ozone")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "ozone");
+
+                            b1.Property<string>("PM25")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "pm2_5");
+
+                            b1.Property<string>("RagweedPollen")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "ragweed_pollen");
+
+                            b1.Property<string>("Time")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "time");
+
+                            b1.Property<string>("UVI")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "uv_index");
+
+                            b1.HasKey("AirQualityId");
+
+                            b1.ToTable("AirQualities");
+
+                            b1.HasAnnotation("Relational:JsonPropertyName", "hourly");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AirQualityId");
+                        });
+
+                    b.Navigation("DayCard");
+
+                    b.Navigation("HourlyBlock");
                 });
 
             modelBuilder.Entity("BusinessLogic.Models.Activity.Activity", b =>
@@ -372,16 +479,16 @@ namespace AppLogic.Migrations
             modelBuilder.Entity("BusinessLogic.Models.Weather.WeatherData", b =>
                 {
                     b.HasOne("BusinessLogic.Models.DayCard", "DayCard")
-                        .WithMany("WeatherData")
-                        .HasForeignKey("DayCardId");
+                        .WithOne("WeatherData")
+                        .HasForeignKey("BusinessLogic.Models.Weather.WeatherData", "DayCardId");
 
                     b.OwnsOne("BusinessLogic.Models.Weather.CloudCoverBlock", "CloudCover", b1 =>
                         {
                             b1.Property<int>("WeatherDataId")
                                 .HasColumnType("int");
 
-                            b1.Property<int?>("Afternoon")
-                                .HasColumnType("int")
+                            b1.Property<double?>("Afternoon")
+                                .HasColumnType("float")
                                 .HasAnnotation("Relational:JsonPropertyName", "afternoon");
 
                             b1.Property<string>("Marker")
@@ -403,8 +510,8 @@ namespace AppLogic.Migrations
                             b1.Property<int>("WeatherDataId")
                                 .HasColumnType("int");
 
-                            b1.Property<int?>("Afternoon")
-                                .HasColumnType("int")
+                            b1.Property<double?>("Afternoon")
+                                .HasColumnType("float")
                                 .HasAnnotation("Relational:JsonPropertyName", "afternoon");
 
                             b1.Property<string>("Marker")
@@ -449,8 +556,8 @@ namespace AppLogic.Migrations
                             b1.Property<int>("WeatherDataId")
                                 .HasColumnType("int");
 
-                            b1.Property<int?>("Afternoon")
-                                .HasColumnType("int")
+                            b1.Property<double?>("Afternoon")
+                                .HasColumnType("float")
                                 .HasAnnotation("Relational:JsonPropertyName", "afternoon");
 
                             b1.Property<string>("Marker")
@@ -535,6 +642,8 @@ namespace AppLogic.Migrations
             modelBuilder.Entity("BusinessLogic.Models.DayCard", b =>
                 {
                     b.Navigation("Activities");
+
+                    b.Navigation("AirQualities");
 
                     b.Navigation("CaffeineDrinks");
 

@@ -8,7 +8,7 @@ namespace BusinessLogic.Models.Weather
         public string Marker { get; set; } = "Exists";
 
         [JsonPropertyName("afternoon")]
-        public int? Afternoon { get; set; }
+        public double? Afternoon { get; set; }
     }
 
 }

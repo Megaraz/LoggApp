@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AppLogic.Models.Weather.AirQuality;
 using BusinessLogic.Models;
 using BusinessLogic.Models.Activity;
 using BusinessLogic.Models.Intake;
@@ -17,6 +18,7 @@ namespace DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<DayCard> DayCards { get; set; }
         public DbSet<WeatherData> WeatherData { get; set; }
+        public DbSet<AirQuality> AirQualities { get; set; }
         public DbSet<Medication> Medications { get; set; }
         public DbSet<CaffeineDrink> CaffeineDrinks { get; set; }
         public DbSet<Food> Foods { get; set; }
@@ -33,6 +35,12 @@ namespace DataAccess
 
             // Egen tabell för Exercise
             modelBuilder.Entity<Exercise>().ToTable("Exercises");
+
+            modelBuilder.Entity<AirQuality>(entity => 
+            { 
+                entity.OwnsOne(a => a.HourlyBlock); 
+            });
+
 
             modelBuilder.Entity<WeatherData>(entity =>
             {

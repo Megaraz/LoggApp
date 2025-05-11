@@ -69,6 +69,41 @@ namespace AppLogic.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AirQualities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DayCardId = table.Column<int>(type: "int", nullable: true),
+                    Lat = table.Column<double>(type: "float", nullable: true),
+                    Lon = table.Column<double>(type: "float", nullable: true),
+                    GenerationTime_ms = table.Column<double>(type: "float", nullable: false),
+                    HourlyBlock_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_Time = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_AlderPollen = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_BirchPollen = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_GrassPollen = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_MugwortPollen = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_RagweedPollen = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_UVI = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_AQI = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_PM25 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_Ozone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_CarbonMonoxide = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_NitrogenDioxide = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_Dust = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AirQualities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AirQualities_DayCards_DayCardId",
+                        column: x => x.DayCardId,
+                        principalTable: "DayCards",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CaffeineDrinks",
                 columns: table => new
                 {
@@ -156,7 +191,7 @@ namespace AppLogic.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DayCardId = table.Column<int>(type: "int", nullable: true),
                     TimeOf = table.Column<TimeOnly>(type: "time", nullable: true),
-                    Units = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Units = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Lat = table.Column<double>(type: "float", nullable: true),
                     Lon = table.Column<double>(type: "float", nullable: true),
                     Temperature_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -167,15 +202,13 @@ namespace AppLogic.Migrations
                     Temperature_Evening = table.Column<double>(type: "float", nullable: true),
                     Temperature_Morning = table.Column<double>(type: "float", nullable: true),
                     Pressure_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Pressure_Afternoon = table.Column<int>(type: "int", nullable: true),
+                    Pressure_Afternoon = table.Column<double>(type: "float", nullable: true),
                     Humidity_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Humidity_Afternoon = table.Column<int>(type: "int", nullable: true),
+                    Humidity_Afternoon = table.Column<double>(type: "float", nullable: true),
                     Precipitation_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Precipitation_Total = table.Column<double>(type: "float", nullable: true),
                     CloudCover_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CloudCover_Afternoon = table.Column<int>(type: "int", nullable: true),
-                    AQI = table.Column<int>(type: "int", nullable: true),
-                    UVI = table.Column<int>(type: "int", nullable: true)
+                    CloudCover_Afternoon = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -242,6 +275,11 @@ namespace AppLogic.Migrations
                 column: "DayCardId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AirQualities_DayCardId",
+                table: "AirQualities",
+                column: "DayCardId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CaffeineDrinks_DayCardId",
                 table: "CaffeineDrinks",
                 column: "DayCardId");
@@ -274,12 +312,17 @@ namespace AppLogic.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_WeatherData_DayCardId",
                 table: "WeatherData",
-                column: "DayCardId");
+                column: "DayCardId",
+                unique: true,
+                filter: "[DayCardId] IS NOT NULL");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AirQualities");
+
             migrationBuilder.DropTable(
                 name: "CaffeineDrinks");
 

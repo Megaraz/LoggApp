@@ -16,7 +16,7 @@ namespace AppLogic.Services
 
         public static async Task RegisterNewUserAsync(UserInputModel input)
         {
-            Task<string> TaskResultString = new WeatherRepo(input.CityName).GetGeoCode();
+            Task<string> TaskResultString = new WeatherRepo(input.CityName).GetGeoCodeAsync();
 
             User newUser = new User()
             {
