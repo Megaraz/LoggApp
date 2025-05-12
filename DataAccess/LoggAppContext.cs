@@ -44,11 +44,9 @@ namespace DataAccess
 
             modelBuilder.Entity<WeatherData>(entity =>
             {
-                entity.OwnsOne(w => w.Temperature);
-                entity.OwnsOne(w => w.Pressure);
-                entity.OwnsOne(w => w.Humidity);
-                entity.OwnsOne(w => w.Precipitation);
-                entity.OwnsOne(w => w.CloudCover);
+                entity.OwnsOne(w => w.HourlyBlock);
+                entity.OwnsOne(w => w.HourlyUnits);
+                
             });
 
         }

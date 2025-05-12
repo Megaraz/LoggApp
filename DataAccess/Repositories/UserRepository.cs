@@ -12,15 +12,16 @@ namespace DataAccess.Repositories
     public class UserRepository
     {
         #region CREATE
-        public static void Create(User newUser)
+        public static async Task<User> CreateAsync(User newUser)
         {
             using (var db = new LoggAppContext())
             {
                 try
                 {
-                    db.Users.Add(newUser);
-                    db.SaveChanges();
+                    await db.Users.AddAsync(newUser);
+                    await db.SaveChangesAsync();
 
+                    return newUser;
                 }
                 catch (Exception e)
                 {
@@ -33,13 +34,31 @@ namespace DataAccess.Repositories
         #endregion
 
         #region READ
-        public static async Task<User?> ReadSingle(int id)
+        public static async Task<SpecificUserMenuDto?> ReadSingleAsync(int id)
         {
             using (var db = new LoggAppContext())
             {
                 try
                 {
-                    return await db.Users.SingleOrDefaultAsync(x => x.Id == id)!;
+                    return await db.Users
+                        .Where(u => u.Id == id)
+                        .Select(u => new SpecificUserMenuDto
+                        {
+                            Id = u.Id,
+                            Username = u.Username!,
+                            CityName = u.CityName,
+                            Lat = u.Lat,
+                            Lon = u.Lon,
+                            AllDayCardsMenu = u.DayCards!
+                            .Select(d => new AllDayCardsMenuDto
+                            {
+                                DayCardId = d.Id,
+                                UserId = d.UserId,
+                                Date = d.Date
+
+                            }).ToList()
+                        })
+                        .SingleOrDefaultAsync();
 
                 }
                 catch (Exception e)
@@ -49,13 +68,32 @@ namespace DataAccess.Repositories
                 }
             }
         }
-        public static async Task<User?> ReadSingle(string username)
+        public static async Task<SpecificUserMenuDto?> ReadSingleAsync(string username)
         {
             using (var db = new LoggAppContext())
             {
                 try
                 {
-                    return await db.Users.SingleOrDefaultAsync(x => x.Username == username)!;
+                    return await db.Users
+                        .Where(u => u.Username == username)
+                        .Select(u => new SpecificUserMenuDto
+                        {
+                            Id = u.Id,
+                            Username = u.Username!,
+                            CityName = u.CityName,
+                            Lat = u.Lat,
+                            Lon = u.Lon,
+                            AllDayCardsMenu = u.DayCards!
+                            .Select(d => new AllDayCardsMenuDto
+                            {
+                                DayCardId = d.Id,
+                                UserId = d.UserId,
+                                Date = d.Date
+
+                            }).ToList()
+                        })
+                        .SingleOrDefaultAsync();
+
 
                 }
                 catch (Exception e)

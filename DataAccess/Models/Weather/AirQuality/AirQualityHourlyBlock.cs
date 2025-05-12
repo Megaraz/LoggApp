@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AppLogic.Models.Weather.AirQuality
 {
-    public class HourlyBlock
+    public class AirQualityHourlyBlock
     {
         [JsonIgnore]
         public string Marker { get; set; } = "Exists";

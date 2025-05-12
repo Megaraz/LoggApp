@@ -45,6 +45,9 @@ namespace AppLogic.Migrations
                         .HasColumnType("float")
                         .HasAnnotation("Relational:JsonPropertyName", "longitude");
 
+                    b.Property<TimeOnly?>("TimeOf")
+                        .HasColumnType("time");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DayCardId");
@@ -264,26 +267,36 @@ namespace AppLogic.Migrations
                     b.Property<int?>("DayCardId")
                         .HasColumnType("int");
 
+                    b.Property<double?>("GenerationTimeMs")
+                        .HasColumnType("float")
+                        .HasAnnotation("Relational:JsonPropertyName", "generationtime_ms");
+
                     b.Property<double?>("Lat")
                         .HasColumnType("float")
-                        .HasAnnotation("Relational:JsonPropertyName", "lat");
+                        .HasAnnotation("Relational:JsonPropertyName", "latitude");
 
                     b.Property<double?>("Lon")
                         .HasColumnType("float")
-                        .HasAnnotation("Relational:JsonPropertyName", "lon");
+                        .HasAnnotation("Relational:JsonPropertyName", "longitude");
 
                     b.Property<TimeOnly?>("TimeOf")
                         .HasColumnType("time");
 
-                    b.Property<string>("Units")
+                    b.Property<string>("Timezone")
                         .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "units");
+                        .HasAnnotation("Relational:JsonPropertyName", "timezone");
+
+                    b.Property<string>("TimezoneAbbreviation")
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "timezone_abbreviation");
+
+                    b.Property<int?>("UtcOffsetSeconds")
+                        .HasColumnType("int")
+                        .HasAnnotation("Relational:JsonPropertyName", "utc_offset_seconds");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DayCardId")
-                        .IsUnique()
-                        .HasFilter("[DayCardId] IS NOT NULL");
+                    b.HasIndex("DayCardId");
 
                     b.ToTable("WeatherData");
                 });
@@ -334,7 +347,7 @@ namespace AppLogic.Migrations
                         .WithMany("AirQualities")
                         .HasForeignKey("DayCardId");
 
-                    b.OwnsOne("AppLogic.Models.Weather.AirQuality.HourlyBlock", "HourlyBlock", b1 =>
+                    b.OwnsOne("AppLogic.Models.Weather.AirQuality.AirQualityHourlyBlock", "HourlyBlock", b1 =>
                         {
                             b1.Property<int>("AirQualityId")
                                 .HasColumnType("int");
@@ -476,155 +489,140 @@ namespace AppLogic.Migrations
             modelBuilder.Entity("BusinessLogic.Models.Weather.WeatherData", b =>
                 {
                     b.HasOne("BusinessLogic.Models.DayCard", "DayCard")
-                        .WithOne("WeatherData")
-                        .HasForeignKey("BusinessLogic.Models.Weather.WeatherData", "DayCardId");
+                        .WithMany("WeatherData")
+                        .HasForeignKey("DayCardId");
 
-                    b.OwnsOne("BusinessLogic.Models.Weather.CloudCoverBlock", "CloudCover", b1 =>
+                    b.OwnsOne("AppLogic.Models.Weather.WeatherDataHourlyBlock", "HourlyBlock", b1 =>
                         {
                             b1.Property<int>("WeatherDataId")
                                 .HasColumnType("int");
 
-                            b1.Property<double?>("Afternoon")
-                                .HasColumnType("float")
-                                .HasAnnotation("Relational:JsonPropertyName", "afternoon");
+                            b1.Property<string>("ApparentTemperature")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "apparent_temperature");
+
+                            b1.Property<string>("CloudCover")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "cloud_cover");
+
+                            b1.Property<string>("DewPoint2m")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "dew_point_2m");
+
+                            b1.Property<string>("IsDay")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "is_day");
 
                             b1.Property<string>("Marker")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
+                            b1.Property<string>("Precipitation")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "precipitation");
+
+                            b1.Property<string>("PressureMsl")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "pressure_msl");
+
+                            b1.Property<string>("Rain")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "rain");
+
+                            b1.Property<string>("RelativeHumidity2m")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "relative_humidity_2m");
+
+                            b1.Property<string>("Temperature2m")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "temperature_2m");
+
+                            b1.Property<string>("UvIndex")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "uv_index");
+
+                            b1.Property<string>("WindSpeed10m")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "wind_speed_10m");
+
                             b1.HasKey("WeatherDataId");
 
                             b1.ToTable("WeatherData");
 
-                            b1.HasAnnotation("Relational:JsonPropertyName", "cloud_cover");
+                            b1.HasAnnotation("Relational:JsonPropertyName", "hourly");
 
                             b1.WithOwner()
                                 .HasForeignKey("WeatherDataId");
                         });
 
-                    b.OwnsOne("BusinessLogic.Models.Weather.HumidityBlock", "Humidity", b1 =>
+                    b.OwnsOne("AppLogic.Models.Weather.WeatherDataHourlyUnits", "HourlyUnits", b1 =>
                         {
                             b1.Property<int>("WeatherDataId")
                                 .HasColumnType("int");
 
-                            b1.Property<double?>("Afternoon")
-                                .HasColumnType("float")
-                                .HasAnnotation("Relational:JsonPropertyName", "afternoon");
+                            b1.Property<string>("ApparentTemperature")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "apparent_temperature");
+
+                            b1.Property<string>("CloudCover")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "cloud_cover");
+
+                            b1.Property<string>("DewPoint2m")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "dew_point_2m");
+
+                            b1.Property<string>("IsDay")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "is_day");
 
                             b1.Property<string>("Marker")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.HasKey("WeatherDataId");
+                            b1.Property<string>("Precipitation")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "precipitation");
 
-                            b1.ToTable("WeatherData");
+                            b1.Property<string>("PressureMsl")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "pressure_msl");
 
-                            b1.HasAnnotation("Relational:JsonPropertyName", "humidity");
+                            b1.Property<string>("Rain")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "rain");
 
-                            b1.WithOwner()
-                                .HasForeignKey("WeatherDataId");
-                        });
+                            b1.Property<string>("RelativeHumidity2m")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "relative_humidity_2m");
 
-                    b.OwnsOne("BusinessLogic.Models.Weather.PrecipitationBlock", "Precipitation", b1 =>
-                        {
-                            b1.Property<int>("WeatherDataId")
-                                .HasColumnType("int");
+                            b1.Property<string>("Temperature2m")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "temperature_2m");
 
-                            b1.Property<string>("Marker")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                            b1.Property<string>("UvIndex")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "uv_index");
 
-                            b1.Property<double?>("Total")
-                                .HasColumnType("float")
-                                .HasAnnotation("Relational:JsonPropertyName", "total");
-
-                            b1.HasKey("WeatherDataId");
-
-                            b1.ToTable("WeatherData");
-
-                            b1.HasAnnotation("Relational:JsonPropertyName", "precipitation");
-
-                            b1.WithOwner()
-                                .HasForeignKey("WeatherDataId");
-                        });
-
-                    b.OwnsOne("BusinessLogic.Models.Weather.PressureBlock", "Pressure", b1 =>
-                        {
-                            b1.Property<int>("WeatherDataId")
-                                .HasColumnType("int");
-
-                            b1.Property<double?>("Afternoon")
-                                .HasColumnType("float")
-                                .HasAnnotation("Relational:JsonPropertyName", "afternoon");
-
-                            b1.Property<string>("Marker")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                            b1.Property<string>("WindSpeed10m")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "wind_speed_10m");
 
                             b1.HasKey("WeatherDataId");
 
                             b1.ToTable("WeatherData");
 
-                            b1.HasAnnotation("Relational:JsonPropertyName", "pressure");
+                            b1.HasAnnotation("Relational:JsonPropertyName", "hourly_units");
 
                             b1.WithOwner()
                                 .HasForeignKey("WeatherDataId");
                         });
-
-                    b.OwnsOne("BusinessLogic.Models.Weather.TemperatureBlock", "Temperature", b1 =>
-                        {
-                            b1.Property<int>("WeatherDataId")
-                                .HasColumnType("int");
-
-                            b1.Property<double?>("Afternoon")
-                                .HasColumnType("float")
-                                .HasAnnotation("Relational:JsonPropertyName", "afternoon");
-
-                            b1.Property<double?>("Evening")
-                                .HasColumnType("float")
-                                .HasAnnotation("Relational:JsonPropertyName", "evening");
-
-                            b1.Property<string>("Marker")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<double?>("Max")
-                                .HasColumnType("float")
-                                .HasAnnotation("Relational:JsonPropertyName", "max");
-
-                            b1.Property<double?>("Min")
-                                .HasColumnType("float")
-                                .HasAnnotation("Relational:JsonPropertyName", "min");
-
-                            b1.Property<double?>("Morning")
-                                .HasColumnType("float")
-                                .HasAnnotation("Relational:JsonPropertyName", "morning");
-
-                            b1.Property<double?>("Night")
-                                .HasColumnType("float")
-                                .HasAnnotation("Relational:JsonPropertyName", "night");
-
-                            b1.HasKey("WeatherDataId");
-
-                            b1.ToTable("WeatherData");
-
-                            b1.HasAnnotation("Relational:JsonPropertyName", "temperature");
-
-                            b1.WithOwner()
-                                .HasForeignKey("WeatherDataId");
-                        });
-
-                    b.Navigation("CloudCover");
 
                     b.Navigation("DayCard");
 
-                    b.Navigation("Humidity");
+                    b.Navigation("HourlyBlock");
 
-                    b.Navigation("Precipitation");
-
-                    b.Navigation("Pressure");
-
-                    b.Navigation("Temperature");
+                    b.Navigation("HourlyUnits");
                 });
 
             modelBuilder.Entity("BusinessLogic.Models.Activity.Exercise", b =>

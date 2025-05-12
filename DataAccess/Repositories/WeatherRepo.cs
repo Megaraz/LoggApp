@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -12,39 +13,42 @@ namespace DataAccess.Repositories
     public class WeatherRepo
     {
 
-        private readonly string _appId = "958d5f0e3839c6548c8b6c09883c79e9";
-        //private readonly string _geoCodeURL = $"http://api.openweathermap.org/geo/1.0/direct?q={input.CityName}&limit=5&appid=958d5f0e3839c6548c8b6c09883c79e9";
-        public string? CityName { get; set; }
-        public DayCard? DayCard { get; set; }
+        private readonly string _forecastBaseUrl = $"https://api.open-meteo.com/v1/forecast";
+        private readonly string _forecastHourlyParams =
+            "temperature_2m,apparent_temperature,relative_humidity_2m,dew_point_2m," +
+            "precipitation,rain,cloud_cover,uv_index,wind_speed_10m,pressure_msl,is_day";
 
+        private readonly string _geoCodeBaseUrl = $"https://geocoding-api.open-meteo.com/v1/search";
+        
         public WeatherRepo()
         {
             
         }
 
-        public WeatherRepo(string cityName)
-        {
-            CityName = cityName;
-        }
-
-        public WeatherRepo(DayCard dayCard)
-        {
-            DayCard = dayCard;
-        }
-
-
-        public async Task<string> GetWeatherDataAsync()
+        public async Task<string> GetWeatherDataAsync(string lat, string lon, string date)
         {
             HttpClient client = new HttpClient();
-            string url = $"https://api.openweathermap.org/data/3.0/onecall/day_summary?lat={DayCard.User.Lat}&lon={DayCard.User!.Lon}&date={DayCard.Date}&appid=958d5f0e3839c6548c8b6c09883c79e9";
+
+            var url = _forecastBaseUrl +
+                      $"?latitude={lat}&longitude={lon}" +
+                      $"&hourly={_forecastHourlyParams}" +
+                      $"&start_date={date}&end_date={date}" +
+                      $"&timezone=auto";
+
+            //Console.WriteLine("FULL URL:");
+            //Console.WriteLine(url);
+            //Console.ReadKey();
+            //string result = await client.GetStringAsync(url);
+            //Console.WriteLine(result);
+            //Console.ReadLine();
             return await client.GetStringAsync(url);
         }
 
-        public async Task<string> GetGeoCodeAsync()
+        public async Task<string> GetGeoCodeAsync(string city)
         {
             HttpClient client = new HttpClient();
-            string url = $"http://api.openweathermap.org/geo/1.0/direct?q={CityName}&limit=5&appid=958d5f0e3839c6548c8b6c09883c79e9";
-            //string url = $"http://api.openweathermap.org/geo/1.0/direct?q=Ljungskile&limit=5&appid=958d5f0e3839c6548c8b6c09883c79e9";
+            string url = _geoCodeBaseUrl + $"?name={city}";
+
 
             return await client.GetStringAsync(url);
 

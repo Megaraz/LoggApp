@@ -1,131 +1,99 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using BusinessLogic.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.PortableExecutable;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace Presentation
-//{
-//    internal static class Menu
-//    {
+namespace Presentation
+{
+    public class Menu
+    {
+        // MENUSTATE ENUM
+        public static MenuState CurrentMenuState { get; set; } = MenuState.InitMenu;
+        public static async Task InitMenuHandler()
+        {
+            var initMenuChoice = BaseMenuHandler(MenuData.s_InitMenu);
+            switch (initMenuChoice)
+            {
+                case $"[LOG IN]":
+                    string username = ViewInput.GetValidUserInput("Username");
+                    await View.ReadUserSingleAsync(username);
 
-//        //public enum Menu_OptionsMain { Login, ReadAllUsers, CreateNewUser };
-//        //public enum Menu_OptionsSpecificUser { CreateDayCard, SpecificDayCard };
+                    if (MenuData.CurrentUserMenu == null)
+                    {
+                        MenuData.PageHeader = "NO USER WITH THAT ID FOUND";
+                        CurrentMenuState = MenuState.InitMenu;
+                        break;
+                    }
+                    CurrentMenuState = MenuState.SpecificUser;
+                    break;
+                case "[GET ALL USERS]":
+                    MenuData.AllUsersMenu = await View.ReadAllUsersAsync()!;
+                    CurrentMenuState = MenuState.AllUsers;
+                    break;
+                case "[CREATE NEW USER ACCOUNT]":
+                    await View.CreateNewUserAsync();
+                    CurrentMenuState = MenuState.SpecificUser;
+                    break;
+            }
+        }
 
-//        public enum MenuState { InitMenu, AllUsers, SpecificUser, CreateNewUser, CreateNewDayCard };
-//        public static MenuState CurrentMenuState { get; set; } = MenuState.InitMenu;
+        public static T BaseMenuHandler<T>(ICollection<T> currentMenu)
+        {
+            var currentMenuList = currentMenu.ToList();
 
-//        public static string header = string.Empty;
+            ConsoleKeyInfo keyPress;
+            int currentIndex = 0;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine(Header);
+                Console.WriteLine();
+
+                DisplayMenu(currentMenuList, ref currentIndex);
+                keyPress = Console.ReadKey(true);
+
+                InputHandler(keyPress, ref currentIndex);
+            } while (keyPress.Key != ConsoleKey.Enter && keyPress.Key != ConsoleKey.Escape);
+
+            return currentMenuList[currentIndex];
+        }
+
+        public static void DisplayMenu<T>(List<T> currentMenu, ref int currentIndex)
+        {
+
+
+            if (currentMenu != null && currentMenu.Count > 0)
+            {
+                if (currentIndex > currentMenu.Count - 1)
+                {
+                    currentIndex = 0;
+                }
+                if (currentIndex < 0)
+                {
+                    currentIndex = currentMenu.Count - 1;
+                }
+
+                for (int i = 0; i < currentMenu.Count; i++)
+                {
+
+                    var item = currentMenu[i];
+                    if (currentIndex == i)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine(item);
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.WriteLine(item);
+                    }
+                }
+
+            }
+        }
 
         
-
-
-
-//        public static void MenuHandler(int currentIndex, ConsoleKeyInfo keyPress)
-//        {
-//            //ICollection<T> currentMenuData
-
-//            switch (CurrentMenuState)
-//            {
-//                case MenuState.InitMenu:
-//                    header = MenuData.s_InitMenuHeader;
-//                    currentMenuData = (ICollection<T>)MenuData.s_InitMenu;
-//                    break;
-//                case MenuState.SpecificUser:
-//                    header = MenuData.s_SpecificUserMenuHeader;
-//                    currentMenuData = (ICollection<T>)MenuData.s_SpecificUserMenu;
-//                    break;
-//                case MenuState.AllUsers:
-//                    header = MenuData.s_AllUsersMenuHeader;
-//                    currentMenuData = (ICollection<T>)new MenuData().AllUsers;
-//                    break;
-//            }
-
-//            if (currentIndex > currentMenuData.Count - 1)
-//            {
-//                currentIndex = 0;
-//            }
-//            if (currentIndex < 0)
-//            {
-//                currentIndex = currentMenuData.Count - 1;
-//            }
-//            int i = 0;
-//            foreach (var item in currentMenuData)
-//            {
-
-//                if (currentIndex == i)
-//                {
-//                    Console.ForegroundColor = ConsoleColor.Green;
-//                    Console.WriteLine(item);
-//                    Console.ResetColor();
-
-//                }
-//                else
-//                {
-//                    Console.WriteLine(item);
-//                }
-//                i++;
-
-//            }
-//            switch (keyPress.Key)
-//            {
-//                case ConsoleKey.DownArrow:
-//                    ++currentIndex;
-//                    break;
-//                case ConsoleKey.UpArrow:
-//                    --currentIndex;
-//                    break;
-//                case ConsoleKey.LeftArrow:
-//                    --currentIndex;
-//                    break;
-//                case ConsoleKey.RightArrow:
-//                    ++currentIndex;
-//                    break;
-//                case ConsoleKey.Escape:
-//                    break;
-//                case ConsoleKey.Enter:
-//                    break;
-//                default: break;
-//            }
-
-
-//        }
-
-//        //public static int DisplayMenu(int currentIndex)
-//        //{
-
-
-//        //    if (currentIndex > CurrentMenuData.Count - 1)
-//        //    {
-//        //        currentIndex = 0;
-//        //    }
-//        //    if (currentIndex < 0)
-//        //    {
-//        //        currentIndex = CurrentMenuData.Count - 1;
-//        //    }
-//        //    int i = 0;
-//        //    foreach (var item in CurrentMenuData)
-//        //    {
-
-//        //        if (currentIndex == i)
-//        //        {
-//        //            Console.ForegroundColor = ConsoleColor.Green;
-//        //            Console.WriteLine(item);
-//        //            Console.ResetColor();
-
-//        //        }
-//        //        else
-//        //        {
-//        //            Console.WriteLine(item);
-//        //        }
-//        //        i++;
-
-//        //    }
-//        //    return currentIndex;
-//        //}
-
-
-
-//    }
-//}
+    }
+}

@@ -17,13 +17,12 @@ namespace BusinessLogic.Models
         public double? Lat { get; set; }
         public double? Lon { get; set; }
 
-
-        public User(UserInputModel userInputModel, GeoResult geoResult)
+        public User(UserInputModel userInputModel)
         {
             Username = userInputModel.Username;
-            CityName = geoResult.Name;
-            Lat = geoResult.Lat;
-            Lon = geoResult.Lon;
+            CityName = userInputModel.GeoResult.Name;
+            Lat = userInputModel.GeoResult.Lat;
+            Lon = userInputModel.GeoResult.Lon;
         }
 
         public User()
@@ -36,7 +35,7 @@ namespace BusinessLogic.Models
         {
             return $"{this.Username}, ID: {this.Id}\n"
                 + $"{this.CityName} \n"
-                + $"{this.DayCards!.Count}\n\n"
+                + $"DayCards: {this.DayCards!.Count}\n\n"
                 + "------------------------\n"
                 + $"[DAYCARDS] for [{this.Username}]\n"
                 + $"{string.Join("\n", DayCards?.Select(x => x.Date)!)}"

@@ -22,8 +22,8 @@ namespace BusinessLogic.Models
         //public virtual ICollection<Food>? Foods { get; set; } = new List<Food>();
         public virtual ICollection<Supplement>? Supplements { get; set; } = new List<Supplement>();
         //public virtual ICollection<WeatherData>? WeatherData { get; set; } = new List<WeatherData>();
-        public virtual WeatherData? WeatherData { get; set; }
-        public virtual ICollection<AirQuality> AirQualities { get; set; } = new List<AirQuality>();
+        public virtual ICollection<WeatherData>? WeatherData { get; set; } = new List<WeatherData>();
+        public virtual ICollection<AirQuality>? AirQualities { get; set; } = new List<AirQuality>();
 
         public DayCard()
         {

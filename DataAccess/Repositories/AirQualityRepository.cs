@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace AppLogic.Repositories
 {
     internal class AirQualityRepository
     {
-        private readonly string _url = "https://air-quality-api.open-meteo.com/v1/air-quality";
+        private readonly string _baseUrl = "https://air-quality-api.open-meteo.com/v1/air-quality";
         private readonly string _hourlyParams = "alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,ragweed_pollen,uv_index,european_aqi,pm2_5,ozone,carbon_monoxide,nitrogen_dioxide,dust";
 
         public DayCard? DayCard { get; set; }
@@ -22,16 +23,20 @@ namespace AppLogic.Repositories
             DayCard = dayCard;
         }
 
+        public AirQualityRepository()
+        {
+            
+        }
 
-        public async Task<string> GetAirQualityData()
+
+        public async Task<string> GetAirQualityDataAsync(string lat, string lon, string date)
         {
             HttpClient client = new HttpClient();
 
-            string fullUrl = _url +
-                $"&latitude={DayCard.User.Lat}&longitude={DayCard.User.Lon}" +
+            string fullUrl = _baseUrl +
+                $"?&latitude={lat}&longitude={lon}" +
                 $"&hourly={_hourlyParams}" +
-                $"&start_date={DayCard.Date}&end_date={DayCard.Date}" +
-                $"&timezone=auto";
+                $"&start_date={date}&end_date={date}";
 
             return await client.GetStringAsync(fullUrl);
 

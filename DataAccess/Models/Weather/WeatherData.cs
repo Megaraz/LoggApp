@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using AppLogic.Models.Weather;
+using AppLogic.Models.Weather.AirQuality;
 using BusinessLogic.Interfaces;
 
 namespace BusinessLogic.Models.Weather
@@ -15,36 +17,30 @@ namespace BusinessLogic.Models.Weather
         public virtual DayCard? DayCard { get; set; }
         public TimeOnly? TimeOf { get; set; }
 
-        [JsonPropertyName("units")]
-        public string? Units { get; set; }
-
-        [JsonPropertyName("lat")]
+        [JsonPropertyName("latitude")]
         public double? Lat { get; set; }
 
-        [JsonPropertyName("lon")]
+        [JsonPropertyName("longitude")]
         public double? Lon { get; set; }
 
-        [JsonPropertyName("temperature")]
-        public TemperatureBlock? Temperature { get; set; }
+        [JsonPropertyName("generationtime_ms")]
+        public double? GenerationTimeMs { get; set; }
 
-        [JsonPropertyName("pressure")]
-        public PressureBlock? Pressure { get; set; }
+        [JsonPropertyName("utc_offset_seconds")]
+        public int? UtcOffsetSeconds { get; set; }
 
-        [JsonPropertyName("humidity")]
-        public HumidityBlock? Humidity { get; set; }
+        [JsonPropertyName("timezone")]
+        public string? Timezone { get; set; }
 
-        [JsonPropertyName("precipitation")]
-        public PrecipitationBlock? Precipitation { get; set; }
+        [JsonPropertyName("timezone_abbreviation")]
+        public string? TimezoneAbbreviation { get; set; }
 
-        [JsonPropertyName("cloud_cover")]
-        public CloudCoverBlock? CloudCover { get; set; }
+        [JsonPropertyName("hourly")]
+        public WeatherDataHourlyBlock? HourlyBlock { get; set; }
 
+        [JsonPropertyName("hourly_units")]
+        public WeatherDataHourlyUnits? HourlyUnits { get; set; }
 
-        public override string ToString()
-        {
-            return $"Date {DayCard.Date.ToString()}"
-                + $"{Temperature}";
-        }
     }
 
 }

@@ -75,6 +75,7 @@ namespace AppLogic.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DayCardId = table.Column<int>(type: "int", nullable: true),
+                    TimeOf = table.Column<TimeOnly>(type: "time", nullable: true),
                     Lat = table.Column<double>(type: "float", nullable: true),
                     Lon = table.Column<double>(type: "float", nullable: true),
                     GenerationTime_ms = table.Column<double>(type: "float", nullable: false),
@@ -191,24 +192,36 @@ namespace AppLogic.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DayCardId = table.Column<int>(type: "int", nullable: true),
                     TimeOf = table.Column<TimeOnly>(type: "time", nullable: true),
-                    Units = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Lat = table.Column<double>(type: "float", nullable: true),
                     Lon = table.Column<double>(type: "float", nullable: true),
-                    Temperature_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Temperature_Min = table.Column<double>(type: "float", nullable: true),
-                    Temperature_Max = table.Column<double>(type: "float", nullable: true),
-                    Temperature_Afternoon = table.Column<double>(type: "float", nullable: true),
-                    Temperature_Night = table.Column<double>(type: "float", nullable: true),
-                    Temperature_Evening = table.Column<double>(type: "float", nullable: true),
-                    Temperature_Morning = table.Column<double>(type: "float", nullable: true),
-                    Pressure_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Pressure_Afternoon = table.Column<double>(type: "float", nullable: true),
-                    Humidity_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Humidity_Afternoon = table.Column<double>(type: "float", nullable: true),
-                    Precipitation_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Precipitation_Total = table.Column<double>(type: "float", nullable: true),
-                    CloudCover_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CloudCover_Afternoon = table.Column<double>(type: "float", nullable: true)
+                    GenerationTimeMs = table.Column<double>(type: "float", nullable: true),
+                    UtcOffsetSeconds = table.Column<int>(type: "int", nullable: true),
+                    Timezone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TimezoneAbbreviation = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_Temperature2m = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_ApparentTemperature = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_RelativeHumidity2m = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_DewPoint2m = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_Precipitation = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_Rain = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_CloudCover = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_UvIndex = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_WindSpeed10m = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_PressureMsl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_IsDay = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_Temperature2m = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_ApparentTemperature = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_RelativeHumidity2m = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_DewPoint2m = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_Precipitation = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_Rain = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_CloudCover = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_UvIndex = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_WindSpeed10m = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_PressureMsl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_IsDay = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -312,9 +325,7 @@ namespace AppLogic.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_WeatherData_DayCardId",
                 table: "WeatherData",
-                column: "DayCardId",
-                unique: true,
-                filter: "[DayCardId] IS NOT NULL");
+                column: "DayCardId");
         }
 
         /// <inheritdoc />

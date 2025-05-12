@@ -4,15 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using BusinessLogic.Interfaces;
 using BusinessLogic.Models;
 
 namespace AppLogic.Models.Weather.AirQuality
 {
-    public class AirQuality
+    public class AirQuality : ITimeOfEntry
     {
         public int Id { get; set; }
         public int? DayCardId { get; set; }
         public virtual DayCard? DayCard { get; set; }
+        public TimeOnly? TimeOf { get; set; }
 
 
         [JsonPropertyName("latitude")]
@@ -25,7 +27,7 @@ namespace AppLogic.Models.Weather.AirQuality
         public double GenerationTime_ms { get; set; }
 
         [JsonPropertyName("hourly")]
-        public HourlyBlock? HourlyBlock { get; set; }
+        public AirQualityHourlyBlock? HourlyBlock { get; set; }
 
 
     }
