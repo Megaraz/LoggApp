@@ -24,7 +24,7 @@ namespace AppLogic.Models
         public ICollection<Supplement>? Supplements { get; set; } = new List<Supplement>();
         //public virtual ICollection<WeatherData>? WeatherData { get; set; } = new List<WeatherData>();
         public ICollection<WeatherData>? WeatherData { get; set; } = new List<WeatherData>();
-        public ICollection<AirQuality> AirQualities { get; set; } = new List<AirQuality>();
+        public ICollection<AirQualityData> AirQualities { get; set; } = new List<AirQualityData>();
 
     }
 }

@@ -12,6 +12,9 @@ namespace AppLogic.Models.Weather
         [JsonIgnore]
         public string Marker { get; set; } = "Exists";
 
+        [JsonPropertyName("time")]
+        public List<DateTime>? Time { get; set; }
+
         [JsonPropertyName("temperature_2m")]
         public List<double>? Temperature2m { get; set; }
 

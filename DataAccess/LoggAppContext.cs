@@ -20,7 +20,7 @@ namespace DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<DayCard> DayCards { get; set; }
         public DbSet<WeatherData> WeatherData { get; set; }
-        public DbSet<AirQuality> AirQualities { get; set; }
+        public DbSet<AirQualityData> AirQualities { get; set; }
         public DbSet<Medication> Medications { get; set; }
         public DbSet<CaffeineDrink> CaffeineDrinks { get; set; }
         public DbSet<Food> Foods { get; set; }
@@ -38,7 +38,7 @@ namespace DataAccess
             // Egen tabell för Exercise
             modelBuilder.Entity<Exercise>().ToTable("Exercises");
 
-            modelBuilder.Entity<AirQuality>(entity => 
+            modelBuilder.Entity<AirQualityData>(entity => 
             { 
                 entity.OwnsOne(a => a.HourlyBlock); 
             });

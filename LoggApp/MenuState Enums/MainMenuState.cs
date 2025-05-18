@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Presentation.MenuState_Enums
 {
-    public enum InitMainMenuState
+    public enum MainMenuState
     {
         Main,
         SpecificUser,
@@ -14,7 +14,7 @@ namespace Presentation.MenuState_Enums
         Exit
     };
 
-    public enum InitUserMenuState
+    public enum UserMenuState
     {
         AllDayCards,
         CreateNewDayCard,
@@ -22,9 +22,16 @@ namespace Presentation.MenuState_Enums
         SearchDayCard
     };
 
-    public enum InitDayCardMenuState
+    public enum DayCardMenuState
     {
-
+        Overview,
+        AllData,
+        AirQuality,
+        Pollen,
+        Weather,
+        Sleep,
+        CaffeineDrinks,
+        Supplements
     };
 
 

@@ -12,11 +12,10 @@ namespace Presentation
     public class SessionContext
     {
         //public MenuState CurrentMenuState { get; set; }
-        public InitMainMenuState CurrentInitMenuState { get; set; }
+        public MainMenuState MainMenuState { get; set; }
+        public UserMenuState UserMenuState { get; set; }
+        public DayCardMenuState DayCardMenuState { get; set; }
 
-        public InitUserMenuState CurrentUserMenuState { get; set; }
-
-        
 
 
         // MAIN PAGE HEADER VARIABLE, UPDATE DYNAMICALLY

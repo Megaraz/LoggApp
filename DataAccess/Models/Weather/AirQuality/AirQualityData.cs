@@ -9,15 +9,12 @@ using BusinessLogic.Models;
 
 namespace AppLogic.Models.Weather.AirQuality
 {
-    public class AirQuality : ITimeOfEntry
+    public class AirQualityData : ITimeOfEntry
     {
         public int Id { get; set; }
         public int? DayCardId { get; set; }
         public virtual DayCard? DayCard { get; set; }
         public TimeOnly? TimeOf { get; set; }
-
-        // List of single airquality measurements
-        List<HourlyAirQualityEntry>? HourlyAirQualityEntries { get; set; }
 
 
 

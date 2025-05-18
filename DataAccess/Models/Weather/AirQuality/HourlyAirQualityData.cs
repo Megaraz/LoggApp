@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace AppLogic.Models.Weather.AirQuality
 {
-    public class HourlyAirQualityEntry
+    public class HourlyAirQualityData
     {
         /// <summary>
         /// Tidpunkten för mätningen.
         /// </summary>
-        public DateTime Time { get; set; }
+        public int? Time { get; set; }
 
         /// <summary>
         /// Björkpollen (antal korn per m³).
@@ -72,5 +72,27 @@ namespace AppLogic.Models.Weather.AirQuality
         /// Damm (µg/m³).
         /// </summary>
         public double? Dust { get; set; }
+
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.Append($"Time: {Time}");
+
+            if (BirchPollen.HasValue) sb.Append($", Birch: {BirchPollen.Value:F1}");
+            if (AlderPollen.HasValue) sb.Append($", Alder: {AlderPollen.Value:F1}");
+            if (GrassPollen.HasValue) sb.Append($", Grass: {GrassPollen.Value:F1}");
+            if (MugwortPollen.HasValue) sb.Append($", Mugwort: {MugwortPollen.Value:F1}");
+            if (RagweedPollen.HasValue) sb.Append($", Ragweed: {RagweedPollen.Value:F1}");
+            if (UVI.HasValue) sb.Append($", UVI: {UVI.Value:F1}");
+            if (AQI.HasValue) sb.Append($", AQI: {AQI.Value:F1}");
+            if (PM25.HasValue) sb.Append($", PM2.5: {PM25.Value:F1}");
+            if (Ozone.HasValue) sb.Append($", O₃: {Ozone.Value:F1}");
+            if (CarbonMonoxide.HasValue) sb.Append($", CO: {CarbonMonoxide.Value:F1}");
+            if (NitrogenDioxide.HasValue) sb.Append($", NO₂: {NitrogenDioxide.Value:F1}");
+            if (Dust.HasValue) sb.Append($", Dust: {Dust.Value:F1}");
+
+            return sb.ToString();
+        }
     }
 }

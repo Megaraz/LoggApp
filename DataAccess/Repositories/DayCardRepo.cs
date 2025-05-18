@@ -95,7 +95,7 @@ namespace AppLogic.Repositories
                     .Include(dc => dc.CaffeineDrinks)
                     .Include(dc => dc.Supplements)
                     .Include(dc => dc.WeatherData)
-                    .Include(dc => dc.AirQualities)
+                    .Include(dc => dc.AirQualityData)
                     .AsSplitQuery()
                     .SingleOrDefaultAsync(dc => dc.Date == date && dc.UserId == userId);
 
@@ -117,7 +117,7 @@ namespace AppLogic.Repositories
                     .Include(dc => dc.CaffeineDrinks)
                     .Include(dc => dc.Supplements)
                     .Include(dc => dc.WeatherData)
-                    .Include(dc => dc.AirQualities)
+                    .Include(dc => dc.AirQualityData)
                     .AsSplitQuery()
                     .SingleOrDefaultAsync(dc => dc.Id == id && dc.UserId == userId);
 
@@ -187,7 +187,7 @@ namespace AppLogic.Repositories
                     .Include(dc => dc.CaffeineDrinks)
                     .Include(dc => dc.Supplements)
                     .Include(dc => dc.WeatherData)
-                    .Include(dc => dc.AirQualities)
+                    .Include(dc => dc.AirQualityData)
                     .AsSplitQuery()
                     .Where(dc => dc.UserId == userId)
                     .ToListAsync();

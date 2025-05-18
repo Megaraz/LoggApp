@@ -46,7 +46,7 @@ namespace Presentation
             _menuHandler = new MenuHandler(_controller);
             _view = new View(_menuHandler);
 
-            _sessionContext.CurrentInitMenuState = InitMainMenuState.Main;
+            _sessionContext.MainMenuState = MainMenuState.Main;
             _sessionContext.MainHeader = MenuText.Header.InitMenu;
             _sessionContext.CurrentMenuIndex = 0;
             _sessionContext.CurrentMainMenu = MenuText.NavOption.s_InitMenu.ToList();
@@ -63,7 +63,7 @@ namespace Presentation
 
 
 
-            } while (_sessionContext.CurrentInitMenuState != InitMainMenuState.Exit);
+            } while (_sessionContext.MainMenuState != MainMenuState.Exit);
 
 
         }

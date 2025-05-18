@@ -28,6 +28,7 @@ namespace Presentation
         public async Task<TContext> Start<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             sessionContext = await MenuHandler.HandleMainMenuState(sessionContext);
+            //sessionContext = await MenuHandler.HandleUserMenuState(sessionContext);
             return sessionContext;
         }
        

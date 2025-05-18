@@ -35,7 +35,7 @@ namespace DataAccess.Repositories
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.WeatherData)
                     .Include(u => u.DayCards!)
-                        .ThenInclude(dc => dc.AirQualities)
+                        .ThenInclude(dc => dc.AirQualityData)
                     .AsSplitQuery()
                     .SingleOrDefaultAsync(u => u.Id == id);
 
@@ -60,7 +60,7 @@ namespace DataAccess.Repositories
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.WeatherData)
                     .Include(u => u.DayCards!)
-                        .ThenInclude(dc => dc.AirQualities)
+                        .ThenInclude(dc => dc.AirQualityData)
                     .AsSplitQuery()
                     .SingleOrDefaultAsync(u => u.Username == username);
 
@@ -87,7 +87,7 @@ namespace DataAccess.Repositories
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.WeatherData)
                     .Include(u => u.DayCards!)
-                        .ThenInclude(dc => dc.AirQualities)
+                        .ThenInclude(dc => dc.AirQualityData)
                     .AsSplitQuery()
                     .ToListAsync();
 

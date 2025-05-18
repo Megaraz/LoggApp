@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppLogic.Migrations
 {
     [DbContext(typeof(LoggAppContext))]
-    [Migration("20250511182532_Init_test")]
-    partial class Init_test
+    [Migration("20250518180914_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace AppLogic.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AppLogic.Models.Weather.AirQuality.AirQuality", b =>
+            modelBuilder.Entity("AppLogic.Models.Weather.AirQuality.AirQualityData", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,7 +53,9 @@ namespace AppLogic.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DayCardId");
+                    b.HasIndex("DayCardId")
+                        .IsUnique()
+                        .HasFilter("[DayCardId] IS NOT NULL");
 
                     b.ToTable("AirQualities");
                 });
@@ -299,7 +301,9 @@ namespace AppLogic.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DayCardId");
+                    b.HasIndex("DayCardId")
+                        .IsUnique()
+                        .HasFilter("[DayCardId] IS NOT NULL");
 
                     b.ToTable("WeatherData");
                 });
@@ -344,15 +348,15 @@ namespace AppLogic.Migrations
                     b.ToTable("Exercises", (string)null);
                 });
 
-            modelBuilder.Entity("AppLogic.Models.Weather.AirQuality.AirQuality", b =>
+            modelBuilder.Entity("AppLogic.Models.Weather.AirQuality.AirQualityData", b =>
                 {
                     b.HasOne("BusinessLogic.Models.DayCard", "DayCard")
-                        .WithMany("AirQualities")
-                        .HasForeignKey("DayCardId");
+                        .WithOne("AirQualityData")
+                        .HasForeignKey("AppLogic.Models.Weather.AirQuality.AirQualityData", "DayCardId");
 
                     b.OwnsOne("AppLogic.Models.Weather.AirQuality.AirQualityHourlyBlock", "HourlyBlock", b1 =>
                         {
-                            b1.Property<int>("AirQualityId")
+                            b1.Property<int>("AirQualityDataId")
                                 .HasColumnType("int");
 
                             b1.Property<string>("AQI")
@@ -411,14 +415,14 @@ namespace AppLogic.Migrations
                                 .HasColumnType("nvarchar(max)")
                                 .HasAnnotation("Relational:JsonPropertyName", "uv_index");
 
-                            b1.HasKey("AirQualityId");
+                            b1.HasKey("AirQualityDataId");
 
                             b1.ToTable("AirQualities");
 
                             b1.HasAnnotation("Relational:JsonPropertyName", "hourly");
 
                             b1.WithOwner()
-                                .HasForeignKey("AirQualityId");
+                                .HasForeignKey("AirQualityDataId");
                         });
 
                     b.Navigation("DayCard");
@@ -492,8 +496,8 @@ namespace AppLogic.Migrations
             modelBuilder.Entity("BusinessLogic.Models.Weather.WeatherData", b =>
                 {
                     b.HasOne("BusinessLogic.Models.DayCard", "DayCard")
-                        .WithMany("WeatherData")
-                        .HasForeignKey("DayCardId");
+                        .WithOne("WeatherData")
+                        .HasForeignKey("BusinessLogic.Models.Weather.WeatherData", "DayCardId");
 
                     b.OwnsOne("AppLogic.Models.Weather.WeatherDataHourlyBlock", "HourlyBlock", b1 =>
                         {
@@ -539,6 +543,10 @@ namespace AppLogic.Migrations
                             b1.Property<string>("Temperature2m")
                                 .HasColumnType("nvarchar(max)")
                                 .HasAnnotation("Relational:JsonPropertyName", "temperature_2m");
+
+                            b1.Property<string>("Time")
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "time");
 
                             b1.Property<string>("UvIndex")
                                 .HasColumnType("nvarchar(max)")
@@ -641,7 +649,7 @@ namespace AppLogic.Migrations
                 {
                     b.Navigation("Activities");
 
-                    b.Navigation("AirQualities");
+                    b.Navigation("AirQualityData");
 
                     b.Navigation("CaffeineDrinks");
 

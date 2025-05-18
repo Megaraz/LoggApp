@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AppLogic.Migrations
 {
     /// <inheritdoc />
-    public partial class Init_test : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -199,6 +199,7 @@ namespace AppLogic.Migrations
                     Timezone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TimezoneAbbreviation = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HourlyBlock_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyBlock_Time = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HourlyBlock_Temperature2m = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HourlyBlock_ApparentTemperature = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HourlyBlock_RelativeHumidity2m = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -290,7 +291,9 @@ namespace AppLogic.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_AirQualities_DayCardId",
                 table: "AirQualities",
-                column: "DayCardId");
+                column: "DayCardId",
+                unique: true,
+                filter: "[DayCardId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CaffeineDrinks_DayCardId",
@@ -325,7 +328,9 @@ namespace AppLogic.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_WeatherData_DayCardId",
                 table: "WeatherData",
-                column: "DayCardId");
+                column: "DayCardId",
+                unique: true,
+                filter: "[DayCardId] IS NOT NULL");
         }
 
         /// <inheritdoc />
