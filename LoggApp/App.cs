@@ -1,0 +1,71 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AppLogic.Controllers;
+using AppLogic.Services;
+using DataAccess;
+using Microsoft.EntityFrameworkCore;
+using Presentation.MenuState_Enums;
+
+namespace Presentation
+{
+    public enum MenuState
+    {
+        InitMenu,
+        AllUsers,
+        SpecificUser,
+        CreateNewUser,
+        CreateNewDayCard,
+        AllDayCards,
+        SpecificDayCard,
+        SearchDayCard,
+    };
+    internal class App
+    {
+
+        private LoggAppContext _dbContext;
+        private SessionContext _sessionContext;
+        private View _view;
+        private MenuHandler _menuHandler;
+        private Controller _controller;
+
+        public App(LoggAppContext dbContext)
+        {
+            _dbContext = dbContext;
+            
+        }
+        
+
+        public void Init()
+        {
+
+            _sessionContext = new SessionContext();
+            _controller = new Controller(_dbContext);
+            _menuHandler = new MenuHandler(_controller);
+            _view = new View(_menuHandler);
+
+            _sessionContext.CurrentInitMenuState = InitMainMenuState.Main;
+            _sessionContext.MainHeader = MenuText.Header.InitMenu;
+            _sessionContext.CurrentMenuIndex = 0;
+            _sessionContext.CurrentMainMenu = MenuText.NavOption.s_InitMenu.ToList();
+
+        }
+
+        public async Task Run()
+        {
+            
+            do
+            {
+                _sessionContext = await _view.Start(_sessionContext);
+
+
+
+
+            } while (_sessionContext.CurrentInitMenuState != InitMainMenuState.Exit);
+
+
+        }
+    }
+}

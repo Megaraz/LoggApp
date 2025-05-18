@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AppLogic.Models;
 using AppLogic.Models.Weather.AirQuality;
 using BusinessLogic.Models;
 using BusinessLogic.Models.Activity;
 using BusinessLogic.Models.Intake;
 using BusinessLogic.Models.Weather;
 using Microsoft.EntityFrameworkCore;
+using Activity = BusinessLogic.Models.Activity.Activity;
 
 namespace DataAccess
 {
@@ -24,7 +26,7 @@ namespace DataAccess
         public DbSet<Food> Foods { get; set; }
         public DbSet<Supplement> Supplements { get; set; }
         public DbSet<SupplementIngredient> SupplementIngredients { get; set; }
-        public DbSet<BusinessLogic.Models.Activity.Activity> Activities { get; set; }
+        public DbSet<Activity> Activities { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
 
 

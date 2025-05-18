@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppLogic.DTOs
+namespace AppLogic.Models.DTOs
 {
-    public class AllUserMenuDto
+    public class DTO_AllUser
     {
         public int Id { get; set; }
         public string Username { get; set; }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AppLogic.DTOs;
+using AppLogic.Models.DTOs;
 using BusinessLogic.Models;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
@@ -13,139 +13,190 @@ namespace AppLogic.Repositories
 {
     public class DayCardRepo
     {
-        public static void Create(DayCard newDayCard)
-        {
-            using (var db = new LoggAppContext())
-            {
-                try
-                {
-                    db.DayCards.Add(newDayCard);
-                    db.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    throw new ArgumentException($"Something went wrong, {e.Message}");
 
-                }
+        private readonly LoggAppContext _dbContext;
+
+        public DayCardRepo(LoggAppContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+
+        public async Task<DayCard> Create(DayCard newDayCard)
+        {
+            try
+            {
+                await _dbContext.DayCards.AddAsync(newDayCard);
+                await _dbContext.SaveChangesAsync();
+                return newDayCard;
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException($"Something went wrong, {e.Message}");
+
             }
         }
 
-        public static async Task<SpecificDayCardMenuDto?> ReadSingleAsync(DateOnly date, int userId)
+        //public async Task<DTO_SpecificDayCard?> ReadSingleAsync(DateOnly date, int userId)
+        //{
+        //    using (var db = new LoggAppContext())
+        //    {
+        //        try
+        //        {
+        //            var dayCard = await db.DayCards
+        //                .Include(d => d.WeatherData)
+        //                .Include(d => d.AirQualities)
+        //                .SingleOrDefaultAsync(d => d.Date == date && d.UserId == userId);
+
+        //            if (dayCard == null) return null;
+
+        //            return new DTO_SpecificDayCard
+        //            {
+        //                DayCardId = dayCard.Id,
+        //                UserId = dayCard.UserId,
+        //                Date = dayCard.Date,
+        //                AirQualitySummary = dayCard.AirQualities?
+        //                    .Select(a => new DTO_AllAirQualities
+        //                    {
+        //                        AirQualityId = a.Id,
+        //                        DayCardId = a.DayCardId,
+        //                        MaxAqi = a.HourlyBlock?.AQI?.Max(),
+        //                        MaxBirchPollen = a.HourlyBlock?.BirchPollen?.Max()
+        //                    })
+        //                    .FirstOrDefault(),
+
+        //                WeatherSummary = dayCard.WeatherData?
+        //                .Select(w => new DTO_AllWeatherData
+        //                {
+        //                    WeatherDataId = w.Id,
+        //                    DayCardId = w.DayCardId,
+        //                    MaxTemp = w.HourlyBlock?.Temperature2m?.Max(),
+        //                    MaxPrecipitation = w.HourlyBlock?.Precipitation?.Max()
+        //                })
+        //                .FirstOrDefault()
+
+        //            };
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            throw new ArgumentException($"Something went wrong, {e.Message}");
+
+        //        }
+        //    }
+        //}
+
+        public async Task<DayCard?> ReadSingleAsync(DateOnly date, int userId)
         {
-            using (var db = new LoggAppContext())
+
+            try
             {
-                try
-                {
-                    var dayCard = await db.DayCards
-                        .Include(d => d.WeatherData)
-                        .Include(d => d.AirQualities)
-                        .SingleOrDefaultAsync(d => d.Date == date && d.UserId == userId);
+                return await _dbContext.DayCards
+                    .Include(dc => dc.Activities)
+                    .Include(dc => dc.CaffeineDrinks)
+                    .Include(dc => dc.Supplements)
+                    .Include(dc => dc.WeatherData)
+                    .Include(dc => dc.AirQualities)
+                    .AsSplitQuery()
+                    .SingleOrDefaultAsync(dc => dc.Date == date && dc.UserId == userId);
 
-                    if (dayCard == null) return null;
 
-                    return new SpecificDayCardMenuDto
-                    {
-                        DayCardId = dayCard.Id,
-                        UserId = dayCard.UserId,
-                        Date = dayCard.Date,
-                        AirQualitySummary = dayCard.AirQualities?
-                            .Select(a => new AllAirQualitiesMenuDto
-                            {
-                                AirQualityId = a.Id,
-                                DayCardId = a.DayCardId,
-                                MaxAqi = a.HourlyBlock?.AQI?.Max(),
-                                MaxBirchPollen = a.HourlyBlock?.BirchPollen?.Max()
-                            })
-                            .FirstOrDefault(),
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException($"Something went wrong, {e.Message}");
 
-                        WeatherSummary = dayCard.WeatherData?
-                        .Select(w => new AllWeatherDataMenuDto
-                        {
-                            WeatherDataId = w.Id,
-                            DayCardId = w.DayCardId,
-                            MaxTemp = w.HourlyBlock?.Temperature2m?.Max(),
-                            MaxPrecipitation = w.HourlyBlock?.Precipitation?.Max()
-                        })
-                        .FirstOrDefault()
-
-                    };
-                }
-                catch (Exception e)
-                {
-                    throw new ArgumentException($"Something went wrong, {e.Message}");
-
-                }
             }
         }
-
-        public static async Task<SpecificDayCardMenuDto?> ReadSingleAsync(int id, int userId)
+        public async Task<DayCard?> ReadSingleAsync(int id, int userId)
         {
-            using (var db = new LoggAppContext())
+
+            try
             {
-                try
-                {
-                    var dayCard = await db.DayCards
-                        .Include(d => d.WeatherData)
-                    .Include(d => d.AirQualities)
-                        .SingleOrDefaultAsync(d => d.Id == id && d.UserId == userId);
+                return await _dbContext.DayCards
+                    .Include(dc => dc.Activities)
+                    .Include(dc => dc.CaffeineDrinks)
+                    .Include(dc => dc.Supplements)
+                    .Include(dc => dc.WeatherData)
+                    .Include(dc => dc.AirQualities)
+                    .AsSplitQuery()
+                    .SingleOrDefaultAsync(dc => dc.Id == id && dc.UserId == userId);
 
-                    if (dayCard == null) return null;
 
-                    return new SpecificDayCardMenuDto
-                    {
-                        DayCardId = dayCard.Id,
-                        UserId = dayCard.UserId,
-                        Date = dayCard.Date,
-                        AirQualitySummary = dayCard.AirQualities?
-                            .Select(a => new AllAirQualitiesMenuDto
-                            {
-                                AirQualityId = a.Id,
-                                DayCardId = a.DayCardId,
-                                MaxAqi = a.HourlyBlock?.AQI?.Max(),
-                                MaxBirchPollen = a.HourlyBlock?.BirchPollen?.Max()
-                            })
-                            .FirstOrDefault(),
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException($"Something went wrong, {e.Message}");
 
-                        WeatherSummary = dayCard.WeatherData?
-                            .Select(w => new AllWeatherDataMenuDto
-                            {
-                                WeatherDataId = w.Id,
-                                DayCardId = w.DayCardId,
-                                MaxTemp = w.HourlyBlock?.Temperature2m?.Max(),
-                                MaxPrecipitation = w.HourlyBlock?.Precipitation?.Max()
-                            })
-                            .FirstOrDefault()
-
-                    };
-                }
-                catch (Exception e)
-                {
-                    throw new ArgumentException($"Something went wrong, {e.Message}");
-
-                }
             }
         }
+        //public async Task<DTO_SpecificDayCardMenu?> ReadSingleAsync(int id, int userId)
+        //{
+        //    using (var db = new LoggAppContext())
+        //    {
+        //        try
+        //        {
+        //            var dayCard = await db.DayCards
+        //                .Include(d => d.WeatherData)
+        //            .Include(d => d.AirQualities)
+        //                .SingleOrDefaultAsync(d => d.Id == id && d.UserId == userId);
 
-        internal static async Task<List<AllDayCardsMenuDto>> ReadAllAsync(int userId)
+        //            if (dayCard == null) return null;
+
+        //            return new DTO_SpecificDayCardMenu
+        //            {
+        //                DayCardId = dayCard.Id,
+        //                UserId = dayCard.UserId,
+        //                Date = dayCard.Date,
+        //                AirQualitySummary = dayCard.AirQualities?
+        //                    .Select(a => new DTO_AllAirQualitiesMenu
+        //                    {
+        //                        AirQualityId = a.Id,
+        //                        DayCardId = a.DayCardId,
+        //                        MaxAqi = a.HourlyBlock?.AQI?.Max(),
+        //                        MaxBirchPollen = a.HourlyBlock?.BirchPollen?.Max()
+        //                    })
+        //                    .FirstOrDefault(),
+
+        //                WeatherSummary = dayCard.WeatherData?
+        //                    .Select(w => new DTO_AllWeatherDataMenu
+        //                    {
+        //                        WeatherDataId = w.Id,
+        //                        DayCardId = w.DayCardId,
+        //                        MaxTemp = w.HourlyBlock?.Temperature2m?.Max(),
+        //                        MaxPrecipitation = w.HourlyBlock?.Precipitation?.Max()
+        //                    })
+        //                    .FirstOrDefault()
+
+        //            };
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            throw new ArgumentException($"Something went wrong, {e.Message}");
+
+        //        }
+        //    }
+        //}
+
+        public async Task<List<DayCard>?> ReadAllAsync(int userId)
         {
-            using (var db = new LoggAppContext())
-            {
-                try
-                {
-                    return await db.DayCards
-                        .Where(x => x.UserId == userId)
-                        .Select(x => new AllDayCardsMenuDto
-                        {
-                            DayCardId = x.Id,
-                            Date = x.Date
-                        })
-                        .ToListAsync();
 
-                }
-                catch (Exception e)
-                {
-                    throw new ArgumentException($"Something went wrong, {e.Message}");
-                }
+            try
+            {
+                return await _dbContext.DayCards
+                    .Include(dc => dc.Activities)
+                    .Include(dc => dc.CaffeineDrinks)
+                    .Include(dc => dc.Supplements)
+                    .Include(dc => dc.WeatherData)
+                    .Include(dc => dc.AirQualities)
+                    .AsSplitQuery()
+                    .Where(dc => dc.UserId == userId)
+                    .ToListAsync();
+
+
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException($"Something went wrong, {e.Message}");
             }
         }
     }

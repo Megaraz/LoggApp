@@ -11,7 +11,7 @@ namespace BusinessLogic.Models
     {
 
         //[JsonPropertyName("id")]
-        public int? Id { get; set; }
+        //public int? Id { get; set; }
 
 
         [JsonPropertyName("name")]

@@ -4,157 +4,169 @@ using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
-using AppLogic.DTOs;
 using AppLogic.Models;
+using AppLogic.Models.DTOs;
 using AppLogic.Services;
+using BusinessLogic.Models;
+using DataAccess;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Presentation
 {
-    internal class View
+    public class View
     {
-        public async Task Start()
+        public MenuHandler MenuHandler { get; }
+
+        public View(MenuHandler menuHandler)
         {
+            MenuHandler = menuHandler;
+        }
+
+
+
+
+        public async Task<TContext> Start<TContext>(TContext sessionContext) where TContext : SessionContext
+        {
+            sessionContext = await MenuHandler.HandleMainMenuState(sessionContext);
+            return sessionContext;
+        }
+       
+
+
+        public static UserInputModel Input_User()
+        {
+            var inputModel = new UserInputModel()
+            {
+                Username = GetValidUserInput(MenuText.Prompt.CreateUser, MenuText.Error.InvalidUserNameInput),
+                CityName = GetValidUserInput(MenuText.Prompt.CreateUserCity, MenuText.Error.InvalidUserCityInput)
+            };
+            
+
+            return inputModel;
+        }
+
+
+        public static DayCardInputModel Input_DayCard<TContext>(TContext sessionContext) where TContext : SessionContext
+        {
+            var inputModel = new DayCardInputModel()
+            {
+                UserId = sessionContext.DTO_CurrentUser!.Id,
+                Date = DateOnly.Parse(GetValidUserInput(MenuText.Prompt.CreateDayCard, MenuText.Error.InvalidDayCardInput)),
+                Lat = sessionContext.DTO_CurrentUser.Lat,
+                Lon = sessionContext.DTO_CurrentUser.Lon
+            };
+            return inputModel;
+        }
+        
+        public static ConsoleKey InputToMenuIndex(ref int currentMenuIndex)
+        {
+
+            var keyPress = Console.ReadKey(true).Key;
+            switch (keyPress)
+            {
+                case ConsoleKey.DownArrow:
+                    ++currentMenuIndex;
+                    break;
+                case ConsoleKey.UpArrow:
+                    --currentMenuIndex;
+                    break;
+                case ConsoleKey.LeftArrow:
+                    --currentMenuIndex;
+                    break;
+                case ConsoleKey.RightArrow:
+                    ++currentMenuIndex;
+                    break;
+                case ConsoleKey.Escape:
+                    break;
+                case ConsoleKey.Enter:
+                    break;
+                default: break;
+            }
+            return keyPress;
+        }
+
+
+        public static string GetValidUserInput(string prompt, string? errorMessage = null)
+        {
+            Console.Clear();
+            if (!prompt.IsNullOrEmpty())
+            {
+                Console.WriteLine(prompt);
+
+            }
+            string userInput;
+            bool validInput;
+
             do
             {
+                userInput = Console.ReadLine()!;
+                validInput = !string.IsNullOrWhiteSpace(userInput) && !string.IsNullOrEmpty(userInput);
 
-                switch (Menu.CurrentMenuState)
+                if (!validInput)
                 {
-                    case MenuState.InitMenu:
-                        await Menu.InitMenuHandler();
-                        break;
-                    case MenuState.SpecificUser:
-                        //Header = $"USER ID\t\tUSERNAME\tCITY\n\n{CurrentUserMenuDto!.ToString()}\n\n\nDAYCARD ID\tDATE";
-                        var specUserChoice = Menu.BaseMenuHandler(MenuData.s_SpecificUserMenu);
-                        switch (specUserChoice)
-                        {
-                            case "[CREATE NEW DAYCARD]":
-                                Menu.CurrentMenuState = MenuState.CreateNewDayCard;
-                                break;
-                            case "[SHOW ALL DAYCARDS]":
-                                Menu.CurrentMenuState = MenuState.AllDayCards;
-                                break;
-                            case "[SEARCH DAYCARD]":
-                                Menu.CurrentMenuState = MenuState.SearchDayCard;
-                                break;
-                        }
-                        break;
-
-                    case MenuState.AllDayCards:
-                        var dayCardChoice = Menu.BaseMenuHandler(MenuData.CurrentUserMenu!.AllDayCardsMenu!);
-                        await ReadDayCardSingleAsync(dayCardChoice.DayCardId, MenuData.CurrentUserMenu.Id);
-                        Menu.CurrentMenuState = MenuState.SpecificDayCard;
-                        break;
-
-                    case MenuState.AllUsers:
-                        if (MenuData.AllUsersMenu == null || MenuData.AllUsersMenu.Count == 0)
-                        {
-                            MenuData.PageHeader = "NO USERS FOUND";
-                            Menu.CurrentMenuState = MenuState.InitMenu;
-                            goto case MenuState.InitMenu;
-                        }
-                        else
-                            MenuData.PageHeader = MenuData.s_AllUsersMenuHeader;
-
-                        var choice = Menu.BaseMenuHandler(MenuData.AllUsersMenu);
-                        await ReadUserSingleAsync(choice.Id);
-                        Menu.CurrentMenuState = MenuState.SpecificUser;
-                        break;
-
-                    case MenuState.CreateNewDayCard:
-                        MenuData.PageHeader = MenuData.s_CreateDayCardHeader;
-                        await CreateNewDayCardAsync();
-                        Menu.CurrentMenuState = MenuState.SpecificDayCard;
-                        break;
-
-                    case MenuState.SpecificDayCard:
-                        MenuData.PageHeader = $"CURRENT DAYCARD:\n";
-                        Console.WriteLine(MenuData.CurrentDayCardMenu!.WeatherSummary!.ToString());
-                        Console.WriteLine(MenuData.CurrentDayCardMenu!.AirQualitySummary!.ToString());
-                        Console.ReadLine();
-
-                        break;
-
+                    Console.Clear();
+                    if (!errorMessage.IsNullOrEmpty())
+                    {
+                        Console.WriteLine(errorMessage);
+                    }
                 }
 
+            }
+            while (!validInput);
+
+            return userInput;
+        }
+
+
+
+
+        public static void DisplayMenu(List<string> currentMenu, ref int CurrentMenuIndex, string mainHeader, string? subHeader = null, string? errorMessage = null)
+        {
+            Console.Clear();
+            Console.WriteLine(mainHeader);
+            if (!subHeader.IsNullOrEmpty())
+            {
+                Console.WriteLine(subHeader);
 
             }
-            while (true);
-
-        }
-
-        public static async Task CreateNewDayCardAsync()
-        {
-            var input = new DayCardInputModel()
+            if (!errorMessage.IsNullOrEmpty())
             {
-                UserId = MenuData.CurrentUserMenu!.Id,
-                Date = DateOnly.Parse(ViewInput.GetValidUserInput("Date")),
-                Lat = MenuData.CurrentUserMenu!.Lat,
-                Lon = MenuData.CurrentUserMenu!.Lon
-            };
+                Console.WriteLine(errorMessage);
 
-            await DayCardService.CreateNewDayCardAsync(input);
-
-            await ReadDayCardSingleAsync((DateOnly)input.Date, MenuData.CurrentUserMenu.Id);
-        }
-
-        public static async Task CreateNewUserAsync()
-        {
-
-            var input = new UserInputModel()
-            {
-                Username = ViewInput.GetValidUserInput("Username"),
-                CityName = ViewInput.GetValidUserInput("City")
-            };
-
-            var geoResultMenu = await UserService.GetLocationsMenu(input.CityName);
-            input.GeoResult = Menu.BaseMenuHandler(geoResultMenu.Results);
-            MenuData.CurrentUserMenu = await UserService.RegisterNewUserAsync(input);
-        }
-
-        public static async Task<List<AllUserMenuDto>>? ReadAllUsersAsync()
-        {
-
-            var users = await UserService.ReadAllUsersAsync();
-
-
-            if (users != null && users.Count > 0)
-            {
-                return users;
-            }
-            else
-            {
-                return null;
             }
 
+            if (currentMenu != null && currentMenu.Count > 0)
+            {
+                if (CurrentMenuIndex > currentMenu.Count - 1)
+                {
+                    CurrentMenuIndex = 0;
+                }
+                if (CurrentMenuIndex < 0)
+                {
+                    CurrentMenuIndex = currentMenu.Count - 1;
+                }
 
+                for (int i = 0; i < currentMenu.Count; i++)
+                {
+
+                    var item = currentMenu[i];
+                    if (CurrentMenuIndex == i)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+
+                        Console.WriteLine(item);
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.WriteLine(item);
+                    }
+                }
+
+            }
         }
 
-        public static async Task<List<AllDayCardsMenuDto>>? ReadAllDayCardsAsyc(int userId)
-        {
-            return await DayCardService.ReadAllDayCardsAsync(userId);
-        }
-
-        public static async Task ReadDayCardSingleAsync(int id, int userId)
-        {
-            MenuData.CurrentDayCardMenu = await DayCardService.ReadSingleDayCardAsync(id, userId)!;
-        }
-        public static async Task ReadDayCardSingleAsync(DateOnly date, int userId)
-        {
-            MenuData.CurrentDayCardMenu = await DayCardService.ReadSingleDayCardAsync(date, userId)!;
-        }
-
-        public static async Task ReadUserSingleAsync(int id)
-        {
-            MenuData.CurrentUserMenu = await UserService.ReadSingleUserAsync(id)!;
-
-        }
-
-        public static async Task ReadUserSingleAsync(string username)
-        {
-
-            MenuData.CurrentUserMenu = await UserService.ReadSingleUserAsync(username)!;
-
-        }
     }
 }
+    
     

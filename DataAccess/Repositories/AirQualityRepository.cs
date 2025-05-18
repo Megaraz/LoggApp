@@ -10,26 +10,15 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AppLogic.Repositories
 {
-    internal class AirQualityRepository
+    public static class AirQualityRepository
     {
-        private readonly string _baseUrl = "https://air-quality-api.open-meteo.com/v1/air-quality";
-        private readonly string _hourlyParams = "alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,ragweed_pollen,uv_index,european_aqi,pm2_5,ozone,carbon_monoxide,nitrogen_dioxide,dust";
+        private static readonly string _baseUrl = "https://air-quality-api.open-meteo.com/v1/air-quality";
+        private static readonly string _hourlyParams = "alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,ragweed_pollen,uv_index,european_aqi,pm2_5,ozone,carbon_monoxide,nitrogen_dioxide,dust";
 
-        public DayCard? DayCard { get; set; }
-
-
-        public AirQualityRepository(DayCard dayCard)
-        {
-            DayCard = dayCard;
-        }
-
-        public AirQualityRepository()
-        {
-            
-        }
+        public static DayCard? DayCard { get; set; }
 
 
-        public async Task<string> GetAirQualityDataAsync(string lat, string lon, string date)
+        public static async Task<string> GetAirQualityDataAsync(string lat, string lon, string date)
         {
             HttpClient client = new HttpClient();
 

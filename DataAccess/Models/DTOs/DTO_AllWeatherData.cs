@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppLogic.DTOs
+namespace AppLogic.Models.DTOs
 {
-    public class AllWeatherDataMenuDto
+    public class DTO_AllWeatherData
     {
         public int WeatherDataId { get; set; }
         public int? DayCardId { get; set; }

@@ -16,7 +16,12 @@ namespace AppLogic.Models.Weather.AirQuality
         public virtual DayCard? DayCard { get; set; }
         public TimeOnly? TimeOf { get; set; }
 
+        // List of single airquality measurements
+        List<HourlyAirQualityEntry>? HourlyAirQualityEntries { get; set; }
 
+
+
+        // These members are fetched and mapped from Open-Meteo API
         [JsonPropertyName("latitude")]
         public double? Lat { get; set; }
 
@@ -28,6 +33,9 @@ namespace AppLogic.Models.Weather.AirQuality
 
         [JsonPropertyName("hourly")]
         public AirQualityHourlyBlock? HourlyBlock { get; set; }
+
+
+
 
 
     }

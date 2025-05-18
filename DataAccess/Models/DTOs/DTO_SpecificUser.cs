@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppLogic.DTOs
+namespace AppLogic.Models.DTOs
 {
-    public class SpecificUserMenuDto
+    public class DTO_SpecificUser
     {
         public int Id { get; set; }
         public string? Username { get; set; }
@@ -14,7 +14,9 @@ namespace AppLogic.DTOs
         public double? Lat { get; set; }
         public double? Lon { get; set; }
 
-        public List<AllDayCardsMenuDto>? AllDayCardsMenu { get; set; }
+        public int? DayCardCount { get; set; }
+
+        public List<DTO_AllDayCard>? DTO_AllDayCards { get; set; }
 
 
         public override string ToString()

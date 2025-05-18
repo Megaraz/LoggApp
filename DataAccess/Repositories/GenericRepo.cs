@@ -3,154 +3,93 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AppLogic.Interfaces;
 using BusinessLogic.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories
 {
-    public static class GenericRepo<T> where T : class
+    public class GenericRepo<T> : IGenericRepo<T> where T : class
     {
+        private readonly LoggAppContext _dbContext;
 
-        public static void Add(T entity)
+        public GenericRepo(LoggAppContext dbContext)
         {
-            using (var db = new LoggAppContext())
+            _dbContext = dbContext;
+        }
+
+        public async Task<T> CreateAsync(T entity)
+        {
+            try
             {
-                try
-                {
-                    db.Set<T>().Add(entity);
-                    db.SaveChanges();
+                await _dbContext.Set<T>().AddAsync(entity);
+                await _dbContext.SaveChangesAsync();
 
-                }
-                catch (Exception e)
-                {
-                    throw new ArgumentException($"Something went wrong, {e.Message}");
+                return entity;
 
-                }
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException($"Something went wrong, {e.Message}");
 
             }
         }
 
-        public static User? ReadUser_Single(string username)
+        public async Task<T?> GetByIdAsync(int id)
         {
-            using (var db = new LoggAppContext())
+            try
             {
-                try
-                {
-                    //var result = db.Users.SingleOrDefault(x => x.Username == username)!;
+                return await _dbContext.Set<T>().FindAsync(id);
 
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException($"Something went wrong, {e.Message}");
 
-
-                    return db.Users.SingleOrDefault(x => x.Username == username)!;
-                }
-                catch (Exception e)
-                {
-                    throw new ArgumentException($"Something went wrong, {e.Message}");
-
-                }
             }
         }
-
-        public static DayCard ReadDayCard_Single(int id)
+        
+        public async Task<List<T>?> GetAllAsync()
         {
-            using (var db = new LoggAppContext())
-            {
-                try
-                {
-                    return db.DayCards.SingleOrDefault(x => x.Id == id);
-                }
-                catch (Exception e)
-                {
-                    throw new ArgumentException($"Something went wrong, {e.Message}");
 
-                }
+            try
+            {
+                return await _dbContext.Set<T>().ToListAsync();
             }
-        }
-
-        public static DayCard ReadDayCard_Single(DateOnly date)
-        {
-            using (var db = new LoggAppContext())
+            catch (Exception e)
             {
-                try
-                {
-                    return db.DayCards.SingleOrDefault(x => x.Date == date);
-                }
-                catch (Exception e)
-                {
-                    throw new ArgumentException($"Something went wrong, {e.Message}");
+                throw new ArgumentException($"Something went wrong, {e.Message}");
 
-                }
-            }
-        }
-        public static List<T> ReadAll()
-        {
-            using (var db = new LoggAppContext())
-            {
-                try
-                {
-                    return db.Set<T>().ToList();
-                }
-                catch (Exception e)
-                {
-                    throw new ArgumentException($"Something went wrong, {e.Message}");
-
-                }
-            }
-        }
-
-        //public static List<DayCard> ReadAllDayCards()
-        //{
-        //    using (var db = new LoggAppContext())
-        //    {
-        //        try
-        //        {
-        //            return db.DayCards.Include(j => j.Supplements).Include(h => h.Activities).Include(c => c.CaffeineDrinks).ToList();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            throw new ArgumentException($"Something went wrong, {e.Message}");
-
-        //        }
-        //    }
-
-        //}
-
-        public static void UpdateDayCard(int id, DateOnly date)
-        {
-
-            using (var db = new LoggAppContext())
-            {
-                try
-                {
-                    //DayCard dayCardToUpdate = ReadDayCard_Single(id);
-
-                    DayCard toChange = db.DayCards.SingleOrDefault(x => x.Id == id);
-                    toChange.Date = date;
-                    db.SaveChanges();
-
-                }
-                catch (Exception e)
-                {
-                    throw new ArgumentException($"Something went wrong, {e.Message}");
-
-                }
             }
 
         }
 
-        public static void DeleteDayCard(int id)
+        public async Task<T> UpdateAsync(T entity)
         {
-            using (var db = new LoggAppContext())
-            {
-                try
-                {
-                    db.DayCards.Remove(ReadDayCard_Single(id));
-                    db.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    throw new ArgumentException($"Something went wrong, {e.Message}");
+            _dbContext.Set<T>().Update(entity);
+            await _dbContext.SaveChangesAsync();
+            return entity;
+        }
 
-                }
+        public async Task<bool> DeleteAsync(int id)
+        {
+
+            try
+            {
+                var dbSet = _dbContext.Set<T>();
+
+                var entity = await dbSet.FindAsync(id);
+                if (entity == null) return false;
+
+                dbSet.Remove(entity!);
+                await _dbContext.SaveChangesAsync();
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException($"Something went wrong, {e.Message}");
+
             }
         }
 

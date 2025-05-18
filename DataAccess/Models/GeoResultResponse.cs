@@ -8,7 +8,7 @@ using BusinessLogic.Models;
 
 namespace AppLogic.Models
 {
-    public class GeoResultsResponse
+    public class GeoResultResponse
     {
         [JsonPropertyName("results")]
         public List<GeoResult> Results { get; set; } = new();

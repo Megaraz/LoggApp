@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Models.Weather.AirQuality;
 
-namespace AppLogic.DTOs
+namespace AppLogic.Models.DTOs
 {
-    public class AllAirQualitiesMenuDto
+    public class DTO_AllAirQualities
     {
         public int AirQualityId { get; set; }
         public int? DayCardId { get; set; }
