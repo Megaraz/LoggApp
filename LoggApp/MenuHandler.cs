@@ -1,6 +1,8 @@
-﻿using AppLogic.Controllers;
+﻿using System.Globalization;
+using AppLogic.Controllers;
 using AppLogic.Models;
 using AppLogic.Models.DTOs;
+using AppLogic.Services;
 using Presentation.MenuState_Enums;
 
 namespace Presentation
@@ -99,6 +101,10 @@ namespace Presentation
                     sessionContext = await AllUsersMenuHandler(sessionContext);
                     break;
 
+                case MainMenuState.TodaysWeather:
+                    sessionContext = await GetTodaysWeather(sessionContext);
+                    break;
+
                 case MainMenuState.Exit:
                     break;
 
@@ -126,10 +132,37 @@ namespace Presentation
                     sessionContext = await CreateNewUser(sessionContext);
                     break;
 
+                case MenuText.NavOption.GetTodaysWeather:
+                    sessionContext = await GetTodaysWeather(sessionContext);
+                    break;
+
                 case MenuText.NavOption.Exit:
                     sessionContext.MainMenuState = MainMenuState.Exit;
                     break;
             }
+
+            return sessionContext;
+        }
+
+        private async Task<TContext> GetTodaysWeather<TContext>(TContext sessionContext) where TContext : SessionContext
+        {
+            // Get basic user info/input
+            string location = View.Input_Location();
+            // Get list of locations that match users input location
+            GeoResultResponse geoResultResponse = await _controller.LocationGeoResultList(location);
+            // User chooses a Location from the list of locations
+            GeoResult geoResult = GetMenuValue(geoResultResponse.Results, sessionContext);
+            string lat = geoResult.Lat?.ToString(CultureInfo.InvariantCulture)!;
+            string lon = geoResult.Lon?.ToString(CultureInfo.InvariantCulture)!;
+            string date = DateTime.Today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)!;
+            DTO_AllWeatherData todayWeather = WeatherService.ConvertToDTO(await WeatherService.GetWeatherDataAsync(lat, lon, date));
+
+            Console.WriteLine(todayWeather.ToString());
+
+            Console.ReadLine();
+
+
+            sessionContext.MainMenuState = MainMenuState.Main;
 
             return sessionContext;
         }

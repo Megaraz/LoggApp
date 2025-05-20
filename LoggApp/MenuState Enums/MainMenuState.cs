@@ -5,6 +5,7 @@
         Main,
         SpecificUser,
         AllUsers,
+        TodaysWeather,
         Exit,
         None
     };

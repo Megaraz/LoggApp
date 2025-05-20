@@ -15,6 +15,9 @@
             public const string AllDayCards = "DAYCARD ID\tDATE\t\tENTRIES";
 
             public const string SpecificUser = "USER ID\t\tUSERNAME\tCITY\n";
+
+
+            public const string WeatherDetails = "TIME\tTEMP\tFEELSLIKE\tHumidity\tPrecip\tRain\tCloud\tUV\tWind\tPressure";
         }
 
         public static class Prompt
@@ -46,7 +49,7 @@
         {
             public const string Login = "[LOG IN]";
             public const string GetAllUsers = "[GET ALL USERS]";
-
+            public const string GetTodaysWeather = "[GET WEATHER FOR TODAY]";
             public const string CreateNewUser = "[CREATE NEW USER]";
             public const string Exit = "[EXIT]";
 
@@ -68,7 +71,7 @@
             public const string ComputerActivity = "[COMPUTER ACTIVITY]";
 
             // STATIC MENU OPTIONS
-            public static string[] s_InitMenu = [Login, GetAllUsers, CreateNewUser, Exit];
+            public static string[] s_InitMenu = [Login, GetAllUsers, CreateNewUser, GetTodaysWeather, Exit];
             public static string[] s_AllUserMenu = [Login, CreateNewUser];
             public static string[] s_SpecificUserMenu = [ShowAllDayCards, CreateNewDayCard, SearchDayCard];
             public static string[] s_SpecificDayCardMenu = [Weather, AirQuality, Pollen, Supplements, CaffeineDrinks, Exercise, ComputerActivity, Sleep];

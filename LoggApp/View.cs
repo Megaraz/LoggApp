@@ -38,7 +38,10 @@ namespace Presentation
             return sessionContext;
         }
        
-
+        public static string Input_Location()
+        {
+            return GetValidUserInput(MenuText.Prompt.CreateUserCity, MenuText.Error.InvalidUserCityInput);
+        }
 
         public static UserInputModel Input_User()
         {
@@ -130,7 +133,7 @@ namespace Presentation
         public static void DisplayMenu(List<string> currentMenu, ref int CurrentMenuIndex, string mainHeader, string? subHeader = null, string? errorMessage = null)
         {
             Console.Clear();
-            Console.WriteLine(mainHeader);
+            Console.WriteLine(mainHeader + Environment.NewLine);
             if (!subHeader.IsNullOrEmpty())
             {
                 Console.WriteLine(subHeader);
@@ -157,6 +160,12 @@ namespace Presentation
                 {
 
                     var item = currentMenu[i];
+
+                    if (item == MenuText.NavOption.Exit || item == MenuText.NavOption.GetTodaysWeather)
+                    {
+                        item = "\n" + item;
+                    }
+
                     if (CurrentMenuIndex == i)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;

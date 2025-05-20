@@ -21,19 +21,20 @@ namespace AppLogic.Models.Weather
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append($"Time: {Time}");
+            
+            sb.Append($"0{Time}:00\t");
 
-            if (Temperature2m.Value.HasValue) sb.Append($", Temp: {Temperature2m.Value:F1}°C");
-            if (ApparentTemperature.Value.HasValue) sb.Append($", FeelsLike: {ApparentTemperature.Value:F1}°C");
-            if (RelativeHumidity2m.Value.HasValue) sb.Append($", RH: {RelativeHumidity2m.Value:F1}%");
-            if (DewPoint2m.Value.HasValue) sb.Append($", DewPt: {DewPoint2m.Value:F1}°C");
-            if (Precipitation.Value.HasValue) sb.Append($", Precip: {Precipitation.Value:F1} mm");
-            if (Rain.Value.HasValue) sb.Append($", Rain: {Rain.Value:F1} mm");
-            if (CloudCover.Value.HasValue) sb.Append($", Cloud: {CloudCover.Value:F1}%");
-            if (UvIndex.Value.HasValue) sb.Append($", UV: {UvIndex.Value:F1}");
-            if (WindSpeed10m.Value.HasValue) sb.Append($", Wind: {WindSpeed10m.Value:F1} m/s");
-            if (PressureMsl.Value.HasValue) sb.Append($", Pressure: {PressureMsl.Value:F1} hPa");
-            if (IsDay.Value.HasValue) sb.Append($", IsDay: {(IsDay.Value > 0.5 ? "Yes" : "No")}");
+            if (Temperature2m.Value.HasValue) sb.Append($"{Temperature2m.Value:F1}\t");
+            if (ApparentTemperature.Value.HasValue) sb.Append($"{ApparentTemperature.Value:F1}\t");
+            if (RelativeHumidity2m.Value.HasValue) sb.Append($"\t{RelativeHumidity2m.Value:F1}\t\t");
+            //if (DewPoint2m.Value.HasValue) sb.Append($", DewPt: {DewPoint2m.Value:F1}°C");
+            if (Precipitation.Value.HasValue) sb.Append($"{Precipitation.Value:F1}\t");
+            if (Rain.Value.HasValue) sb.Append($"{Rain.Value:F1}\t");
+            if (CloudCover.Value.HasValue) sb.Append($"{CloudCover.Value:F1}\t");
+            if (UvIndex.Value.HasValue) sb.Append($"{UvIndex.Value:F1}\t");
+            if (WindSpeed10m.Value.HasValue) sb.Append($"{WindSpeed10m.Value:F1}\t");
+            if (PressureMsl.Value.HasValue) sb.Append($"{PressureMsl.Value:F1}\t");
+            //if (IsDay.Value.HasValue) sb.Append($", IsDay: {(IsDay.Value > 0.5 ? "Yes" : "No")}");
 
             return sb.ToString();
         }

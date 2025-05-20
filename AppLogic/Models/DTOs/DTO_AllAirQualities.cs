@@ -9,18 +9,21 @@ namespace AppLogic.Models.DTOs
         public int? DayCardId { get; set; }
 
         public List<HourlyAirQualityData>? HourlyAirQualityData { get; set; } = new List<HourlyAirQualityData>();
+        public List<HourlyPollenData> HourlyPollenData { get; set; } = new List<HourlyPollenData>();
+
+
 
 
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append($"AirQualityId: {AirQualityId}");
-            if (DayCardId.HasValue) sb.Append($", DayCardId: {DayCardId.Value}");
+            //sb.Append($"AirQualityId: {AirQualityId}");
+            //if (DayCardId.HasValue) sb.Append($", DayCardId: {DayCardId.Value}");
 
             if (HourlyAirQualityData != null && HourlyAirQualityData.Any())
             {
                 sb.AppendLine();
-                sb.AppendLine("Hourly readings:");
+                //sb.AppendLine("Hourly readings:");
                 foreach (var hour in HourlyAirQualityData)
                 {
                     sb.AppendLine($"{hour}");

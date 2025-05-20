@@ -19,24 +19,33 @@ namespace AppLogic.Models.DTOs
 
             if (AirQualitySummary?.HourlyAirQualityData != null && AirQualitySummary.HourlyAirQualityData.Count > 0)
             {
-                var avgBirch = AirQualitySummary.HourlyAirQualityData.Average(d => d.BirchPollen.Value ?? 0);
+                
                 var avgAQI = AirQualitySummary.HourlyAirQualityData.Average(d => d.AQI.Value ?? 0);
 
-                string birchUnit = AirQualitySummary.HourlyAirQualityData
-                    .Select(x => x.BirchPollen.Unit)
-                    .FirstOrDefault();
+                
                 string AQIUnit = AirQualitySummary.HourlyAirQualityData
                     .Select(x => x.AQI.Unit)
-                    .FirstOrDefault();
+                    .FirstOrDefault()!;
 
 
 
-                sb.AppendLine($"\t\tAvg Birch Pollen: {avgBirch:F1} {birchUnit}");
+                
                 sb.AppendLine($"\t\tAvg AQI: {avgAQI:F1} {AQIUnit}");
             }
             else
             {
                 sb.AppendLine("  [No air quality data]");
+            }
+
+            if (AirQualitySummary?.HourlyPollenData != null && AirQualitySummary.HourlyPollenData.Count > 0)
+            {
+                var avgBirch = AirQualitySummary.HourlyPollenData.Average(d => d.BirchPollen.Value ?? 0);
+
+                string birchUnit = AirQualitySummary.HourlyPollenData
+                    .Select(x => x.BirchPollen.Unit)
+                    .FirstOrDefault()!;
+
+                sb.AppendLine($"\t\tAvg Birch Pollen: {avgBirch:F1} {birchUnit}");
             }
 
             if (WeatherSummary?.HourlyWeatherData != null && WeatherSummary.HourlyWeatherData.Any())
@@ -63,8 +72,8 @@ namespace AppLogic.Models.DTOs
                         .Select(h => h.WindSpeed10m.Unit)
                         .FirstOrDefault();
 
-                    sb.AppendLine($"\t\tMorning Avg Temp: {avgTemp:F1}°{tempUnit}");
-                    sb.AppendLine($"\t\tMorning Feels Like: {avgFeels:F1}°{feelTempUnit}");
+                    sb.AppendLine($"\t\tMorning Avg Temp: {avgTemp:F1} {tempUnit}");
+                    sb.AppendLine($"\t\tMorning Feels Like: {avgFeels:F1} {feelTempUnit}");
                     sb.AppendLine($"\t\tMax Wind Speed (6–9): {maxWind:F1} {windUnit}");
                 }
                 else

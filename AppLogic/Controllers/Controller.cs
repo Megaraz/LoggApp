@@ -22,6 +22,12 @@ namespace AppLogic.Controllers
 
         }
 
+        public async Task<GeoResultResponse> LocationGeoResultList(string cityName)
+        {
+            return await _userService.GetGeoResultAsync(cityName);
+
+        }
+
         public async Task<GeoResultResponse> UserGeoResultList(UserInputModel input)
         {
             return await _userService.GetGeoResultAsync(input.CityName);

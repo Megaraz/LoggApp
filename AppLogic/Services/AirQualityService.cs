@@ -29,31 +29,7 @@ namespace AppLogic.Services
                     .Select((time, i) => new HourlyAirQualityData()
                     {
                         Time = time.Hour,
-                        BirchPollen = new Measurement<double?>
-                        {
-                            Value = block.BirchPollen.ElementAtOrDefault(i),
-                            Unit = units.BirchPollen
-                        },
-                        AlderPollen = new Measurement<double?>
-                        {
-                            Value = block.AlderPollen.ElementAtOrDefault(i),
-                            Unit = units.AlderPollen
-                        },
-                        GrassPollen = new Measurement<double?>
-                        {
-                            Value = block.GrassPollen.ElementAtOrDefault(i),
-                            Unit = units.GrassPollen
-                        },
-                        MugwortPollen = new Measurement<double?>
-                        {
-                            Value = block.MugwortPollen.ElementAtOrDefault(i),
-                            Unit = units.MugwortPollen
-                        },
-                        RagweedPollen = new Measurement<double?>
-                        {
-                            Value = block.RagweedPollen.ElementAtOrDefault(i),
-                            Unit = units.RagweedPollen
-                        },
+
                         UVI = new Measurement<double?>
                         {
                             Value = block.UVI.ElementAtOrDefault(i),
@@ -91,7 +67,41 @@ namespace AppLogic.Services
                         }
 
                     }).
-                    ToList()
+                    ToList(),
+
+                HourlyPollenData = block.Time
+                .Select((time, i) => new HourlyPollenData()
+                {
+                    Time = time.Hour,
+
+                    BirchPollen = new Measurement<double?>
+                    {
+                        Value = block.BirchPollen.ElementAtOrDefault(i),
+                        Unit = units.BirchPollen
+                    },
+                    AlderPollen = new Measurement<double?>
+                    {
+                        Value = block.AlderPollen.ElementAtOrDefault(i),
+                        Unit = units.AlderPollen
+                    },
+                    GrassPollen = new Measurement<double?>
+                    {
+                        Value = block.GrassPollen.ElementAtOrDefault(i),
+                        Unit = units.GrassPollen
+                    },
+                    MugwortPollen = new Measurement<double?>
+                    {
+                        Value = block.MugwortPollen.ElementAtOrDefault(i),
+                        Unit = units.MugwortPollen
+                    },
+                    RagweedPollen = new Measurement<double?>
+                    {
+                        Value = block.RagweedPollen.ElementAtOrDefault(i),
+                        Unit = units.RagweedPollen
+                    }
+                }).ToList()
+
+
 
             };
 
