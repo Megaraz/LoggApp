@@ -1,7 +1,6 @@
 ﻿using AppLogic.Models;
 using AppLogic.Models.DTOs;
 using AppLogic.Services;
-using DataAccess;
 
 namespace AppLogic.Controllers
 {

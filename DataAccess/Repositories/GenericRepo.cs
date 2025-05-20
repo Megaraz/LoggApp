@@ -1,7 +1,8 @@
-﻿using AppLogic.Interfaces;
+﻿using AppLogic;
+using AppLogic.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.Repositories
+namespace AppLogic.Repositories
 {
     public class GenericRepo<T> : IGenericRepo<T> where T : class
     {

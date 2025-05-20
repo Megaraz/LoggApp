@@ -1,5 +1,4 @@
 ﻿using AppLogic.Models;
-using DataAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace AppLogic.Repositories

@@ -1,4 +1,4 @@
-﻿namespace DataAccess.Repositories
+﻿namespace AppLogic.Repositories
 {
     public static class WeatherRepo
     {

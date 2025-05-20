@@ -1,6 +1,5 @@
 ﻿using DataAccess;
-using Presentation;
-namespace LoggApp
+namespace Presentation
 
 {
     internal class Program

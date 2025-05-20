@@ -1,8 +1,7 @@
 ﻿using System.Text.Json;
 using AppLogic.Models;
 using AppLogic.Models.DTOs;
-using DataAccess;
-using DataAccess.Repositories;
+using AppLogic.Repositories;
 
 namespace AppLogic.Services
 {

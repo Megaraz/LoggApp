@@ -1,7 +1,8 @@
-﻿using AppLogic.Models;
+﻿using AppLogic;
+using AppLogic.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.Repositories
+namespace AppLogic.Repositories
 {
     public class UserRepo : GenericRepo<User>
     {

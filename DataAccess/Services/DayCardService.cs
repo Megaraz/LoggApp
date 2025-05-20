@@ -2,7 +2,6 @@
 using AppLogic.Models;
 using AppLogic.Models.DTOs;
 using AppLogic.Repositories;
-using DataAccess;
 
 
 namespace AppLogic.Services

@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using AppLogic.Models.DTOs;
 using AppLogic.Models.Weather;
-using DataAccess.Repositories;
+using AppLogic.Repositories;
 
 namespace AppLogic.Services
 {

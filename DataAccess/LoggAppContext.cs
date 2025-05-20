@@ -6,7 +6,7 @@ using AppLogic.Models.Weather.AirQuality;
 using Microsoft.EntityFrameworkCore;
 using Activity = AppLogic.Models.Activity.Activity;
 
-namespace DataAccess
+namespace AppLogic
 {
     public class LoggAppContext : DbContext
     {
