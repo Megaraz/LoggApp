@@ -44,6 +44,9 @@ namespace Presentation
             _sessionContext.CurrentMenuIndex = 0;
             _sessionContext.CurrentMainMenu = MenuText.NavOption.s_InitMenu.ToList();
 
+            _sessionContext.UserMenuState = UserMenuState.None;
+            _sessionContext.DayCardMenuState = DayCardMenuState.None;
+
         }
 
         public async Task Run()

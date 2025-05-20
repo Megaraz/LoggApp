@@ -30,7 +30,7 @@ namespace Presentation
                     break;
 
                 case DayCardMenuState.AirQuality:
-                    //sessionContext = ;
+                    sessionContext = await SpecificAirQualityMenuHandler(sessionContext);
                     break;
 
                 case DayCardMenuState.Pollen:
@@ -57,6 +57,8 @@ namespace Presentation
             return sessionContext;
 
         }
+
+        
 
         public async Task<TContext> HandleUserMenuState<TContext>(TContext sessionContext) where TContext : SessionContext
         {
@@ -90,7 +92,7 @@ namespace Presentation
                     break;
 
                 case MainMenuState.SpecificUser:
-                    sessionContext = await SpecificUserMenuHandler(sessionContext);
+                    sessionContext = SpecificUserMenuHandler(sessionContext);
                     break;
 
                 case MainMenuState.AllUsers:
@@ -104,42 +106,7 @@ namespace Presentation
             }
             return sessionContext;
         }
-        //public async Task<TContext> HandleCurrentState<TContext>(TContext sessionContext) where TContext : SessionContext
-        //{
-
-        //    switch (sessionContext.CurrentMenuState)
-        //    {
-        //        case MenuState.InitMenu:
-        //            sessionContext = await InitMenuHandler(sessionContext);
-        //            break;
-
-        //        case MenuState.SpecificUser:
-        //            sessionContext = SpecificUserMenuHandler(sessionContext);
-        //            break;
-
-        //        case MenuState.AllDayCards:
-        //            sessionContext = await AllDayCardsMenuHandler(sessionContext);
-        //            break;
-
-        //        case MenuState.AllUsers:
-        //            sessionContext = await AllUsersMenuHandler(sessionContext);
-        //            break;
-
-        //        case MenuState.CreateNewDayCard:
-        //            sessionContext = await CreateDayCardMenuHandler(sessionContext);
-        //            break;
-
-        //        case MenuState.SpecificDayCard:
-        //            sessionContext = SpecificDayCardMenuHandler(sessionContext);
-        //            break;
-
-                
-        //        case MenuState.SearchDayCard:
-
-        //            break;
-        //    }
-        //    return sessionContext;
-        //}
+        
 
         public async Task<TContext> InitMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
@@ -223,14 +190,21 @@ namespace Presentation
             return sessionContext;
         }
 
-        
+        public TContext ResetMenuStates<TContext>(TContext sessionContext) where TContext : SessionContext
+        {
+            sessionContext.MainMenuState = MainMenuState.None;
+            sessionContext.UserMenuState = UserMenuState.None;
+            sessionContext.DayCardMenuState = DayCardMenuState.None;
+            return sessionContext;
+        }
 
         public async Task<TContext> CreateDayCardMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             sessionContext.MainHeader = MenuText.Prompt.CreateDayCard;
             DayCardInputModel dayCardInputModel = View.Input_DayCard(sessionContext);
-            await _controller.CreateNewDayCardAsync(dayCardInputModel);
-            sessionContext.UserMenuState = UserMenuState.SpecificDayCard;
+            sessionContext.DTO_CurrentDayCard = await _controller.CreateNewDayCardAsync(dayCardInputModel);
+            sessionContext = ResetMenuStates(sessionContext);
+            sessionContext.DayCardMenuState = DayCardMenuState.Overview;
 
             return sessionContext;
         }
@@ -277,24 +251,72 @@ namespace Presentation
 
 
                 sessionContext.DTO_CurrentDayCard = await _controller.ReadDayCardSingleAsync(dayCardChoice.DayCardId, sessionContext.DTO_CurrentUser.Id);
+                sessionContext = ResetMenuStates(sessionContext);
                 sessionContext.DayCardMenuState = DayCardMenuState.Overview;
             }
 
-            return await HandleDayCardMenuState(sessionContext);
-            //return await SpecificDayCardMenuHandler(sessionContext);
-            //return sessionContext;
+            return sessionContext;
         }
         public async Task<TContext> SpecificDayCardMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
 
-            sessionContext.MainHeader = MenuText.Header.CurrentDayCard;
+            sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.DTO_CurrentUser!.ToString()}";
+            sessionContext.SubHeader = MenuText.Header.CurrentDayCard + "\n[OVERVIEW]\n" + sessionContext.DTO_CurrentDayCard!.ToString();
             var specific = sessionContext.DTO_CurrentDayCard!;
-            Console.WriteLine($"{specific.ToString()}");
-            Console.ReadLine();
+
+            var specUserChoice = GetMenuValue(MenuText.NavOption.s_SpecificDayCardMenu.ToList(), sessionContext);
+
+            switch (specUserChoice)
+            {
+                case MenuText.NavOption.Weather:
+                    sessionContext.DayCardMenuState = DayCardMenuState.Weather;
+                    break;
+
+                case MenuText.NavOption.AirQuality:
+                    sessionContext.DayCardMenuState = DayCardMenuState.AirQuality;
+                    break;
+
+                case MenuText.NavOption.Pollen:
+                    sessionContext.DayCardMenuState = DayCardMenuState.Pollen;
+                    break;
+
+                case MenuText.NavOption.Supplements:
+                    sessionContext.DayCardMenuState = DayCardMenuState.Supplements;
+                    break;
+
+                case MenuText.NavOption.CaffeineDrinks:
+                    sessionContext.DayCardMenuState = DayCardMenuState.CaffeineDrinks;
+                    break;
+
+                case MenuText.NavOption.Exercise:
+                    sessionContext.DayCardMenuState = DayCardMenuState.Exercise;
+                    break;
+
+                case MenuText.NavOption.ComputerActivity:
+                    sessionContext.DayCardMenuState = DayCardMenuState.ComputerActivity;
+                    break;
+
+                case MenuText.NavOption.Sleep:
+                    break;
+
+
+            }
+
+
+            //Console.WriteLine($"{specific.ToString()}");
+            //Console.ReadLine();
             return sessionContext;
 
         }
-        public async Task<TContext> SpecificUserMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
+
+        private async Task<TContext> SpecificAirQualityMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
+        {
+            Console.Clear();
+            Console.WriteLine(sessionContext.DTO_CurrentDayCard.AirQualitySummary.ToString());
+            Console.ReadLine();
+            return sessionContext;
+        }
+        public TContext SpecificUserMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.DTO_CurrentUser!.ToString()}";
 
@@ -310,16 +332,23 @@ namespace Presentation
             switch (specUserChoice)
             {
                 case MenuText.NavOption.CreateNewDayCard:
+                    sessionContext = ResetMenuStates(sessionContext);
                     sessionContext.UserMenuState = UserMenuState.CreateNewDayCard;
+                    //sessionContext.MainMenuState = MainMenuState.None;
                     break;
+
                 case MenuText.NavOption.ShowAllDayCards:
+                    sessionContext = ResetMenuStates(sessionContext);
                     sessionContext.UserMenuState = UserMenuState.AllDayCards;
                     break;
+
                 case MenuText.NavOption.SearchDayCard:
+                    sessionContext = ResetMenuStates(sessionContext);
                     sessionContext.UserMenuState = UserMenuState.SearchDayCard;
                     break;
             }
-            return await HandleUserMenuState(sessionContext);
+
+            return sessionContext;
         }
 
         public T GetMenuValue<T>(List<T> currentMenu, SessionContext sessionContext)

@@ -22,6 +22,9 @@ namespace AppLogic.Models.Weather.AirQuality
         [JsonPropertyName("generationtime_ms")]
         public double GenerationTime_ms { get; set; }
 
+        [JsonPropertyName("hourly_units")]
+        public AirQualityHourlyUnits? HourlyUnits { get; set; }
+
         [JsonPropertyName("hourly")]
         public AirQualityHourlyBlock? HourlyBlock { get; set; }
 

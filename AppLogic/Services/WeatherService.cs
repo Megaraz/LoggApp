@@ -25,22 +25,70 @@ namespace AppLogic.Services
             var block = weatherData.HourlyBlock
                         ?? throw new ArgumentNullException(nameof(weatherData.HourlyBlock));
 
+            var units = weatherData.HourlyUnits
+                        ?? throw new ArgumentNullException(nameof(weatherData.HourlyBlock));
+
             // Mappa varje tidpunkt + index till en HourlyWeatherData
             var hourly = block.Time
                 .Select((time, i) => new HourlyWeatherData
                 {
-                    Time = time.Hour,  
-                    Temperature2m = block.Temperature2m.ElementAtOrDefault(i),
-                    ApparentTemperature = block.ApparentTemperature.ElementAtOrDefault(i),
-                    RelativeHumidity2m = block.RelativeHumidity2m.ElementAtOrDefault(i),
-                    DewPoint2m = block.DewPoint2m.ElementAtOrDefault(i),
-                    Precipitation = block.Precipitation.ElementAtOrDefault(i),
-                    Rain = block.Rain.ElementAtOrDefault(i),
-                    CloudCover = block.CloudCover.ElementAtOrDefault(i),
-                    UvIndex = block.UvIndex.ElementAtOrDefault(i),
-                    WindSpeed10m = block.WindSpeed10m.ElementAtOrDefault(i),
-                    PressureMsl = block.PressureMsl.ElementAtOrDefault(i),
-                    IsDay = block.IsDay.ElementAtOrDefault(i)
+                    Time = time.Hour,
+                    Temperature2m = new Measurement<double?>
+                    {
+                        Value = block.Temperature2m.ElementAtOrDefault(i),
+                        Unit = units.Temperature2m
+                    },
+                    ApparentTemperature = new Measurement<double?>
+                    {
+                        Value = block.ApparentTemperature.ElementAtOrDefault(i),
+                        Unit = units.ApparentTemperature
+                    },
+                    RelativeHumidity2m = new Measurement<double?> 
+                    { 
+                        Value = block.RelativeHumidity2m.ElementAtOrDefault(i), 
+                        Unit = units.RelativeHumidity2m 
+                    },
+                    DewPoint2m = new Measurement<double?>()
+                    {
+                        Value = block.DewPoint2m.ElementAtOrDefault(i),
+                        Unit = units.DewPoint2m
+                    },                    
+                    Precipitation = new Measurement<double?> 
+                    { 
+                        Value = block.Precipitation.ElementAtOrDefault(i), 
+                        Unit = units.Precipitation 
+                    },
+                    Rain = new Measurement<double?> 
+                    { 
+                        Value = block.Rain.ElementAtOrDefault(i), 
+                        Unit = units.Rain 
+                    },
+                    CloudCover = new Measurement<double?> 
+                    { 
+                        Value = block.CloudCover.ElementAtOrDefault(i), 
+                        Unit = units.CloudCover 
+                    },
+                    UvIndex = new Measurement<double?> 
+                    { 
+                        Value = block.UvIndex.ElementAtOrDefault(i), 
+                        Unit = units.UvIndex 
+                    },
+                    WindSpeed10m = new Measurement<double?> 
+                    { 
+                        Value = block.WindSpeed10m.ElementAtOrDefault(i), 
+                        Unit = units.WindSpeed10m 
+                    },
+                    PressureMsl = new Measurement<double?> 
+                    { 
+                        Value = block.PressureMsl.ElementAtOrDefault(i), 
+                        Unit = units.PressureMsl 
+                    } ,
+                    IsDay = new Measurement<double?>()
+                    {
+                        Value = block.IsDay.ElementAtOrDefault(i),
+                        
+
+                    }
                 })
                 .ToList();
 

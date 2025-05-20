@@ -9,84 +9,39 @@ namespace AppLogic.Models.Weather.AirQuality
         /// </summary>
         public int? Time { get; set; }
 
-        /// <summary>
-        /// Björkpollen (antal korn per m³).
-        /// </summary>
-        public double? BirchPollen { get; set; }
+        public Measurement<double?>? BirchPollen { get; set; }
+        public Measurement<double?>? AlderPollen { get; set; }
+        public Measurement<double?>? GrassPollen { get; set; }
+        public Measurement<double?>? MugwortPollen { get; set; }
+        public Measurement<double?>? RagweedPollen { get; set; }
+        public Measurement<double?>? UVI { get; set; }
+        public Measurement<double?>? AQI { get; set; }
+        public Measurement<double?>? PM25 { get; set; }
+        public Measurement<double?>? Ozone { get; set; }
+        public Measurement<double?>? CarbonMonoxide { get; set; }
+        public Measurement<double?>? NitrogenDioxide { get; set; }
+        public Measurement<double?>? Dust { get; set; }
 
-        /// <summary>
-        /// Alarpollen (antal korn per m³).
-        /// </summary>
-        public double? AlderPollen { get; set; }
-
-        /// <summary>
-        /// Gräspollen (antal korn per m³).
-        /// </summary>
-        public double? GrassPollen { get; set; }
-
-        /// <summary>
-        /// Beppelpollen (antal korn per m³).
-        /// </summary>
-        public double? MugwortPollen { get; set; }
-
-        /// <summary>
-        /// Ambrosiapollen (antal korn per m³).
-        /// </summary>
-        public double? RagweedPollen { get; set; }
-
-        /// <summary>
-        /// UV-index.
-        /// </summary>
-        public double? UVI { get; set; }
-
-        /// <summary>
-        /// Europeiskt luftkvalitetsindex (AQI).
-        /// </summary>
-        public double? AQI { get; set; }
-
-        /// <summary>
-        /// Partiklar ≤2.5 µm (µg/m³).
-        /// </summary>
-        public double? PM25 { get; set; }
-
-        /// <summary>
-        /// Ozon (µg/m³).
-        /// </summary>
-        public double? Ozone { get; set; }
-
-        /// <summary>
-        /// Kolmonoxid (µg/m³).
-        /// </summary>
-        public double? CarbonMonoxide { get; set; }
-
-        /// <summary>
-        /// Kvävedioxid (µg/m³).
-        /// </summary>
-        public double? NitrogenDioxide { get; set; }
-
-        /// <summary>
-        /// Damm (µg/m³).
-        /// </summary>
-        public double? Dust { get; set; }
 
 
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append($"Time: {Time}");
-
-            if (BirchPollen.HasValue) sb.Append($", Birch: {BirchPollen.Value:F1}");
-            if (AlderPollen.HasValue) sb.Append($", Alder: {AlderPollen.Value:F1}");
-            if (GrassPollen.HasValue) sb.Append($", Grass: {GrassPollen.Value:F1}");
-            if (MugwortPollen.HasValue) sb.Append($", Mugwort: {MugwortPollen.Value:F1}");
-            if (RagweedPollen.HasValue) sb.Append($", Ragweed: {RagweedPollen.Value:F1}");
-            if (UVI.HasValue) sb.Append($", UVI: {UVI.Value:F1}");
-            if (AQI.HasValue) sb.Append($", AQI: {AQI.Value:F1}");
-            if (PM25.HasValue) sb.Append($", PM2.5: {PM25.Value:F1}");
-            if (Ozone.HasValue) sb.Append($", O₃: {Ozone.Value:F1}");
-            if (CarbonMonoxide.HasValue) sb.Append($", CO: {CarbonMonoxide.Value:F1}");
-            if (NitrogenDioxide.HasValue) sb.Append($", NO₂: {NitrogenDioxide.Value:F1}");
-            if (Dust.HasValue) sb.Append($", Dust: {Dust.Value:F1}");
+            sb.Append($"[{Time}:00]\n");
+            sb.Append($"  [POLLEN]\n");
+            if (BirchPollen.Value.HasValue) sb.Append($"\tBirch: {BirchPollen.Value:F1} {BirchPollen.Unit} | ");
+            if (AlderPollen.Value.HasValue) sb.Append($"Alder: {AlderPollen.Value:F1} {AlderPollen.Unit} | ");
+            if (GrassPollen.Value.HasValue) sb.Append($"Grass: {GrassPollen.Value:F1}  {GrassPollen.Unit} | ");
+            if (MugwortPollen.Value.HasValue) sb.Append($"Mugwort: {MugwortPollen.Value:F1}  {MugwortPollen.Unit} | ");
+            if (RagweedPollen.Value.HasValue) sb.Append($"Ragweed: {RagweedPollen.Value:F1} {RagweedPollen.Unit}\n");
+            sb.Append($"  [AIRQUALITY]\n");
+            if (UVI.Value.HasValue) sb.Append($"\tUVI: {UVI.Value:F1} {UVI.Unit} | ");
+            if (AQI.Value.HasValue) sb.Append($"AQI: {AQI.Value:F1} {AQI.Unit} | ");
+            if (PM25.Value.HasValue) sb.Append($"PM2.5: {PM25.Value:F1} {PM25.Unit} | ");
+            if (Ozone.Value.HasValue) sb.Append($"O₃: {Ozone.Value:F1} {Ozone.Unit} | ");
+            if (CarbonMonoxide.Value.HasValue) sb.Append($"CO: {CarbonMonoxide.Value:F1} {CarbonMonoxide.Unit} | ");
+            if (NitrogenDioxide.Value.HasValue) sb.Append($"NO₂: {NitrogenDioxide.Value:F1} {NitrogenDioxide.Unit} | ");
+            if (Dust.Value.HasValue) sb.Append($"Dust: {Dust.Value:F1} {Dust.Unit}\n");
 
             return sb.ToString();
         }

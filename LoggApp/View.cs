@@ -1,5 +1,6 @@
 ﻿using AppLogic.Models;
 using Microsoft.IdentityModel.Tokens;
+using Presentation.MenuState_Enums;
 
 namespace Presentation
 {
@@ -17,7 +18,22 @@ namespace Presentation
 
         public async Task<TContext> Start<TContext>(TContext sessionContext) where TContext : SessionContext
         {
-            sessionContext = await MenuHandler.HandleMainMenuState(sessionContext);
+            if (sessionContext.MainMenuState != MainMenuState.None)
+            {
+                sessionContext = await MenuHandler.HandleMainMenuState(sessionContext);
+
+            }
+
+            if (sessionContext.UserMenuState != UserMenuState.None)
+            {
+                sessionContext = await MenuHandler.HandleUserMenuState(sessionContext);
+            }
+
+            if (sessionContext.DayCardMenuState != DayCardMenuState.None)
+            {
+                sessionContext = await MenuHandler.HandleDayCardMenuState(sessionContext);
+            }
+
             //sessionContext = await MenuHandler.HandleUserMenuState(sessionContext);
             return sessionContext;
         }

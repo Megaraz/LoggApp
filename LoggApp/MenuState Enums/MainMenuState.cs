@@ -5,7 +5,8 @@
         Main,
         SpecificUser,
         AllUsers,
-        Exit
+        Exit,
+        None
     };
 
     public enum UserMenuState
@@ -13,19 +14,23 @@
         AllDayCards,
         CreateNewDayCard,
         SpecificDayCard,
-        SearchDayCard
+        SearchDayCard,
+        None
     };
 
     public enum DayCardMenuState
     {
         Overview,
         AllData,
+        Weather,
         AirQuality,
         Pollen,
-        Weather,
+        Exercise,
+        ComputerActivity,
         Sleep,
         CaffeineDrinks,
-        Supplements
+        Supplements,
+        None
     };
 
 

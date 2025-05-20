@@ -32,6 +32,9 @@ namespace Presentation
         public DTO_SpecificDayCard? DTO_CurrentDayCard { get; set; }
         public List<DTO_AllUser>? DTO_AllUsers { get; set; }
         public List<DTO_AllDayCard>? DTO_AllDayCards { get; set; }
+
+        public DTO_AllAirQualities DTO_AllAirQualities { get; set; }
+
         //public User? CurrentUser { get; set; }
         //public DayCard? CurrentDayCard { get; set; }
         //public List<User>? AllUsers { get; set; }

@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
+using AppLogic.Migrations;
 using AppLogic.Models.DTOs;
+using AppLogic.Models.Weather;
 using AppLogic.Models.Weather.AirQuality;
 using AppLogic.Repositories;
 
@@ -19,7 +21,7 @@ namespace AppLogic.Services
         {
 
             var block = airQuality.HourlyBlock ?? throw new ArgumentNullException(nameof(airQuality));
-
+            var units = airQuality.HourlyUnits ?? throw new ArgumentNullException(nameof(airQuality));
 
             return new DTO_AllAirQualities()
             {
@@ -27,18 +29,67 @@ namespace AppLogic.Services
                     .Select((time, i) => new HourlyAirQualityData()
                     {
                         Time = time.Hour,
-                        BirchPollen = block.BirchPollen.ElementAtOrDefault(i),
-                        AlderPollen = block.AlderPollen.ElementAtOrDefault(i),
-                        GrassPollen = block.GrassPollen.ElementAtOrDefault(i),
-                        MugwortPollen = block.MugwortPollen.ElementAtOrDefault(i),
-                        RagweedPollen = block.RagweedPollen.ElementAtOrDefault(i),
-                        UVI = block.UVI.ElementAtOrDefault(i),
-                        AQI = block.AQI.ElementAtOrDefault(i),
-                        PM25 = block.PM25.ElementAtOrDefault(i),
-                        Ozone = block.Ozone.ElementAtOrDefault(i),
-                        CarbonMonoxide = block.CarbonMonoxide.ElementAtOrDefault(i),
-                        NitrogenDioxide = block.NitrogenDioxide.ElementAtOrDefault(i),
-                        Dust = block.Dust.ElementAtOrDefault(i)
+                        BirchPollen = new Measurement<double?>
+                        {
+                            Value = block.BirchPollen.ElementAtOrDefault(i),
+                            Unit = units.BirchPollen
+                        },
+                        AlderPollen = new Measurement<double?>
+                        {
+                            Value = block.AlderPollen.ElementAtOrDefault(i),
+                            Unit = units.AlderPollen
+                        },
+                        GrassPollen = new Measurement<double?>
+                        {
+                            Value = block.GrassPollen.ElementAtOrDefault(i),
+                            Unit = units.GrassPollen
+                        },
+                        MugwortPollen = new Measurement<double?>
+                        {
+                            Value = block.MugwortPollen.ElementAtOrDefault(i),
+                            Unit = units.MugwortPollen
+                        },
+                        RagweedPollen = new Measurement<double?>
+                        {
+                            Value = block.RagweedPollen.ElementAtOrDefault(i),
+                            Unit = units.RagweedPollen
+                        },
+                        UVI = new Measurement<double?>
+                        {
+                            Value = block.UVI.ElementAtOrDefault(i),
+                            Unit = units.UVI
+                        },
+                        AQI = new Measurement<double?>
+                        {
+                            Value = block.AQI.ElementAtOrDefault(i),
+                            Unit = units.AQI
+                        },
+                        PM25 = new Measurement<double?>
+                        {
+                            Value = block.PM25.ElementAtOrDefault(i),
+                            Unit = units.PM25
+                        },
+                        Ozone = new Measurement<double?>
+                        {
+                            Value = block.Ozone.ElementAtOrDefault(i),
+                            Unit = units.Ozone
+                        },
+                        CarbonMonoxide = new Measurement<double?>
+                        {
+                            Value = block.CarbonMonoxide.ElementAtOrDefault(i),
+                            Unit = units.CarbonMonoxide
+                        },
+                        NitrogenDioxide = new Measurement<double?>
+                        {
+                            Value = block.NitrogenDioxide.ElementAtOrDefault(i),
+                            Unit = units.NitrogenDioxide
+                        },
+                        Dust = new Measurement<double?>
+                        {
+                            Value = block.Dust.ElementAtOrDefault(i),
+                            Unit = units.Dust
+                        }
+
                     }).
                     ToList()
 

@@ -58,17 +58,20 @@
             public const string SearchDayCard = "[SEARCH DAYCARD]";
             public const string ShowAllDayCards = "[SHOW ALL DAYCARDS]";
 
-            public const string Weather = "[WEATHER]";
-            public const string AirQuality = "[AIRQUALITY]";
+            public const string Weather = "[WEATHER SPECIFICS]";
+            public const string AirQuality = "[AIRQUALITY SPECIFICS]";
+            public const string Pollen = "[POLLEN SPECIFICS]";
             public const string Supplements = "[SUPPLEMENTS]";
             public const string CaffeineDrinks = "[CAFFEINEDRINKS]";
             public const string Exercise = "[EXERCISE]";
+            public const string Sleep = "[SLEEP]";
+            public const string ComputerActivity = "[COMPUTER ACTIVITY]";
 
             // STATIC MENU OPTIONS
             public static string[] s_InitMenu = [Login, GetAllUsers, CreateNewUser, Exit];
             public static string[] s_AllUserMenu = [Login, CreateNewUser];
             public static string[] s_SpecificUserMenu = [ShowAllDayCards, CreateNewDayCard, SearchDayCard];
-            public static string[] s_SpecificDayCardMenu = [Supplements, CaffeineDrinks, Exercise];
+            public static string[] s_SpecificDayCardMenu = [Weather, AirQuality, Pollen, Supplements, CaffeineDrinks, Exercise, ComputerActivity, Sleep];
 
         }
 

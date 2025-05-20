@@ -23,7 +23,7 @@ namespace AppLogic.Models.DTOs
                 sb.AppendLine("Hourly readings:");
                 foreach (var hour in HourlyAirQualityData)
                 {
-                    sb.AppendLine($"  - {hour}");
+                    sb.AppendLine($"{hour}");
                 }
             }
 

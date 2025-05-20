@@ -15,14 +15,24 @@ namespace AppLogic.Models.DTOs
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine($"Date: {Date:yyyy-MM-dd}");
+            sb.AppendLine($"\tDate: {Date:yyyy-MM-dd}");
 
             if (AirQualitySummary?.HourlyAirQualityData != null && AirQualitySummary.HourlyAirQualityData.Count > 0)
             {
-                var avgBirch = AirQualitySummary.HourlyAirQualityData.Average(d => d.BirchPollen ?? 0);
-                var avgAQI = AirQualitySummary.HourlyAirQualityData.Average(d => d.AQI ?? 0);
-                sb.AppendLine($"  Avg Birch Pollen: {avgBirch:F1}");
-                sb.AppendLine($"  Avg AQI: {avgAQI:F1}");
+                var avgBirch = AirQualitySummary.HourlyAirQualityData.Average(d => d.BirchPollen.Value ?? 0);
+                var avgAQI = AirQualitySummary.HourlyAirQualityData.Average(d => d.AQI.Value ?? 0);
+
+                string birchUnit = AirQualitySummary.HourlyAirQualityData
+                    .Select(x => x.BirchPollen.Unit)
+                    .FirstOrDefault();
+                string AQIUnit = AirQualitySummary.HourlyAirQualityData
+                    .Select(x => x.AQI.Unit)
+                    .FirstOrDefault();
+
+
+
+                sb.AppendLine($"\t\tAvg Birch Pollen: {avgBirch:F1} {birchUnit}");
+                sb.AppendLine($"\t\tAvg AQI: {avgAQI:F1} {AQIUnit}");
             }
             else
             {
@@ -35,14 +45,27 @@ namespace AppLogic.Models.DTOs
                     .Where(h => h.Time >= 6 && h.Time <= 9) // Exempelvis morgonperiod
                     .ToList();
 
+                
+
+
                 if (morning.Any())
                 {
-                    var avgTemp = morning.Average(h => h.Temperature2m ?? 0);
-                    var avgFeels = morning.Average(h => h.ApparentTemperature ?? 0);
-                    var maxWind = morning.Max(h => h.WindSpeed10m ?? 0);
-                    sb.AppendLine($"  Morning Avg Temp: {avgTemp:F1}°C");
-                    sb.AppendLine($"  Morning Feels Like: {avgFeels:F1}°C");
-                    sb.AppendLine($"  Max Wind Speed (6–9): {maxWind:F1} m/s");
+                    var avgTemp = morning.Average(h => h.Temperature2m.Value ?? 0);
+                    var tempUnit = morning
+                        .Select(h => h.Temperature2m.Unit)
+                        .FirstOrDefault();
+                    var avgFeels = morning.Average(h => h.ApparentTemperature.Value ?? 0);
+                    var feelTempUnit = morning
+                        .Select(h => h.ApparentTemperature.Unit)
+                        .FirstOrDefault();
+                    var maxWind = morning.Max(h => h.WindSpeed10m.Value ?? 0);
+                    var windUnit = morning
+                        .Select(h => h.WindSpeed10m.Unit)
+                        .FirstOrDefault();
+
+                    sb.AppendLine($"\t\tMorning Avg Temp: {avgTemp:F1}°{tempUnit}");
+                    sb.AppendLine($"\t\tMorning Feels Like: {avgFeels:F1}°{feelTempUnit}");
+                    sb.AppendLine($"\t\tMax Wind Speed (6–9): {maxWind:F1} {windUnit}");
                 }
                 else
                 {

@@ -33,7 +33,8 @@ namespace AppLogic
 
             modelBuilder.Entity<AirQualityData>(entity => 
             { 
-                entity.OwnsOne(a => a.HourlyBlock); 
+                entity.OwnsOne(a => a.HourlyBlock);
+                entity.OwnsOne(w => w.HourlyUnits);
             });
 
 
@@ -50,7 +51,7 @@ namespace AppLogic
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-            optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=HealthLogg;Trusted_Connection=True;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=LoggApp;Trusted_Connection=True;TrustServerCertificate=True;");
             //optionsBuilder.UseSqlServer(@"Server=tcp:rlack.database.windows.net,1433;Initial Catalog=HealthLogg;Persist Security Info=False;User ID=rlack;Password=Tellus46;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
         }
