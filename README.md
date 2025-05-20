@@ -3,10 +3,3 @@ The other main focus is to build a robust project according to OOP, SOLID and a 
 
 Later on the goal is to make it a health/wellness webapplication with user accounts and graphs etc. 
 
-
-PresentationLayer →
-    ApplicationLayer →
-        DomainLayer
-
-InfrastructureLayer →
-    DomainLayer
