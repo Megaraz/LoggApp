@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "LoggApp\Presentation.csproj", "{15EF1F8E-CBD4-4028-BA0A-46E4844EE77B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{07A6ABF5-92BF-4556-ABBF-297F619FCD16}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppLogic", "AppLogic\AppLogic.csproj", "{6A242A6D-2BF9-72C4-5C47-0298B7F30A50}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{15EF1F8E-CBD4-4028-BA0A-46E4844EE77B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15EF1F8E-CBD4-4028-BA0A-46E4844EE77B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15EF1F8E-CBD4-4028-BA0A-46E4844EE77B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15EF1F8E-CBD4-4028-BA0A-46E4844EE77B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A242A6D-2BF9-72C4-5C47-0298B7F30A50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A242A6D-2BF9-72C4-5C47-0298B7F30A50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A242A6D-2BF9-72C4-5C47-0298B7F30A50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A242A6D-2BF9-72C4-5C47-0298B7F30A50}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
