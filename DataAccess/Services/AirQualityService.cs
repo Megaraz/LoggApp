@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using AppLogic.Models.DTOs;
 using AppLogic.Models.Weather.AirQuality;
 using AppLogic.Repositories;
-using BusinessLogic.Models.Weather;
-using DataAccess.Repositories;
 
 namespace AppLogic.Services
 {

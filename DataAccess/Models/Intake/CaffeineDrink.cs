@@ -1,8 +1,7 @@
-﻿using BusinessLogic.Interfaces;
-using BusinessLogic.Models.Intake.Enums;
-using static BusinessLogic.Models.Intake.CaffeineDrink;
+﻿using AppLogic.Interfaces;
+using AppLogic.Models.Intake.Enums;
 
-namespace BusinessLogic.Models.Intake
+namespace AppLogic.Models.Intake
 {
     public class CaffeineDrink : ITimeOfEntry
     {

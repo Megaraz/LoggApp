@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BusinessLogic.Interfaces;
+﻿using AppLogic.Interfaces;
 
-namespace BusinessLogic.Models.Activity
+namespace AppLogic.Models.Activity
 {
     public abstract class Activity : ITimeOfEntry, ITimeRange, IDailyLogId
     {

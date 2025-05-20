@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppLogic.Controllers;
-using AppLogic.Services;
+﻿using AppLogic.Controllers;
 using DataAccess;
-using Microsoft.EntityFrameworkCore;
 using Presentation.MenuState_Enums;
 
 namespace Presentation

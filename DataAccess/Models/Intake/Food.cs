@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BusinessLogic.Interfaces;
-using BusinessLogic.Models.Intake.Enums;
+﻿using AppLogic.Interfaces;
+using AppLogic.Models.Intake.Enums;
 
-namespace BusinessLogic.Models.Intake
+namespace AppLogic.Models.Intake
 {
     public class Food : ITimeOfEntry, IDailyLogId
     {

@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using AppLogic.Models;
 using AppLogic.Models.DTOs;
-using BusinessLogic.Models;
 using DataAccess;
 using DataAccess.Repositories;
-using Presentation;
 
 namespace AppLogic.Services
 {

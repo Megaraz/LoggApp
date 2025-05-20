@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppLogic.Interfaces;
-using AppLogic.Models.DTOs;
-using BusinessLogic.Models;
+﻿using AppLogic.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories

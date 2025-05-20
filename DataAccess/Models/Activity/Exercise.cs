@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BusinessLogic.Models.Activity.Enums;
+﻿using AppLogic.Models.Activity.Enums;
 
-namespace BusinessLogic.Models.Activity
+namespace AppLogic.Models.Activity
 {
     public class Exercise : Activity
     {

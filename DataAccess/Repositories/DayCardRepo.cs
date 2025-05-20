@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppLogic.Models.DTOs;
-using BusinessLogic.Models;
+﻿using AppLogic.Models;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AppLogic.Repositories
 {

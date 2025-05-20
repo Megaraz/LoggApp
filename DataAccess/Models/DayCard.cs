@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BusinessLogic.Models.Intake;
-using BusinessLogic.Models.Activity;
-using BusinessLogic.Models.Weather;
+﻿using AppLogic.Models.Intake;
+using AppLogic.Models.Weather;
 using AppLogic.Models.Weather.AirQuality;
 
-namespace BusinessLogic.Models
+namespace AppLogic.Models
 {
     public class DayCard
     {

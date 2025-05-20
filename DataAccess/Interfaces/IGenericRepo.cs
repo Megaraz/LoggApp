@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AppLogic.Interfaces
+﻿namespace AppLogic.Interfaces
 {
     public interface IGenericRepo<T> where T : class
     {

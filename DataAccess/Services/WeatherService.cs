@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using AppLogic.Models.DTOs;
-using AppLogic.Models;
-using BusinessLogic.Models.Weather;
-using DataAccess.Repositories;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using AppLogic.Models.Weather;
+using DataAccess.Repositories;
 
 namespace AppLogic.Services
 {

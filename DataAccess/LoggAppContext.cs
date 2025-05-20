@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppLogic.Models;
+﻿using AppLogic.Models;
+using AppLogic.Models.Activity;
+using AppLogic.Models.Intake;
+using AppLogic.Models.Weather;
 using AppLogic.Models.Weather.AirQuality;
-using BusinessLogic.Models;
-using BusinessLogic.Models.Activity;
-using BusinessLogic.Models.Intake;
-using BusinessLogic.Models.Weather;
 using Microsoft.EntityFrameworkCore;
-using Activity = BusinessLogic.Models.Activity.Activity;
+using Activity = AppLogic.Models.Activity.Activity;
 
 namespace DataAccess
 {
@@ -33,7 +26,7 @@ namespace DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Bas-tabell för Activity
-            modelBuilder.Entity<BusinessLogic.Models.Activity.Activity>().ToTable("Activities");
+            modelBuilder.Entity<Activity>().ToTable("Activities");
 
             // Egen tabell för Exercise
             modelBuilder.Entity<Exercise>().ToTable("Exercises");

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AppLogic.Models.DTOs
+﻿namespace AppLogic.Models.DTOs
 {
     public class DTO_AllUser
     {

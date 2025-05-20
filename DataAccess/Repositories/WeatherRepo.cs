@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using BusinessLogic.Models;
-using BusinessLogic.Models.Weather;
-
-namespace DataAccess.Repositories
+﻿namespace DataAccess.Repositories
 {
     public static class WeatherRepo
     {

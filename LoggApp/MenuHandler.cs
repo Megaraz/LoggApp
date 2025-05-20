@@ -1,19 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
-using AppLogic.Models.DTOs;
+﻿using AppLogic.Controllers;
 using AppLogic.Models;
-using AppLogic.Services;
-using DataAccess;
-using Microsoft.IdentityModel.Tokens;
-using BusinessLogic.Models;
-using AppLogic.Controllers;
-using Microsoft.EntityFrameworkCore;
+using AppLogic.Models.DTOs;
 using Presentation.MenuState_Enums;
-using Microsoft.Identity.Client;
 
 namespace Presentation
 {

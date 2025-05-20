@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using AppLogic.Models.Weather;
-using AppLogic.Models.Weather.AirQuality;
-using BusinessLogic.Interfaces;
+﻿using System.Text.Json.Serialization;
+using AppLogic.Interfaces;
 
-namespace BusinessLogic.Models.Weather
+namespace AppLogic.Models.Weather
 {
     public class WeatherData : ITimeOfEntry
     {

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Presentation;
-
-namespace BusinessLogic.Models
+﻿namespace AppLogic.Models
 {
     public class User
     {
@@ -33,11 +26,11 @@ namespace BusinessLogic.Models
 
         public override string ToString()
         {
-            return $"{this.Username}, ID: {this.Id}\n"
-                + $"{this.CityName} \n"
-                + $"DayCards: {this.DayCards!.Count}\n\n"
+            return $"{Username}, ID: {Id}\n"
+                + $"{CityName} \n"
+                + $"DayCards: {DayCards!.Count}\n\n"
                 + "------------------------\n"
-                + $"[DAYCARDS] for [{this.Username}]\n"
+                + $"[DAYCARDS] for [{Username}]\n"
                 + $"{string.Join("\n", DayCards?.Select(x => x.Date)!)}"
                 + "------------------------\n";   
         }
