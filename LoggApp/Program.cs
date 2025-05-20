@@ -17,10 +17,6 @@ namespace LoggApp
             await app.Run();
 
 
-
-
-
-
         }
 
     }

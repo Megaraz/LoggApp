@@ -20,9 +20,9 @@ namespace AppLogic.Models.DTOs
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine($"[DayCard #{DayCardId}] Date: {Date:yyyy-MM-dd}");
+            sb.AppendLine($"Date: {Date:yyyy-MM-dd}");
 
-            if (AirQualitySummary?.HourlyAirQualityData != null && AirQualitySummary.HourlyAirQualityData.Any())
+            if (AirQualitySummary?.HourlyAirQualityData != null && AirQualitySummary.HourlyAirQualityData.Count > 0)
             {
                 var avgBirch = AirQualitySummary.HourlyAirQualityData.Average(d => d.BirchPollen ?? 0);
                 var avgAQI = AirQualitySummary.HourlyAirQualityData.Average(d => d.AQI ?? 0);

@@ -28,11 +28,8 @@ namespace Presentation
         }
 
 
-
-
         public async Task<TContext> HandleDayCardMenuState<TContext>(TContext sessionContext) where TContext : SessionContext
         {
-
 
             switch (sessionContext.DayCardMenuState)
             {
@@ -47,7 +44,6 @@ namespace Presentation
                 case DayCardMenuState.AirQuality:
                     //sessionContext = ;
                     break;
-
 
                 case DayCardMenuState.Pollen:
                     //sessionContext = ;
