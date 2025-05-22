@@ -45,7 +45,8 @@ namespace AppLogic.Services
                 DayCardId = newDayCard.Id,
                 UserId = newDayCard.UserId,
                 Date = newDayCard.Date,
-                AirQualitySummary = AirQualityService.ConvertToDTO(newDayCard.AirQualityData!),
+                AirQualitySummary = AirQualityService.ConvertToAQDTO(newDayCard.AirQualityData!),
+                PollenSummary = AirQualityService.ConvertToPollenDTO(newDayCard.AirQualityData!),
                 WeatherSummary = WeatherService.ConvertToDTO(newDayCard.WeatherData!)
             };
         }
@@ -86,7 +87,8 @@ namespace AppLogic.Services
                 DayCardId = dayCard!.Id,
                 UserId = dayCard.UserId!,
                 Date = dayCard.Date,
-                AirQualitySummary = AirQualityService.ConvertToDTO(dayCard.AirQualityData!),
+                AirQualitySummary = AirQualityService.ConvertToAQDTO(dayCard.AirQualityData!),
+                PollenSummary = AirQualityService.ConvertToPollenDTO(dayCard.AirQualityData!),
                 WeatherSummary = WeatherService.ConvertToDTO(dayCard.WeatherData!)
             };
 
@@ -101,7 +103,8 @@ namespace AppLogic.Services
                 DayCardId = dayCard!.Id,
                 UserId = dayCard.UserId,
                 Date = dayCard.Date,
-                AirQualitySummary = AirQualityService.ConvertToDTO(dayCard.AirQualityData!),
+                AirQualitySummary = AirQualityService.ConvertToAQDTO(dayCard.AirQualityData!),
+                PollenSummary = AirQualityService.ConvertToPollenDTO(dayCard.AirQualityData!),
                 WeatherSummary = WeatherService.ConvertToDTO(dayCard.WeatherData!)
             };
         }

@@ -31,16 +31,16 @@ namespace Presentation
                     //sessionContext = ;
                     break;
 
-                case DayCardMenuState.AirQuality:
-                    sessionContext = await SpecificAirQualityMenuHandler(sessionContext);
+                case DayCardMenuState.AirQualityDetails:
+                    sessionContext = await AirQualityDetailsMenuHandler(sessionContext);
                     break;
 
-                case DayCardMenuState.Pollen:
-                    //sessionContext = ;
+                case DayCardMenuState.PollenDetails:
+                    sessionContext = await PollenDetailsMenuHandler(sessionContext);
                     break;
 
-                case DayCardMenuState.Weather:
-                    //sessionContext = ;
+                case DayCardMenuState.WeatherDetails:
+                    sessionContext = await WeatherDetailsMenuHandler(sessionContext);
                     break;
 
                 case DayCardMenuState.CaffeineDrinks:
@@ -60,7 +60,7 @@ namespace Presentation
 
         }
 
-        
+
 
         public async Task<TContext> HandleUserMenuState<TContext>(TContext sessionContext) where TContext : SessionContext
         {
@@ -108,11 +108,11 @@ namespace Presentation
                 case MainMenuState.Exit:
                     break;
 
-                
+
             }
             return sessionContext;
         }
-        
+
 
         public async Task<TContext> InitMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
@@ -148,7 +148,7 @@ namespace Presentation
         {
             // Get basic user info/input
             string location = View.Input_Location();
-            // Get list of locations that match users input location
+            // Get list of locations that match users input location%
             GeoResultResponse geoResultResponse = await _controller.LocationGeoResultList(location);
             // User chooses a Location from the list of locations
             GeoResult geoResult = GetMenuValue(geoResultResponse.Results, sessionContext);
@@ -293,24 +293,55 @@ namespace Presentation
         public async Task<TContext> SpecificDayCardMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
 
+
+            sessionContext = ResetMenuStates(sessionContext);
             sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.DTO_CurrentUser!.ToString()}";
             sessionContext.SubHeader = MenuText.Header.CurrentDayCard + "\n[OVERVIEW]\n" + sessionContext.DTO_CurrentDayCard!.ToString();
-            var specific = sessionContext.DTO_CurrentDayCard!;
 
-            var specUserChoice = GetMenuValue(MenuText.NavOption.s_SpecificDayCardMenu.ToList(), sessionContext);
+            List<string>? specificDayCardMenu = new List<string>()
+            {
+                MenuText.NavOption.Weather,
+                MenuText.NavOption.AirQuality,
+                MenuText.NavOption.Pollen,
+
+            };
+
+            if (sessionContext.DTO_CurrentDayCard.SupplementsSummary != null)
+            {
+                specificDayCardMenu.Add(MenuText.NavOption.Supplements);
+            }
+            else
+            {
+                specificDayCardMenu.Add(MenuText.NavOption.AddSupplements);
+            }
+
+            if (sessionContext.DTO_CurrentDayCard.CaffeineDrinksSummary != null)
+            {
+                specificDayCardMenu.Add(MenuText.NavOption.CaffeineDrinks);
+            }
+            else
+            {
+                specificDayCardMenu.Add(MenuText.NavOption.AddCaffeine);
+            }
+
+
+            specificDayCardMenu.Add("[BACK]");
+            specificDayCardMenu.Add("[EXIT]");
+
+            var specUserChoice = GetMenuValue(specificDayCardMenu, sessionContext);
 
             switch (specUserChoice)
             {
                 case MenuText.NavOption.Weather:
-                    sessionContext.DayCardMenuState = DayCardMenuState.Weather;
+                    sessionContext.DayCardMenuState = DayCardMenuState.WeatherDetails;
                     break;
 
                 case MenuText.NavOption.AirQuality:
-                    sessionContext.DayCardMenuState = DayCardMenuState.AirQuality;
+                    sessionContext.DayCardMenuState = DayCardMenuState.AirQualityDetails;
                     break;
 
                 case MenuText.NavOption.Pollen:
-                    sessionContext.DayCardMenuState = DayCardMenuState.Pollen;
+                    sessionContext.DayCardMenuState = DayCardMenuState.PollenDetails;
                     break;
 
                 case MenuText.NavOption.Supplements:
@@ -341,27 +372,52 @@ namespace Presentation
             return sessionContext;
 
         }
-
-        private async Task<TContext> SpecificAirQualityMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
+        private async Task<TContext> WeatherDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             Console.Clear();
-            Console.WriteLine(sessionContext.DTO_CurrentDayCard.AirQualitySummary.ToString());
+            Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.DTO_CurrentUser!.ToString()}");
+            Console.WriteLine(sessionContext.DTO_CurrentDayCard.WeatherSummary.ToString());
             Console.ReadLine();
+            sessionContext = ResetMenuStates(sessionContext);
+            sessionContext.DayCardMenuState = DayCardMenuState.Overview;
             return sessionContext;
         }
+        private async Task<TContext> AirQualityDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
+        {
+            Console.Clear();
+            Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.DTO_CurrentUser!.ToString()}");
+            Console.WriteLine(sessionContext.DTO_CurrentDayCard.AirQualitySummary.ToString());
+            Console.ReadLine();
+            sessionContext = ResetMenuStates(sessionContext);
+            sessionContext.DayCardMenuState = DayCardMenuState.Overview;
+            return sessionContext;
+        }
+
+        private async Task<TContext> PollenDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
+        {
+            Console.Clear();
+            Console.WriteLine(sessionContext.DTO_CurrentDayCard.PollenSummary.ToString());
+            Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.DTO_CurrentUser!.ToString()}");
+            Console.ReadLine();
+            sessionContext = ResetMenuStates(sessionContext);
+            sessionContext.DayCardMenuState = DayCardMenuState.Overview;
+            return sessionContext;
+        }
+
         public TContext SpecificUserMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.DTO_CurrentUser!.ToString()}";
 
+            var specificUserMenu = MenuText.NavOption.s_SpecificUserMenu.ToList();
 
             if (sessionContext.DTO_CurrentUser.DTO_AllDayCards!.Count > 0)
             {
                 sessionContext.SubHeader = "Number of Daycards: " + sessionContext.DTO_CurrentUser.DTO_AllDayCards.Count;
-
+                specificUserMenu = specificUserMenu.Prepend(MenuText.NavOption.ShowAllDayCards).ToList();
             }
 
+            var specUserChoice = GetMenuValue(specificUserMenu, sessionContext);
 
-            var specUserChoice = GetMenuValue(MenuText.NavOption.s_SpecificUserMenu.ToList(), sessionContext);
             switch (specUserChoice)
             {
                 case MenuText.NavOption.CreateNewDayCard:
@@ -396,6 +452,11 @@ namespace Presentation
 
                 View.DisplayMenu(currentMenuStringList, ref currentIndex, sessionContext.MainHeader!, sessionContext.SubHeader, sessionContext.ErrorMessage);
                 keyPress = View.InputToMenuIndex(ref currentIndex);
+
+                if (keyPress == ConsoleKey.Escape)
+                {
+                    
+                }
 
             } while (keyPress != ConsoleKey.Enter && keyPress != ConsoleKey.Escape);
 

@@ -9,7 +9,7 @@ namespace AppLogic.Models.DTOs
         public int? DayCardId { get; set; }
         public List<HourlyWeatherData>? HourlyWeatherData { get; set; } = new List<HourlyWeatherData>();
 
-        public string MainHeader { get; set; } = "TIME\tTEMP\tFEELSLIKE\tHumidity\tPrecip\tRain\tCloud\tUV\tWind\tPressure";
+        public string MainHeader { get; set; } = "TIME\tTEMP\tFEELSLIKE\tHUMIDITY\tPRECIP\tRAIN\tCLOUD\tUV\tWIND\tPRESSURE";
 
 
 

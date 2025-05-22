@@ -8,8 +8,13 @@ namespace AppLogic.Models.DTOs
         public int? UserId { get; set; }
         public DateOnly Date { get; set; }
 
-        public DTO_AllAirQualities? AirQualitySummary { get; set; }
+        public DTO_AllAirQualityData? AirQualitySummary { get; set; }
+        public DTO_AllPollenData? PollenSummary { get; set; }
         public DTO_AllWeatherData? WeatherSummary { get; set; }
+        public DTO_AllCaffeineDrinks? CaffeineDrinksSummary { get; set; }
+        public DTO_AllSupplements? SupplementsSummary { get; set; }
+
+        public int MyProperty { get; set; }
 
         public override string ToString()
         {
@@ -37,12 +42,12 @@ namespace AppLogic.Models.DTOs
                 sb.AppendLine("  [No air quality data]");
             }
 
-            if (AirQualitySummary?.HourlyPollenData != null && AirQualitySummary.HourlyPollenData.Count > 0)
+            if (PollenSummary?.HourlyPollenData != null && PollenSummary.HourlyPollenData.Count > 0)
             {
-                var avgBirch = AirQualitySummary.HourlyPollenData.Average(d => d.BirchPollen.Value ?? 0);
+                var avgBirch = PollenSummary.HourlyPollenData.Average(d => d.Birch.Value ?? 0);
 
-                string birchUnit = AirQualitySummary.HourlyPollenData
-                    .Select(x => x.BirchPollen.Unit)
+                string birchUnit = PollenSummary.HourlyPollenData
+                    .Select(x => x.Birch.Unit)
                     .FirstOrDefault()!;
 
                 sb.AppendLine($"\t\tAvg Birch Pollen: {avgBirch:F1} {birchUnit}");

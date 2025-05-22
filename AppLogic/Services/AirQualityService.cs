@@ -17,13 +17,55 @@ namespace AppLogic.Services
 
         }
 
-        public static DTO_AllAirQualities ConvertToDTO(AirQualityData airQuality)
+        public static DTO_AllPollenData ConvertToPollenDTO(AirQualityData airQuality)
         {
 
             var block = airQuality.HourlyBlock ?? throw new ArgumentNullException(nameof(airQuality));
             var units = airQuality.HourlyUnits ?? throw new ArgumentNullException(nameof(airQuality));
 
-            return new DTO_AllAirQualities()
+            return new DTO_AllPollenData()
+            {
+                HourlyPollenData = block.Time
+                .Select((time, i) => new HourlyPollenData()
+                {
+                    Time = time.Hour,
+
+                    Birch = new Measurement<double?>
+                    {
+                        Value = block.BirchPollen.ElementAtOrDefault(i),
+                        Unit = units.BirchPollen
+                    },
+                    Alder = new Measurement<double?>
+                    {
+                        Value = block.AlderPollen.ElementAtOrDefault(i),
+                        Unit = units.AlderPollen
+                    },
+                    Grass = new Measurement<double?>
+                    {
+                        Value = block.GrassPollen.ElementAtOrDefault(i),
+                        Unit = units.GrassPollen
+                    },
+                    Mugwort = new Measurement<double?>
+                    {
+                        Value = block.MugwortPollen.ElementAtOrDefault(i),
+                        Unit = units.MugwortPollen
+                    },
+                    Ragweed = new Measurement<double?>
+                    {
+                        Value = block.RagweedPollen.ElementAtOrDefault(i),
+                        Unit = units.RagweedPollen
+                    }
+                }).ToList()
+            };
+        }
+
+        public static DTO_AllAirQualityData ConvertToAQDTO(AirQualityData airQuality)
+        {
+
+            var block = airQuality.HourlyBlock ?? throw new ArgumentNullException(nameof(airQuality));
+            var units = airQuality.HourlyUnits ?? throw new ArgumentNullException(nameof(airQuality));
+
+            return new DTO_AllAirQualityData()
             {
                 HourlyAirQualityData = block.Time
                     .Select((time, i) => new HourlyAirQualityData()
@@ -50,12 +92,12 @@ namespace AppLogic.Services
                             Value = block.Ozone.ElementAtOrDefault(i),
                             Unit = units.Ozone
                         },
-                        CarbonMonoxide = new Measurement<double?>
+                        CO = new Measurement<double?>
                         {
                             Value = block.CarbonMonoxide.ElementAtOrDefault(i),
                             Unit = units.CarbonMonoxide
                         },
-                        NitrogenDioxide = new Measurement<double?>
+                        NO2 = new Measurement<double?>
                         {
                             Value = block.NitrogenDioxide.ElementAtOrDefault(i),
                             Unit = units.NitrogenDioxide
@@ -68,41 +110,6 @@ namespace AppLogic.Services
 
                     }).
                     ToList(),
-
-                HourlyPollenData = block.Time
-                .Select((time, i) => new HourlyPollenData()
-                {
-                    Time = time.Hour,
-
-                    BirchPollen = new Measurement<double?>
-                    {
-                        Value = block.BirchPollen.ElementAtOrDefault(i),
-                        Unit = units.BirchPollen
-                    },
-                    AlderPollen = new Measurement<double?>
-                    {
-                        Value = block.AlderPollen.ElementAtOrDefault(i),
-                        Unit = units.AlderPollen
-                    },
-                    GrassPollen = new Measurement<double?>
-                    {
-                        Value = block.GrassPollen.ElementAtOrDefault(i),
-                        Unit = units.GrassPollen
-                    },
-                    MugwortPollen = new Measurement<double?>
-                    {
-                        Value = block.MugwortPollen.ElementAtOrDefault(i),
-                        Unit = units.MugwortPollen
-                    },
-                    RagweedPollen = new Measurement<double?>
-                    {
-                        Value = block.RagweedPollen.ElementAtOrDefault(i),
-                        Unit = units.RagweedPollen
-                    }
-                }).ToList()
-
-
-
             };
 
         }

@@ -70,10 +70,13 @@
             public const string Sleep = "[SLEEP]";
             public const string ComputerActivity = "[COMPUTER ACTIVITY]";
 
+            public const string AddSupplements = "[ADD SUPPLEMENTS]";
+            public const string AddCaffeine = "[ADD CAFFEINE]";
+
             // STATIC MENU OPTIONS
             public static string[] s_InitMenu = [Login, GetAllUsers, CreateNewUser, GetTodaysWeather, Exit];
             public static string[] s_AllUserMenu = [Login, CreateNewUser];
-            public static string[] s_SpecificUserMenu = [ShowAllDayCards, CreateNewDayCard, SearchDayCard];
+            public static string[] s_SpecificUserMenu = [CreateNewDayCard, SearchDayCard];
             public static string[] s_SpecificDayCardMenu = [Weather, AirQuality, Pollen, Supplements, CaffeineDrinks, Exercise, ComputerActivity, Sleep];
 
         }

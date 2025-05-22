@@ -11,7 +11,6 @@ namespace Presentation
         public DayCardMenuState DayCardMenuState { get; set; }
 
 
-
         // MAIN PAGE HEADER VARIABLE, UPDATE DYNAMICALLY
         public string? MainHeader { get; set; }
         public string? SubHeader { get; set; }
@@ -33,7 +32,8 @@ namespace Presentation
         public List<DTO_AllUser>? DTO_AllUsers { get; set; }
         public List<DTO_AllDayCard>? DTO_AllDayCards { get; set; }
 
-        public DTO_AllAirQualities DTO_AllAirQualities { get; set; }
+        public DTO_AllAirQualityData DTO_AllAirQualityData { get; set; }
+        public DTO_AllWeatherData DTO_AllWeatherData { get; set; }
 
         //public User? CurrentUser { get; set; }
         //public DayCard? CurrentDayCard { get; set; }

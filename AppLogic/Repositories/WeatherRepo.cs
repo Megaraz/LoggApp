@@ -1,4 +1,6 @@
-﻿namespace AppLogic.Repositories
+﻿using System.Diagnostics;
+
+namespace AppLogic.Repositories
 {
     public static class WeatherRepo
     {
@@ -9,27 +11,46 @@
             "precipitation,rain,cloud_cover,uv_index,wind_speed_10m,pressure_msl,is_day";
 
         private static readonly string _geoCodeBaseUrl = $"https://geocoding-api.open-meteo.com/v1/search";
+
+        private static readonly HttpClient _httpClient = new HttpClient();
         
         public static async Task<string> GetWeatherDataAsync(string lat, string lon, string date)
         {
-            HttpClient client = new HttpClient();
 
             var url = _forecastBaseUrl +
                       $"?latitude={lat}&longitude={lon}" +
                       $"&hourly={_forecastHourlyParams}" +
                       $"&start_date={date}&end_date={date}" +
-                      $"&timezone=auto";
+                      $"&timezone=auto" +
+                      $"&wind_speed_unit=ms";
 
-            return await client.GetStringAsync(url);
+
+            //var stopwatch = Stopwatch.StartNew();
+
+            //var response = await _httpClient.GetStringAsync(url);
+
+            //stopwatch.Stop();
+            //Console.WriteLine($"Total response time: {stopwatch.ElapsedMilliseconds} ms");
+            //Console.ReadKey();
+            //return response;
+
+            return await _httpClient.GetStringAsync(url);
         }
 
         public static async Task<string> GetGeoCodeAsync(string city)
         {
-            HttpClient client = new HttpClient();
             string url = _geoCodeBaseUrl + $"?name={city}";
 
+            //var stopwatch = Stopwatch.StartNew();
 
-            return await client.GetStringAsync(url);
+            //var response = await _httpClient.GetStringAsync(url);
+
+            //stopwatch.Stop();
+            //Console.WriteLine($"Total response time: {stopwatch.ElapsedMilliseconds} ms");
+            //Console.ReadKey();
+            //return response;
+
+            return await _httpClient.GetStringAsync(url);
 
         }
     }

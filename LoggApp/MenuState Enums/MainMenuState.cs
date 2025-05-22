@@ -23,9 +23,9 @@
     {
         Overview,
         AllData,
-        Weather,
-        AirQuality,
-        Pollen,
+        WeatherDetails,
+        AirQualityDetails,
+        PollenDetails,
         Exercise,
         ComputerActivity,
         Sleep,
