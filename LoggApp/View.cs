@@ -7,11 +7,15 @@ namespace Presentation
 {
     public class View
     {
-        public MenuHandler MenuHandler { get; }
+        public MainMenuHandler MainMenuHandler { get; }
+        public UserMenuHandler UserMenuHandler { get; }
+        public DayCardMenuHandler DayCardMenuHandler { get; }
 
-        public View(MenuHandler menuHandler)
+        public View(MainMenuHandler mainMenuHandler, UserMenuHandler userMenuHandler, DayCardMenuHandler menuHandler)
         {
-            MenuHandler = menuHandler;
+            MainMenuHandler = mainMenuHandler;
+            UserMenuHandler = userMenuHandler;
+            DayCardMenuHandler = menuHandler;
         }
 
 
@@ -21,18 +25,17 @@ namespace Presentation
         {
             if (sessionContext.MainMenuState != MainMenuState.None)
             {
-                sessionContext = await MenuHandler.HandleMainMenuState(sessionContext);
-
+                sessionContext = await MainMenuHandler.HandleMenuState(sessionContext);
             }
 
             if (sessionContext.UserMenuState != UserMenuState.None)
             {
-                sessionContext = await MenuHandler.HandleUserMenuState(sessionContext);
+                sessionContext = await UserMenuHandler.HandleMenuState(sessionContext);
             }
 
             if (sessionContext.DayCardMenuState != DayCardMenuState.None)
             {
-                sessionContext = await MenuHandler.HandleDayCardMenuState(sessionContext);
+                sessionContext = await DayCardMenuHandler.HandleMenuState(sessionContext);
             }
 
             //sessionContext = await MenuHandler.HandleUserMenuState(sessionContext);

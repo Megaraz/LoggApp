@@ -21,7 +21,9 @@ namespace Presentation
         private LoggAppContext _dbContext;
         private SessionContext _sessionContext;
         private View _view;
-        private MenuHandler _menuHandler;
+        private DayCardMenuHandler _dayCardMenuHandler;
+        private UserMenuHandler _userMenuHandler;
+        private MainMenuHandler _mainMenuHandler;
         private Controller _controller;
 
         public App(LoggAppContext dbContext)
@@ -36,8 +38,10 @@ namespace Presentation
 
             _sessionContext = new SessionContext();
             _controller = new Controller(_dbContext);
-            _menuHandler = new MenuHandler(_controller);
-            _view = new View(_menuHandler);
+            _userMenuHandler = new UserMenuHandler(_controller);
+            _mainMenuHandler = new MainMenuHandler(_controller);
+            _dayCardMenuHandler = new DayCardMenuHandler(_controller);
+            _view = new View(_mainMenuHandler, _userMenuHandler, _dayCardMenuHandler);
 
             _sessionContext.MainMenuState = MainMenuState.Main;
             _sessionContext.MainHeader = MenuText.Header.InitMenu;
