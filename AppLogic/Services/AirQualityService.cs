@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using AppLogic.Migrations;
 using AppLogic.Models.DTOs;
 using AppLogic.Models.Weather;
 using AppLogic.Models.Weather.AirQuality;

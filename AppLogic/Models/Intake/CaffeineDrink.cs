@@ -12,10 +12,11 @@ namespace AppLogic.Models.Intake
         public int? EstimatedMgCaffeine { get; set; }
         public string? TypeOfDrink { get; set; } 
 
-        public CaffeineDrink(TimeOnly timeOfIntake, SizeOfDrink sizeOfDrink, string typeOfDrink)
+        public CaffeineDrink(int dayCardId, TimeOnly? timeOfIntake, SizeOfDrink? sizeOfDrink, string? typeOfDrink)
         {
+            DayCardId = dayCardId;
             TimeOf = timeOfIntake;
-            TypeOfDrink = typeOfDrink ?? throw new ArgumentNullException(nameof(typeOfDrink));
+            TypeOfDrink = typeOfDrink;
             EstimatedMgCaffeine = sizeOfDrink switch
             {
                 SizeOfDrink.Small => 110,

@@ -69,7 +69,7 @@ namespace AppLogic.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AirQualities",
+                name: "AirQualityData",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -79,6 +79,19 @@ namespace AppLogic.Migrations
                     Lat = table.Column<double>(type: "float", nullable: true),
                     Lon = table.Column<double>(type: "float", nullable: true),
                     GenerationTime_ms = table.Column<double>(type: "float", nullable: false),
+                    HourlyUnits_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_AlderPollen = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_BirchPollen = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_GrassPollen = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_MugwortPollen = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_RagweedPollen = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_UVI = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_AQI = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_PM25 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_Ozone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_CarbonMonoxide = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_NitrogenDioxide = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_Dust = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HourlyBlock_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HourlyBlock_Time = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HourlyBlock_AlderPollen = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -96,9 +109,9 @@ namespace AppLogic.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AirQualities", x => x.Id);
+                    table.PrimaryKey("PK_AirQualityData", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AirQualities_DayCards_DayCardId",
+                        name: "FK_AirQualityData_DayCards_DayCardId",
                         column: x => x.DayCardId,
                         principalTable: "DayCards",
                         principalColumn: "Id");
@@ -289,8 +302,8 @@ namespace AppLogic.Migrations
                 column: "DayCardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AirQualities_DayCardId",
-                table: "AirQualities",
+                name: "IX_AirQualityData_DayCardId",
+                table: "AirQualityData",
                 column: "DayCardId",
                 unique: true,
                 filter: "[DayCardId] IS NOT NULL");
@@ -337,7 +350,7 @@ namespace AppLogic.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AirQualities");
+                name: "AirQualityData");
 
             migrationBuilder.DropTable(
                 name: "CaffeineDrinks");

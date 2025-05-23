@@ -19,8 +19,6 @@ namespace Presentation
 
         public int CurrentMenuIndex { get; set; }
 
-        // Main Navigation Menu
-        public List<string>? CurrentMainMenu { get; set; }
 
         // ERROR VARIABLE, UPDATE DYNAMICALLY
         public string? ErrorMessage { get; set; }

@@ -6,6 +6,7 @@
         SpecificUser,
         AllUsers,
         TodaysWeather,
+        Back,
         Exit,
         None
     };
@@ -16,6 +17,7 @@
         CreateNewDayCard,
         SpecificDayCard,
         SearchDayCard,
+        Back,
         None
     };
 
@@ -29,8 +31,10 @@
         Exercise,
         ComputerActivity,
         Sleep,
-        CaffeineDrinks,
+        AddCaffeineDrink,
+        CaffeineDrinkDetails,
         Supplements,
+        Back,
         None
     };
 

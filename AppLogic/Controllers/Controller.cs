@@ -1,5 +1,6 @@
 ﻿using AppLogic.Models;
 using AppLogic.Models.DTOs;
+using AppLogic.Models.Intake.InputModels;
 using AppLogic.Services;
 
 namespace AppLogic.Controllers
@@ -9,18 +10,27 @@ namespace AppLogic.Controllers
         private readonly LoggAppContext _dbContext;
         private readonly UserService _userService;
         private readonly DayCardService _dayCardService;
+        private readonly CaffeineDrinkService _caffeineDrinkService;
         public Controller(LoggAppContext dbContext)
         {
             _dbContext = dbContext;
-            _dayCardService = new DayCardService(dbContext);
             _userService = new UserService(dbContext);
+            _dayCardService = new DayCardService(dbContext);
+            _caffeineDrinkService = new CaffeineDrinkService(dbContext);
         }
 
-        public async Task<DTO_SpecificDayCard> CreateNewDayCardAsync(DayCardInputModel input)
+        public async Task<DTO_SpecificDayCard> CreateNewDayCardAsync(int userId, DayCardInputModel input)
         {
-            return await _dayCardService.CreateNewDayCardAsync(input);
+            return await _dayCardService.CreateNewDayCardAsync(userId, input);
 
         }
+
+        public async Task<DTO_SpecificCaffeineDrink> AddCaffeineDrinkToDayCardAsync(int dayCardId, CaffeineDrinkInputModel input)
+        {
+            return await _caffeineDrinkService.AddCaffeineDrinkToDayCardAsync(dayCardId, input);
+        }
+
+
 
         public async Task<GeoResultResponse> LocationGeoResultList(string cityName)
         {

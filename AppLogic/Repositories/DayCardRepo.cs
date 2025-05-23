@@ -3,31 +3,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AppLogic.Repositories
 {
-    public class DayCardRepo
+    public class DayCardRepo : GenericRepo<DayCard>
     {
 
         private readonly LoggAppContext _dbContext;
 
-        public DayCardRepo(LoggAppContext dbContext)
+        public DayCardRepo(LoggAppContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }
 
+        
+        //public async Task<DayCard> Create(DayCard newDayCard)
+        //{
+        //    try
+        //    {
+        //        await _dbContext.DayCards.AddAsync(newDayCard);
+        //        await _dbContext.SaveChangesAsync();
+        //        return newDayCard;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw new ArgumentException($"Something went wrong, {e.Message}");
 
-        public async Task<DayCard> Create(DayCard newDayCard)
-        {
-            try
-            {
-                await _dbContext.DayCards.AddAsync(newDayCard);
-                await _dbContext.SaveChangesAsync();
-                return newDayCard;
-            }
-            catch (Exception e)
-            {
-                throw new ArgumentException($"Something went wrong, {e.Message}");
-
-            }
-        }
+        //    }
+        //}
 
         //public async Task<DTO_SpecificDayCard?> ReadSingleAsync(DateOnly date, int userId)
         //{

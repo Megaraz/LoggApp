@@ -7,7 +7,7 @@ namespace AppLogic.Models
     public class DayCardInputModel
     {
         public DateOnly? Date { get; set; } = DateOnly.FromDateTime(DateTime.Today);
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
         public double? Lat { get; set; }
         public double? Lon { get; set; }
         public ICollection<Activity.Activity>? Activities { get; set; } = new List<Activity.Activity>();
@@ -17,7 +17,7 @@ namespace AppLogic.Models
         public ICollection<Supplement>? Supplements { get; set; } = new List<Supplement>();
         //public virtual ICollection<WeatherData>? WeatherData { get; set; } = new List<WeatherData>();
         public WeatherData? WeatherData { get; set; }
-        public AirQualityData AirQualityData { get; set; }
+        public AirQualityData? AirQualityData { get; set; }
 
     }
 }

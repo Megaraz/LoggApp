@@ -13,7 +13,7 @@ namespace AppLogic
         public DbSet<User> Users { get; set; }
         public DbSet<DayCard> DayCards { get; set; }
         public DbSet<WeatherData> WeatherData { get; set; }
-        public DbSet<AirQualityData> AirQualities { get; set; }
+        public DbSet<AirQualityData> AirQualityData { get; set; }
         public DbSet<Medication> Medications { get; set; }
         public DbSet<CaffeineDrink> CaffeineDrinks { get; set; }
         public DbSet<Food> Foods { get; set; }
@@ -51,7 +51,7 @@ namespace AppLogic
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-            optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=LoggApp;Trusted_Connection=True;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=HealthLogApp;Trusted_Connection=True;TrustServerCertificate=True;");
             //optionsBuilder.UseSqlServer(@"Server=tcp:rlack.database.windows.net,1433;Initial Catalog=HealthLogg;Persist Security Info=False;User ID=rlack;Password=Tellus46;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
         }

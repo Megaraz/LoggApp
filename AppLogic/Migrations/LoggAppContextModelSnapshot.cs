@@ -255,7 +255,7 @@ namespace AppLogic.Migrations
                         .IsUnique()
                         .HasFilter("[DayCardId] IS NOT NULL");
 
-                    b.ToTable("AirQualities");
+                    b.ToTable("AirQualityData");
                 });
 
             modelBuilder.Entity("AppLogic.Models.Weather.WeatherData", b =>
@@ -477,7 +477,7 @@ namespace AppLogic.Migrations
 
                             b1.HasKey("AirQualityDataId");
 
-                            b1.ToTable("AirQualities");
+                            b1.ToTable("AirQualityData");
 
                             b1.HasAnnotation("Relational:JsonPropertyName", "hourly");
 
@@ -544,7 +544,7 @@ namespace AppLogic.Migrations
 
                             b1.HasKey("AirQualityDataId");
 
-                            b1.ToTable("AirQualities");
+                            b1.ToTable("AirQualityData");
 
                             b1.HasAnnotation("Relational:JsonPropertyName", "hourly_units");
 

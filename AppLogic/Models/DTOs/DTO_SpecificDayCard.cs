@@ -14,8 +14,6 @@ namespace AppLogic.Models.DTOs
         public DTO_AllCaffeineDrinks? CaffeineDrinksSummary { get; set; }
         public DTO_AllSupplements? SupplementsSummary { get; set; }
 
-        public int MyProperty { get; set; }
-
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -90,6 +88,13 @@ namespace AppLogic.Models.DTOs
             {
                 sb.AppendLine("  [No weather data]");
             }
+
+            if (CaffeineDrinksSummary != null)
+            {
+                sb.AppendLine($"\n\t\tCaffeinedrinks: {CaffeineDrinksSummary.HourlyCaffeineData.Count}");
+                sb.AppendLine($"\t\tTotal Caffeine: {CaffeineDrinksSummary.TotalCaffeineInMg}mg");
+            }
+
 
             return sb.ToString().TrimEnd();
         }

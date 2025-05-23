@@ -23,10 +23,15 @@
         public static class Prompt
         {
             // PROMPTS
+            public const string EnterTimeOfIntake = "ENTER TIME OF";
+
             public const string CreateDayCard = "ENTER A DATE FOR THE NEW DAYCARD, OR LEAVE EMPTY FOR TODAYS DATE";
 
             public const string CreateUser = "ENTER A USERNAME";
             public const string CreateUserCity = "ENTER A CITY OR LOCATION";
+            public const string CreateUserLocationChoice = "CHOOSE YOUR LOCATION";
+
+            public const string ChooseSizeOfDrink = "CHOOSE SIZE OF DRINK";
 
         }
 
@@ -37,6 +42,8 @@
             public const string NoUsersFound = "NO USERS FOUND";
 
             public const string NoDayCardsFound = "NO DAYCARDS FOUND FOR THIS USER";
+
+            public const string InvalidTimeInput = "NOT A VALID TIME";
 
             public const string InvalidDayCardInput = "NOT A VALID DATE";
             public const string InvalidUserNameInput = "NOT A VALID USERNAME";
@@ -54,7 +61,10 @@
             public const string Exit = "[EXIT]";
 
             public const string SearchUser = "[SEARCH USER]";
-            
+
+            public const string DrinkLarge = "[LARGE]";
+            public const string DrinkMedium = "[MEDIUM]";
+            public const string DrinkSmall = "[SMALL]";
 
 
             public const string CreateNewDayCard = "[CREATE NEW DAYCARD]";
@@ -73,11 +83,14 @@
             public const string AddSupplements = "[ADD SUPPLEMENTS]";
             public const string AddCaffeine = "[ADD CAFFEINE]";
 
+            public const string Back = "[BACK]";
+
             // STATIC MENU OPTIONS
             public static string[] s_InitMenu = [Login, GetAllUsers, CreateNewUser, GetTodaysWeather, Exit];
             public static string[] s_AllUserMenu = [Login, CreateNewUser];
             public static string[] s_SpecificUserMenu = [CreateNewDayCard, SearchDayCard];
             public static string[] s_SpecificDayCardMenu = [Weather, AirQuality, Pollen, Supplements, CaffeineDrinks, Exercise, ComputerActivity, Sleep];
+            public static string[] s_DrinkSize = [DrinkLarge, DrinkMedium, DrinkSmall];
 
         }
 

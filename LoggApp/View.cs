@@ -1,4 +1,5 @@
 ﻿using AppLogic.Models;
+using AppLogic.Models.Intake.InputModels;
 using Microsoft.IdentityModel.Tokens;
 using Presentation.MenuState_Enums;
 
@@ -37,37 +38,66 @@ namespace Presentation
             //sessionContext = await MenuHandler.HandleUserMenuState(sessionContext);
             return sessionContext;
         }
-       
-        public static string Input_Location()
+
+        public static string? Input_Location()
         {
             return GetValidUserInput(MenuText.Prompt.CreateUserCity, MenuText.Error.InvalidUserCityInput);
+
         }
 
-        public static UserInputModel Input_User()
+        public static string? Input_TimeOfIntake()
         {
-            var inputModel = new UserInputModel()
-            {
-                Username = GetValidUserInput(MenuText.Prompt.CreateUser, MenuText.Error.InvalidUserNameInput),
-                CityName = GetValidUserInput(MenuText.Prompt.CreateUserCity, MenuText.Error.InvalidUserCityInput)
-            };
-            
-
-            return inputModel;
+            return GetValidUserInput(MenuText.Prompt.EnterTimeOfIntake, MenuText.Error.InvalidTimeInput);
         }
 
 
-        public static DayCardInputModel Input_DayCard<TContext>(TContext sessionContext) where TContext : SessionContext
+
+        public static UserInputModel? Input_User()
         {
-            var inputModel = new DayCardInputModel()
+
+            var userName = GetValidUserInput(MenuText.Prompt.CreateUser, MenuText.Error.InvalidUserNameInput);
+            if (userName.IsNullOrEmpty())
             {
-                UserId = sessionContext.DTO_CurrentUser!.Id,
-                Date = DateOnly.Parse(GetValidUserInput(MenuText.Prompt.CreateDayCard, MenuText.Error.InvalidDayCardInput)),
-                Lat = sessionContext.DTO_CurrentUser.Lat,
-                Lon = sessionContext.DTO_CurrentUser.Lon
+                return null;
+            }
+            var city = GetValidUserInput(MenuText.Prompt.CreateUserCity, MenuText.Error.InvalidUserCityInput);
+            if (city.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            UserInputModel userInputModel = new UserInputModel()
+            {
+                Username = userName!,
+                CityName = city!
             };
-            return inputModel;
+
+
+            return userInputModel;
         }
-        
+
+
+        public static DayCardInputModel? Input_DayCard<TContext>(TContext sessionContext) where TContext : SessionContext
+        {
+            string? dateString = GetValidUserInput(MenuText.Prompt.CreateDayCard, MenuText.Error.InvalidDayCardInput)!;
+
+            DayCardInputModel? dayCardInputModel = null;
+
+            if (!dateString.IsNullOrEmpty() && sessionContext.DTO_CurrentUser != null)
+            {
+                dayCardInputModel = new DayCardInputModel()
+                {
+                    UserId = sessionContext.DTO_CurrentUser!.Id,
+                    Date = DateOnly.Parse(dateString),
+                    Lat = sessionContext.DTO_CurrentUser.Lat,
+                    Lon = sessionContext.DTO_CurrentUser.Lon
+
+                };
+            }
+
+            return dayCardInputModel;
+        }
+
         public static ConsoleKey InputToMenuIndex(ref int currentMenuIndex)
         {
 
@@ -96,7 +126,7 @@ namespace Presentation
         }
 
 
-        public static string GetValidUserInput(string prompt, string? errorMessage = null)
+        public static string? GetValidUserInput(string prompt, string? errorMessage = null)
         {
             Console.Clear();
             if (!prompt.IsNullOrEmpty())
@@ -104,12 +134,33 @@ namespace Presentation
                 Console.WriteLine(prompt);
 
             }
-            string userInput;
+            string? userInput = null;
             bool validInput;
 
             do
             {
-                userInput = Console.ReadLine()!;
+
+                var keyPress = Console.ReadKey();
+
+                if (keyPress.Key == ConsoleKey.Escape)
+                {
+                    break;
+                }
+                else if (keyPress.Key == ConsoleKey.Enter)
+                {
+                    return DateOnly.FromDateTime(DateTime.Today).ToString();
+                }
+                else
+                {
+                    if (char.IsLetterOrDigit(keyPress.KeyChar))
+                    {
+                        userInput = keyPress.KeyChar.ToString();
+                    }
+                }
+
+                userInput += Console.ReadLine()!;
+
+
                 validInput = !string.IsNullOrWhiteSpace(userInput) && !string.IsNullOrEmpty(userInput);
 
                 if (!validInput)
@@ -120,9 +171,9 @@ namespace Presentation
                         Console.WriteLine(errorMessage);
                     }
                 }
-
             }
             while (!validInput);
+
 
             return userInput;
         }
@@ -130,18 +181,31 @@ namespace Presentation
 
 
 
-        public static void DisplayMenu(List<string> currentMenu, ref int CurrentMenuIndex, string mainHeader, string? subHeader = null, string? errorMessage = null)
+        public static void DisplayMenu(List<string> currentMenu, ref int CurrentMenuIndex, string? currentPrompt, string mainHeader, string? subHeader = null, string? errorMessage = null)
         {
             Console.Clear();
-            Console.WriteLine(mainHeader + Environment.NewLine);
+
+
+            // Write MainHeader
+            if (!mainHeader.IsNullOrEmpty())
+            {
+                Console.WriteLine(mainHeader + Environment.NewLine);
+            }
+            if (!currentPrompt.IsNullOrEmpty())
+            {
+                Console.WriteLine(currentPrompt + '\n');
+            }
+
+            // Write Error
+            if (!errorMessage.IsNullOrEmpty())
+            {
+                Console.WriteLine(errorMessage + '\n');
+
+            }
+            // Write SubHeader
             if (!subHeader.IsNullOrEmpty())
             {
                 Console.WriteLine(subHeader);
-
-            }
-            if (!errorMessage.IsNullOrEmpty())
-            {
-                Console.WriteLine(errorMessage);
 
             }
 
@@ -184,5 +248,4 @@ namespace Presentation
 
     }
 }
-    
-    
+
