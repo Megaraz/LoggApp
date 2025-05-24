@@ -10,13 +10,20 @@ using AppLogic.Models;
 using AppLogic.Services;
 using Microsoft.IdentityModel.Tokens;
 using Presentation.MenuState_Enums;
+using AppLogic.Controllers.Interfaces;
 
 namespace Presentation
 {
     public class MainMenuHandler : MenuHandlerBase
     {
-        public MainMenuHandler(Controller controller) : base(controller)
+
+        private readonly IUserController _userController;
+        private readonly IWeatherController _weatherController;
+
+        public MainMenuHandler(IUserController userController, IWeatherController weatherController)
         {
+            _userController = userController;
+            _weatherController = weatherController;
         }
 
         public override async Task<TContext> HandleMenuState<TContext>(TContext sessionContext)
@@ -70,7 +77,7 @@ namespace Presentation
                 if (userChoice != null)
                 {
                     sessionContext
-                        .DTO_CurrentUser = await _controller.ReadUserSingleAsync(userChoice.Id);
+                        .DTO_CurrentUser = await _userController.ReadUserSingleAsync(userChoice.Id);
 
                     sessionContext
                         .MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.DTO_CurrentUser!.ToString()}\n\n\n";
@@ -138,7 +145,7 @@ namespace Presentation
             if (userInputModel != null)
             {
                 // Get list of locations that match users input location
-                GeoResultResponse geoResultResponse = await _controller.UserGeoResultList(userInputModel);
+                GeoResultResponse geoResultResponse = await _weatherController.UserGeoResultList(userInputModel);
 
                 // User chooses a Location from the list of locations
                 sessionContext.CurrentPrompt = MenuText.Prompt.CreateUserLocationChoice;
@@ -148,7 +155,7 @@ namespace Presentation
                 if (userInputModel.GeoResult != null)
                 {
                     // Create a new user with the updated GeoResult, and sets the CurrentUser to the newly created one
-                    sessionContext.DTO_CurrentUser = await _controller.CreateNewUserAsync(userInputModel);
+                    sessionContext.DTO_CurrentUser = await _userController.CreateNewUserAsync(userInputModel);
                     sessionContext.MainMenuState = MainMenuState.SpecificUser;
 
                 }
@@ -163,7 +170,7 @@ namespace Presentation
         private async Task<TContext> GetAllUsers<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
-            List<DTO_AllUser>? allUsers = await _controller.ReadAllUsersAsync()!;
+            List<DTO_AllUser>? allUsers = await _userController.ReadAllUsersAsync()!;
 
             if (allUsers == null || allUsers.Count == 0)
             {
@@ -188,7 +195,7 @@ namespace Presentation
             if (username != null)
             {
 
-                DTO_SpecificUser? resultUser = await _controller.ReadUserSingleAsync(username);
+                DTO_SpecificUser? resultUser = await _userController.ReadUserSingleAsync(username);
 
                 if (resultUser == null)
                 {
@@ -271,7 +278,7 @@ namespace Presentation
             if (!location.IsNullOrEmpty())
             {
                 // Get list of locations that match users input location%
-                GeoResultResponse geoResultResponse = await _controller.LocationGeoResultList(location!);
+                GeoResultResponse geoResultResponse = await _weatherController.LocationGeoResultList(location!);
                 // User chooses a Location from the list of locations
                 GeoResult geoResult = GetMenuValue(geoResultResponse.Results, sessionContext);
 
@@ -280,7 +287,7 @@ namespace Presentation
                     string lat = geoResult.Lat?.ToString(CultureInfo.InvariantCulture)!;
                     string lon = geoResult.Lon?.ToString(CultureInfo.InvariantCulture)!;
                     string date = DateTime.Today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)!;
-                    DTO_AllWeatherData todayWeather = WeatherService.ConvertToDTO(await WeatherService.GetWeatherDataAsync(lat, lon, date));
+                    DTO_AllWeatherData todayWeather = _weatherController.ConvertToDTO(await _weatherController.GetWeatherDataAsync(lat, lon, date));
 
                     Console.WriteLine(todayWeather.ToString());
 

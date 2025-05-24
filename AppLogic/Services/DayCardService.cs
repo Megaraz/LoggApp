@@ -2,23 +2,28 @@
 using AppLogic.Models;
 using AppLogic.Models.DTOs;
 using AppLogic.Repositories;
+using AppLogic.Repositories.Interfaces;
+using AppLogic.Services.Interfaces;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace AppLogic.Services
 {
-    public class DayCardService
+    public class DayCardService : IDayCardService
     {
 
-        private readonly LoggAppContext _dbContext;
-        private readonly DayCardRepo _dayCardRepo;
+        private readonly IDayCardRepo _dayCardRepo;
+        private readonly IWeatherService _weatherService;
+        private readonly IAirQualityService _airQualityService;
+        private readonly ICaffeineDrinkService _caffeineDrinkService;
 
-        public DayCardService(LoggAppContext dbContext)
+        public DayCardService(IDayCardRepo dayCardRepo, IWeatherService weatherService, IAirQualityService airQualityService, ICaffeineDrinkService caffeineDrinkService)
         {
-            _dbContext = dbContext;
-            _dayCardRepo = new DayCardRepo(_dbContext);
+            _dayCardRepo = dayCardRepo;
+            _weatherService = weatherService;
+            _airQualityService = airQualityService;
+            _caffeineDrinkService = caffeineDrinkService;
         }
-
 
         public async Task<DTO_SpecificDayCard> CreateNewDayCardAsync(int userId, DayCardInputModel dayCardInputModel)
         {
@@ -26,8 +31,8 @@ namespace AppLogic.Services
             string lon = dayCardInputModel.Lon?.ToString(CultureInfo.InvariantCulture)!;
             string date = dayCardInputModel.Date?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)!;
 
-            var TASK_weatherData = WeatherService.GetWeatherDataAsync(lat, lon, date)!;
-            var TASK_airQualityData = AirQualityService.GetAirQualityDataAsync(lat, lon, date);
+            var TASK_weatherData = _weatherService.GetWeatherDataAsync(lat, lon, date)!;
+            var TASK_airQualityData = _airQualityService.GetAirQualityDataAsync(lat, lon, date);
 
             DayCard newDayCard = new DayCard()
             {
@@ -46,10 +51,10 @@ namespace AppLogic.Services
                 DayCardId = newDayCard.Id,
                 UserId = newDayCard.UserId,
                 Date = newDayCard.Date,
-                CaffeineDrinksSummary = CaffeineDrinkService.ConvertToSummaryDTO(newDayCard.CaffeineDrinks!.ToList()),
-                AirQualitySummary = AirQualityService.ConvertToAQDTO(newDayCard.AirQualityData!),
-                PollenSummary = AirQualityService.ConvertToPollenDTO(newDayCard.AirQualityData!),
-                WeatherSummary = WeatherService.ConvertToDTO(newDayCard.WeatherData!)
+                CaffeineDrinksSummary = _caffeineDrinkService.ConvertToSummaryDTO(newDayCard.CaffeineDrinks!.ToList()),
+                AirQualitySummary = _airQualityService.ConvertToAQDTO(newDayCard.AirQualityData!),
+                PollenSummary = _airQualityService.ConvertToPollenDTO(newDayCard.AirQualityData!),
+                WeatherSummary = _weatherService.ConvertToDTO(newDayCard.WeatherData!)
             };
         }
 
@@ -59,7 +64,7 @@ namespace AppLogic.Services
 
         public async Task<List<DTO_AllDayCard>?> ReadAllDayCardsAsync(int userId)
         {
-            List<DayCard>? dayCards = await _dayCardRepo.ReadAllAsync(userId);
+            List<DayCard>? dayCards = await _dayCardRepo.GetAllDayCardsAsync(userId);
 
             if (dayCards == null) return null;
 
@@ -86,34 +91,34 @@ namespace AppLogic.Services
 
         public async Task<DTO_SpecificDayCard?> ReadSingleDayCardAsync(int id, int userId)
         {
-            DayCard? dayCard = await _dayCardRepo.ReadSingleAsync(id, userId);
+            DayCard? dayCard = await _dayCardRepo.GetDayCardById(id, userId);
 
             return new DTO_SpecificDayCard
             {
                 DayCardId = dayCard!.Id,
                 UserId = dayCard.UserId!,
                 Date = dayCard.Date,
-                CaffeineDrinksSummary = CaffeineDrinkService.ConvertToSummaryDTO(dayCard.CaffeineDrinks!.ToList()),
-                AirQualitySummary = AirQualityService.ConvertToAQDTO(dayCard.AirQualityData!),
-                PollenSummary = AirQualityService.ConvertToPollenDTO(dayCard.AirQualityData!),
-                WeatherSummary = WeatherService.ConvertToDTO(dayCard.WeatherData!)
+                CaffeineDrinksSummary = _caffeineDrinkService.ConvertToSummaryDTO(dayCard.CaffeineDrinks!.ToList()),
+                AirQualitySummary = _airQualityService.ConvertToAQDTO(dayCard.AirQualityData!),
+                PollenSummary = _airQualityService.ConvertToPollenDTO(dayCard.AirQualityData!),
+                WeatherSummary = _weatherService.ConvertToDTO(dayCard.WeatherData!)
             };
 
         }
 
         public async Task<DTO_SpecificDayCard?> ReadSingleDayCardAsync(DateOnly date, int userId)
         {
-            DayCard? dayCard = await _dayCardRepo.ReadSingleAsync(date, userId);
+            DayCard? dayCard = await _dayCardRepo.GetDayCardByDate(date, userId);
 
             return new DTO_SpecificDayCard
             {
                 DayCardId = dayCard!.Id,
                 UserId = dayCard.UserId,
                 Date = dayCard.Date,
-                CaffeineDrinksSummary = CaffeineDrinkService.ConvertToSummaryDTO(dayCard.CaffeineDrinks!.ToList()),
-                AirQualitySummary = AirQualityService.ConvertToAQDTO(dayCard.AirQualityData!),
-                PollenSummary = AirQualityService.ConvertToPollenDTO(dayCard.AirQualityData!),
-                WeatherSummary = WeatherService.ConvertToDTO(dayCard.WeatherData!)
+                CaffeineDrinksSummary = _caffeineDrinkService.ConvertToSummaryDTO(dayCard.CaffeineDrinks!.ToList()),
+                AirQualitySummary = _airQualityService.ConvertToAQDTO(dayCard.AirQualityData!),
+                PollenSummary = _airQualityService.ConvertToPollenDTO(dayCard.AirQualityData!),
+                WeatherSummary = _weatherService.ConvertToDTO(dayCard.WeatherData!)
             };
         }
 

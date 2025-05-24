@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Controllers;
+using AppLogic.Controllers.Interfaces;
 using AppLogic.Models;
 using Presentation.MenuState_Enums;
 
@@ -11,8 +12,11 @@ namespace Presentation
 {
     public class UserMenuHandler : MenuHandlerBase
     {
-        public UserMenuHandler(Controller controller) : base(controller)
+        private readonly IDayCardController _dayCardController;
+
+        public UserMenuHandler(IDayCardController dayCardController)
         {
+            _dayCardController = dayCardController;
         }
 
         public override async Task<TContext> HandleMenuState<TContext>(TContext sessionContext)
@@ -57,7 +61,7 @@ namespace Presentation
 
                 if (dayCardChoice != null)
                 {
-                    sessionContext.DTO_CurrentDayCard = await _controller.ReadDayCardSingleAsync(dayCardChoice.DayCardId, sessionContext.DTO_CurrentUser.Id);
+                    sessionContext.DTO_CurrentDayCard = await _dayCardController.ReadDayCardSingleAsync(dayCardChoice.DayCardId, sessionContext.DTO_CurrentUser.Id);
                     sessionContext.DayCardMenuState = DayCardMenuState.Overview;
                 }
                 else
@@ -79,7 +83,7 @@ namespace Presentation
 
             if (dayCardInputModel != null)
             {
-                sessionContext.DTO_CurrentDayCard = await _controller.CreateNewDayCardAsync(sessionContext.DTO_CurrentUser!.Id, dayCardInputModel);
+                sessionContext.DTO_CurrentDayCard = await _dayCardController.CreateNewDayCardAsync(sessionContext.DTO_CurrentUser!.Id, dayCardInputModel);
                 sessionContext.DayCardMenuState = DayCardMenuState.Overview;
 
             }

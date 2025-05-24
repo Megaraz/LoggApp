@@ -1,5 +1,5 @@
 ﻿using AppLogic;
-using AppLogic.Interfaces;
+using AppLogic.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace AppLogic.Repositories

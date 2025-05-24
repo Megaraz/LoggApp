@@ -3,20 +3,28 @@ using AppLogic.Models.DTOs;
 using AppLogic.Models.Weather;
 using AppLogic.Models.Weather.AirQuality;
 using AppLogic.Repositories;
+using AppLogic.Repositories.Interfaces;
+using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Services
 {
-    public static class AirQualityService
+    public class AirQualityService : IAirQualityService
     {
-        public static async Task<AirQualityData> GetAirQualityDataAsync(string lat, string lon, string date)
+        private readonly IAirQualityRepo _airQualityRepo;
+        public AirQualityService(IAirQualityRepo airQualityRepo)
         {
-            var airQualityResultString = AirQualityRepository.GetAirQualityDataAsync(lat, lon, date);
+            _airQualityRepo = airQualityRepo;
+        }
+
+        public async Task<AirQualityData> GetAirQualityDataAsync(string lat, string lon, string date)
+        {
+            var airQualityResultString = _airQualityRepo.GetAirQualityDataAsync(lat, lon, date);
 
             return JsonSerializer.Deserialize<AirQualityData>(await airQualityResultString)!;
 
         }
 
-        public static DTO_AllPollenData ConvertToPollenDTO(AirQualityData airQuality)
+        public DTO_AllPollenData ConvertToPollenDTO(AirQualityData airQuality)
         {
 
             var block = airQuality.HourlyBlock ?? throw new ArgumentNullException(nameof(airQuality));
@@ -58,7 +66,7 @@ namespace AppLogic.Services
             };
         }
 
-        public static DTO_AllAirQualityData ConvertToAQDTO(AirQualityData airQuality)
+        public DTO_AllAirQualityData ConvertToAQDTO(AirQualityData airQuality)
         {
 
             var block = airQuality.HourlyBlock ?? throw new ArgumentNullException(nameof(airQuality));

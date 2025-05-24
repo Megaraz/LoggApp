@@ -2,26 +2,21 @@
 using AppLogic.Models;
 using AppLogic.Models.DTOs;
 using AppLogic.Repositories;
+using AppLogic.Repositories.Interfaces;
+using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
 
-        private readonly LoggAppContext _dbContext;
-        private readonly UserRepo _userRepository;
+        private readonly IUserRepo _userRepository;
 
-        public UserService(LoggAppContext dbContext)
+        public UserService(IUserRepo userRepo)
         {
-            _dbContext = dbContext;
-            _userRepository = new UserRepo(dbContext);
+            _userRepository = userRepo;
         }
-        public async Task<GeoResultResponse> GetGeoResultAsync(string city)
-        {
-            Task<string> TaskResultString = WeatherRepo.GetGeoCodeAsync(city);
-
-            return JsonSerializer.Deserialize<GeoResultResponse>(await TaskResultString)!;
-        }
+        
 
 
         public async Task<DTO_SpecificUser> RegisterNewUserAsync(UserInputModel input)
@@ -132,53 +127,5 @@ namespace AppLogic.Services
             };
         }
 
-
-
-
-        //public async Task<DTO_SpecificUser> RegisterNewUserAsync(UserInputModel input)
-        //{
-
-        //    User newUser = new User(input);
-
-        //    newUser = await _userRepository.CreateAsync(newUser);
-
-        //    return new DTO_SpecificUser()
-        //{
-        //    Id = newUser.Id,
-        //        Username = newUser.Username!,
-        //        CityName = newUser.CityName,
-        //        Lat = newUser.Lat,
-        //        Lon = newUser.Lon,
-        //        AllDayCardsMenu = newUser.DayCards!
-        //            .Select(d => new DTO_AllDayCards
-        //            {
-        //                DayCardId = d.Id,
-        //                UserId = d.UserId,
-        //                Date = d.Date
-
-        //            }).ToList()
-        //    };
-
-        //}
-
-
-
-        //public async Task<List<DTO_AllUser>> ReadAllUsersAsync()
-        //{
-        //    var usersTask = await _userRepository.ReadAllAsync();
-        //    return usersTask.OrderBy(x => x.Id).ToList();
-
-        //}
-
-        //public async Task<DTO_SpecificUser>? ReadSingleUserAsync(int id)
-        //{
-        //    var userTask = await _userRepository.ReadSingleAsync(id);
-        //    return userTask!;
-        //}
-        //public async Task<DTO_SpecificUser>? ReadSingleUserAsync(string username)
-        //{
-        //    var userTask = await _userRepository.ReadSingleAsync(username);
-        //    return userTask!;
-        //}
     }
 }

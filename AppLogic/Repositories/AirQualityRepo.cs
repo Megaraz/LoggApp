@@ -1,18 +1,25 @@
 ﻿using System.Diagnostics;
 using AppLogic.Models;
+using AppLogic.Models.Weather.AirQuality;
+using AppLogic.Repositories.Interfaces;
 
 namespace AppLogic.Repositories
 {
-    public static class AirQualityRepository
+    public class AirQualityRepo : GenericRepo<AirQualityData>, IAirQualityRepo
     {
+
+        private readonly LoggAppContext _dbContext;
         private static readonly string _baseUrl = "https://air-quality-api.open-meteo.com/v1/air-quality";
         private static readonly string _hourlyParams = "alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,ragweed_pollen,uv_index,european_aqi,pm2_5,ozone,carbon_monoxide,nitrogen_dioxide,dust";
 
         private static readonly HttpClient _httpClient = new HttpClient();
-        public static DayCard? DayCard { get; set; }
 
+        public AirQualityRepo(LoggAppContext dbContext) : base(dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
-        public static async Task<string> GetAirQualityDataAsync(string lat, string lon, string date)
+        public async Task<string> GetAirQualityDataAsync(string lat, string lon, string date)
         {
             
             string fullUrl = _baseUrl +

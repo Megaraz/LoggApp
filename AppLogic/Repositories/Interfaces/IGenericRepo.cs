@@ -1,4 +1,4 @@
-﻿namespace AppLogic.Interfaces
+﻿namespace AppLogic.Repositories.Interfaces
 {
     public interface IGenericRepo<T> where T : class
     {

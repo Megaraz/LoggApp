@@ -4,21 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Controllers;
+using AppLogic.Controllers.Interfaces;
 using Presentation.MenuState_Enums;
 
 namespace Presentation
 {
     public abstract class MenuHandlerBase
     {
-        protected readonly Controller _controller;
-
-
-        protected MenuHandlerBase(Controller controller)
-        {
-            _controller = controller;
-        }
-
-
 
         public abstract Task<TContext> HandleMenuState<TContext>(TContext sessionContext) where TContext : SessionContext;
 

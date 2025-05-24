@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Models;
 using AppLogic.Models.Intake;
+using AppLogic.Repositories.Interfaces;
 
 namespace AppLogic.Repositories
 {
-    public class CaffeineDrinkRepo : GenericRepo<CaffeineDrink>
+    public class CaffeineDrinkRepo : GenericRepo<CaffeineDrink>, ICaffeineDrinkRepo
     {
         private readonly LoggAppContext _dbContext;
 

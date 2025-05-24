@@ -1,10 +1,11 @@
 ﻿using AppLogic;
 using AppLogic.Models;
+using AppLogic.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace AppLogic.Repositories
 {
-    public class UserRepo : GenericRepo<User>
+    public class UserRepo : GenericRepo<User>, IUserRepo
     {
 
         private readonly LoggAppContext _dbContext;
@@ -91,92 +92,7 @@ namespace AppLogic.Repositories
                 throw new ArgumentException($"Something went wrong, {e.Message}");
             }
         }
-                
-
-        //public async Task<DTO_SpecificUser?> ReadSingleAsync(int id)
-        //{
-        //    try
-        //    {
-        //        return await _dbContext.Users
-        //            .Where(u => u.Id == id)
-        //            .Select(u => new DTO_SpecificUser
-        //            {
-        //                Id = u.Id,
-        //                Username = u.Username!,
-        //                CityName = u.CityName,
-        //                Lat = u.Lat,
-        //                Lon = u.Lon,
-        //                AllDayCardsMenu = u.DayCards!
-        //                .Select(d => new DTO_AllDayCards
-        //                {
-        //                    DayCardId = d.Id,
-        //                    UserId = d.UserId,
-        //                    Date = d.Date
-
-        //                }).ToList()
-        //            })
-        //            .SingleOrDefaultAsync();
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw new ArgumentException($"Something went wrong, {e.Message}");
-
-        //    }
-        //}
-        //public async Task<DTO_SpecificUser?> ReadSingleAsync(string username)
-        //{
-        //    try
-        //    {
-        //        return await _dbContext.Users
-        //            .Where(u => u.Username == username)
-        //            .Select(u => new DTO_SpecificUser
-        //            {
-        //                Id = u.Id,
-        //                Username = u.Username!,
-        //                CityName = u.CityName,
-        //                Lat = u.Lat,
-        //                Lon = u.Lon,
-        //                AllDayCardsMenu = u.DayCards!
-        //                .Select(d => new DTO_AllDayCards
-        //                {
-        //                    DayCardId = d.Id,
-        //                    UserId = d.UserId,
-        //                    Date = d.Date
-
-        //                }).ToList()
-        //            })
-        //            .SingleOrDefaultAsync();
-
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw new ArgumentException($"Something went wrong, {e.Message}");
-
-        //    }
-        //}
-
-        //public async Task<List<DTO_AllUser>> ReadAllAsync()
-        //{
-        //    try
-        //    {
-        //        return await _dbContext.Users
-        //            .Select(x => new DTO_AllUser
-        //            {
-        //                Id = x.Id,
-        //                Username = x.Username!,
-        //                DayCardCount = x.DayCards!.Count,
-        //                CityName = x.CityName
-        //            })
-        //            .ToListAsync();
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw new ArgumentException($"Something went wrong, {e.Message}");
-        //    }
-        //}
+           
         #endregion
     }
 }

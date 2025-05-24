@@ -38,7 +38,6 @@ namespace Presentation
                 sessionContext = await DayCardMenuHandler.HandleMenuState(sessionContext);
             }
 
-            //sessionContext = await MenuHandler.HandleUserMenuState(sessionContext);
             return sessionContext;
         }
 

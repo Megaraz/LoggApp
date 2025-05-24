@@ -1,17 +1,33 @@
 ﻿using System.Text.Json;
+using AppLogic.Models;
 using AppLogic.Models.DTOs;
 using AppLogic.Models.Weather;
 using AppLogic.Repositories;
+using AppLogic.Repositories.Interfaces;
+using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Services
 {
-    public static class WeatherService
+    public class WeatherService : IWeatherService
     {
+        private readonly IWeatherRepo _weatherRepo;
 
-        public static async Task<WeatherData> GetWeatherDataAsync(string lat, string lon, string date)
+        public WeatherService(IWeatherRepo weatherRepo)
+        {
+            _weatherRepo = weatherRepo;
+        }
+
+        public async Task<GeoResultResponse> GetGeoResultAsync(string city)
+        {
+            Task<string> TaskResultString = _weatherRepo.GetGeoCodeAsync(city);
+
+            return JsonSerializer.Deserialize<GeoResultResponse>(await TaskResultString)!;
+        }
+
+        public async Task<WeatherData> GetWeatherDataAsync(string lat, string lon, string date)
         {
 
-            var weatherResultString = await WeatherRepo.GetWeatherDataAsync(lat, lon, date);
+            var weatherResultString = await _weatherRepo.GetWeatherDataAsync(lat, lon, date);
 
 
 
@@ -19,7 +35,7 @@ namespace AppLogic.Services
 
         }
 
-        public static DTO_AllWeatherData ConvertToDTO(WeatherData weatherData)
+        public DTO_AllWeatherData ConvertToDTO(WeatherData weatherData)
         {
             // Säkerställ att HourlyBlock finns
             var block = weatherData.HourlyBlock

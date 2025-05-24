@@ -13,7 +13,11 @@ namespace Presentation
 
             App app = new App(dbContext);
 
-            app.Init();
+            app.InitRepos();
+            app.InitServices();
+            app.InitControllers();
+            app.InitPresentation();
+
             await app.Run();
 
 

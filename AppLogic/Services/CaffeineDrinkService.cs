@@ -7,18 +7,18 @@ using AppLogic.Models.DTOs;
 using AppLogic.Models.Intake;
 using AppLogic.Models.Intake.InputModels;
 using AppLogic.Repositories;
+using AppLogic.Repositories.Interfaces;
+using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Services
 {
-    public class CaffeineDrinkService
+    public class CaffeineDrinkService : ICaffeineDrinkService
     {
-        private readonly LoggAppContext _dbContext;
-        private readonly CaffeineDrinkRepo _caffeineDrinkRepo;
+        private readonly ICaffeineDrinkRepo _caffeineDrinkRepo;
 
-        public CaffeineDrinkService(LoggAppContext dbContext)
+        public CaffeineDrinkService(ICaffeineDrinkRepo caffeineDrinkRepo)
         {
-            _dbContext = dbContext;
-            _caffeineDrinkRepo = new CaffeineDrinkRepo(_dbContext);
+            _caffeineDrinkRepo = caffeineDrinkRepo;
         }
 
         public async Task<DTO_SpecificCaffeineDrink> AddCaffeineDrinkToDayCardAsync(int dayCardId, CaffeineDrinkInputModel model)
@@ -42,7 +42,7 @@ namespace AppLogic.Services
             };
         }
 
-        public static DTO_AllCaffeineDrinks ConvertToSummaryDTO(List<CaffeineDrink> caffeineDrinks)
+        public DTO_AllCaffeineDrinks ConvertToSummaryDTO(List<CaffeineDrink> caffeineDrinks)
         {
 
             DTO_AllCaffeineDrinks DTO_allCaffeineDrinks = new DTO_AllCaffeineDrinks();

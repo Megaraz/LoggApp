@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using AppLogic.Controllers;
+using AppLogic.Controllers.Interfaces;
 using AppLogic.Models;
 using AppLogic.Models.DTOs;
 using AppLogic.Models.Intake.Enums;
@@ -12,8 +13,11 @@ namespace Presentation
 {
     public class DayCardMenuHandler : MenuHandlerBase
     {
-        public DayCardMenuHandler(Controller controller) : base(controller)
+        private readonly ICaffeineDrinkController _caffeineDrinkController;
+
+        public DayCardMenuHandler(ICaffeineDrinkController caffeineDrinkController)
         {
+            _caffeineDrinkController = caffeineDrinkController;
         }
 
         public override async Task<TContext> HandleMenuState<TContext>(TContext sessionContext)
@@ -100,7 +104,7 @@ namespace Presentation
                             .CaffeineDrinksSummary!
                                 .HourlyCaffeineData
                                     .Add
-                                    (await _controller
+                                    (await _caffeineDrinkController
                                         .AddCaffeineDrinkToDayCardAsync
                                         (sessionContext.DTO_CurrentDayCard!.DayCardId,
                                             caffeineDrinkInputModel
