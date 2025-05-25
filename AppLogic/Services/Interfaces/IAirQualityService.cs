@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AppLogic.Models.DTOs;
+using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.Weather.AirQuality;
 
 namespace AppLogic.Services.Interfaces
@@ -12,8 +12,8 @@ namespace AppLogic.Services.Interfaces
     {
         Task<AirQualityData> GetAirQualityDataAsync(string lat, string lon, string date);
 
-        DTO_AllPollenData ConvertToPollenDTO(AirQualityData airQuality);
+        PollenDataSummary ConvertToPollenDTO(AirQualityData airQuality);
 
-        DTO_AllAirQualityData ConvertToAQDTO(AirQualityData airQuality);
+        AirQualityDataSummary ConvertToAQDTO(AirQualityData airQuality);
     }
 }

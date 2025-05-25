@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AppLogic.Models.DTOs.Detailed;
 using AppLogic.Models.Intake.Enums;
 
-namespace AppLogic.Models.DTOs
+namespace AppLogic.Models.DTOs.Summary
 {
-    public class DTO_AllCaffeineDrinks
+    public class CaffeineDrinkSummary
     {
 
         public int? DayCardId { get; set; }
 
-        public List<DTO_SpecificCaffeineDrink> HourlyCaffeineData { get; set; } = new List<DTO_SpecificCaffeineDrink>();
+        public List<CaffeineDrinkDetailed> CaffeineDrinksDetails { get; set; } = new List<CaffeineDrinkDetailed>();
 
         public int? TotalCaffeineInMg { get; set; }
 
@@ -22,7 +23,7 @@ namespace AppLogic.Models.DTOs
         {
             var sb = new StringBuilder();
 
-            var props = typeof(DTO_SpecificCaffeineDrink).GetProperties();
+            var props = typeof(CaffeineDrinkDetailed).GetProperties();
             string mainHeader = string.Empty;
 
             foreach (var prop in props)
@@ -32,7 +33,7 @@ namespace AppLogic.Models.DTOs
 
             sb.AppendLine(mainHeader);
 
-            foreach (var drink in HourlyCaffeineData)
+            foreach (var drink in CaffeineDrinksDetails)
             {
                 sb.AppendLine($"{drink}");
             }

@@ -40,10 +40,10 @@ namespace AppLogic.Models.Weather.AirQuality
         public string? Ozone { get; set; }
 
         [JsonPropertyName("carbon_monoxide")]
-        public string? CarbonMonoxide { get; set; }
+        public string? CO { get; set; }
 
         [JsonPropertyName("nitrogen_dioxide")]
-        public string? NitrogenDioxide { get; set; }
+        public string? NO2 { get; set; }
 
         [JsonPropertyName("dust")]
         public string? Dust { get; set; }

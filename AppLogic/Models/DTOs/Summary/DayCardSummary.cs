@@ -1,6 +1,6 @@
-﻿namespace AppLogic.Models.DTOs
+﻿namespace AppLogic.Models.DTOs.Summary
 {
-    public class DTO_AllDayCard
+    public class DayCardSummary
     {
         public int DayCardId { get; set; }
         public int? UserId { get; set; }

@@ -85,20 +85,30 @@ namespace Presentation
 
             DayCardInputModel? dayCardInputModel = null;
 
-            if (!dateString.IsNullOrEmpty() && sessionContext.DTO_CurrentUser != null)
+            if (!dateString.IsNullOrEmpty() && sessionContext.UserDetailed != null)
             {
                 dayCardInputModel = new DayCardInputModel()
                 {
-                    UserId = sessionContext.DTO_CurrentUser!.Id,
+                    UserId = sessionContext.UserDetailed!.Id,
                     Date = DateOnly.Parse(dateString),
-                    Lat = sessionContext.DTO_CurrentUser.Lat,
-                    Lon = sessionContext.DTO_CurrentUser.Lon
+                    Lat = sessionContext.UserDetailed.Lat,
+                    Lon = sessionContext.UserDetailed.Lon
 
                 };
             }
 
             return dayCardInputModel;
         }
+
+
+
+        //public static string GetDTOValuesAsRow<T>(T dto, string separator) where T : class
+        //{
+        //    foreach (var value in dto)
+        //    {
+
+        //    }
+        //}
 
         public static ConsoleKey InputToMenuIndex(ref int currentMenuIndex)
         {
@@ -130,17 +140,17 @@ namespace Presentation
 
         public static string? GetValidUserInput(string prompt, string? errorMessage = null)
         {
-            Console.Clear();
-            if (!prompt.IsNullOrEmpty())
-            {
-                Console.WriteLine(prompt);
-
-            }
             string? userInput = null;
             bool validInput;
 
             do
             {
+                Console.Clear();
+                if (!prompt.IsNullOrEmpty())
+                {
+                    Console.WriteLine(prompt);
+
+                }
 
                 var keyPress = Console.ReadKey();
 
@@ -148,20 +158,11 @@ namespace Presentation
                 {
                     break;
                 }
-                else if (keyPress.Key == ConsoleKey.Enter)
+                else if (char.IsLetterOrDigit(keyPress.KeyChar))
                 {
-                    return DateOnly.FromDateTime(DateTime.Today).ToString();
+                    userInput = keyPress.KeyChar.ToString();
+                    userInput += Console.ReadLine()!;
                 }
-                else
-                {
-                    if (char.IsLetterOrDigit(keyPress.KeyChar))
-                    {
-                        userInput = keyPress.KeyChar.ToString();
-                    }
-                }
-
-                userInput += Console.ReadLine()!;
-
 
                 validInput = !string.IsNullOrWhiteSpace(userInput) && !string.IsNullOrEmpty(userInput);
 
@@ -171,6 +172,7 @@ namespace Presentation
                     if (!errorMessage.IsNullOrEmpty())
                     {
                         Console.WriteLine(errorMessage);
+                        Thread.Sleep(1200);
                     }
                 }
             }
@@ -249,5 +251,8 @@ namespace Presentation
         }
 
     }
+
+
+
 }
 

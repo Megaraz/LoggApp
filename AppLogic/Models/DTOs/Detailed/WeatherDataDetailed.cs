@@ -1,8 +1,9 @@
 ﻿using System.Text;
+using AppLogic.Models.Weather;
 
-namespace AppLogic.Models.Weather
+namespace AppLogic.Models.DTOs.Detailed
 {
-    public class HourlyWeatherData
+    public class WeatherDataDetailed
     {
         public int? Time { get; set; }
 

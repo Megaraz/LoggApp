@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using AppLogic.Models;
-using AppLogic.Models.DTOs;
+using AppLogic.Models.DTOs.Detailed;
+using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.Weather;
 using AppLogic.Repositories;
 using AppLogic.Repositories.Interfaces;
@@ -29,13 +30,11 @@ namespace AppLogic.Services
 
             var weatherResultString = await _weatherRepo.GetWeatherDataAsync(lat, lon, date);
 
-
-
             return JsonSerializer.Deserialize<WeatherData>(weatherResultString)!;
 
         }
 
-        public DTO_AllWeatherData ConvertToDTO(WeatherData weatherData)
+        public WeatherDataSummary ConvertToDTO(WeatherData weatherData)
         {
             // Säkerställ att HourlyBlock finns
             var block = weatherData.HourlyBlock
@@ -46,7 +45,7 @@ namespace AppLogic.Services
 
             // Mappa varje tidpunkt + index till en HourlyWeatherData
             var hourly = block.Time
-                .Select((time, i) => new HourlyWeatherData
+                .Select((time, i) => new WeatherDataDetailed
                 {
                     Time = time.Hour,
                     Temperature2m = new Measurement<double?>
@@ -108,10 +107,15 @@ namespace AppLogic.Services
                 })
                 .ToList();
 
-            return new DTO_AllWeatherData
+            WeatherDataSummary weatherDataSummary = new WeatherDataSummary()
             {
-                HourlyWeatherData = hourly
+                WeatherDataDetails = hourly,
+                AISummary = weatherData.AISummary
+
             };
+            
+
+            return weatherDataSummary;
         }
     }
 }

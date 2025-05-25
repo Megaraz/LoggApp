@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppLogic.Models.DTOs
+namespace AppLogic.Models.DTOs.Summary
 {
-    public class DTO_AllSupplements
+    public class SupplementSummary
     {
     }
 }

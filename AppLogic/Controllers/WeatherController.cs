@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Controllers.Interfaces;
 using AppLogic.Models;
-using AppLogic.Models.DTOs;
+using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.Weather;
 using AppLogic.Services.Interfaces;
 
@@ -21,7 +21,7 @@ namespace AppLogic.Controllers
             _weatherService = weatherService;
         }
 
-        public DTO_AllWeatherData ConvertToDTO(WeatherData weatherData)
+        public WeatherDataSummary ConvertToDTO(WeatherData weatherData)
         {
             return _weatherService.ConvertToDTO(weatherData);
         }

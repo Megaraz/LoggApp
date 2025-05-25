@@ -18,6 +18,7 @@ namespace Presentation
         private DayCardMenuHandler _dayCardMenuHandler;
         private UserMenuHandler _userMenuHandler;
         private MainMenuHandler _mainMenuHandler;
+        private OpenAiResponseClient _openAiResponseClient;
 
         // Repos
         private IUserRepo _userRepo;
@@ -25,6 +26,7 @@ namespace Presentation
         private ICaffeineDrinkRepo _caffeineDrinkRepo;
         private IWeatherRepo _weatherRepo;
         private IAirQualityRepo _airQualityRepo;
+        //private IOpenAiResponseClient _openAiResponseClient;
 
         // Services
         private IUserService _userService;
@@ -53,6 +55,7 @@ namespace Presentation
             _caffeineDrinkRepo = new CaffeineDrinkRepo(_dbContext);
             _weatherRepo = new WeatherRepo(_dbContext);
             _airQualityRepo = new AirQualityRepo(_dbContext);
+            _openAiResponseClient = new OpenAiResponseClient();
         }
 
         public void InitServices()
@@ -61,7 +64,7 @@ namespace Presentation
             _weatherService = new WeatherService(_weatherRepo);
             _airQualityService = new AirQualityService(_airQualityRepo);
             _caffeineDrinkService = new CaffeineDrinkService(_caffeineDrinkRepo);
-            _dayCardService = new DayCardService(_dayCardRepo, _weatherService, _airQualityService, _caffeineDrinkService);
+            _dayCardService = new DayCardService(_dayCardRepo, _weatherService, _airQualityService, _caffeineDrinkService, _openAiResponseClient);
         }
 
         public void InitControllers()

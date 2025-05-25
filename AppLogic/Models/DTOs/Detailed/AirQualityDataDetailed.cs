@@ -1,8 +1,9 @@
 ﻿using System.Text;
+using AppLogic.Models.Weather;
 
-namespace AppLogic.Models.Weather.AirQuality
+namespace AppLogic.Models.DTOs.Detailed
 {
-    public class HourlyAirQualityData
+    public class AirQualityDataDetailed
     {
         /// <summary>
         /// Tidpunkten för mätningen.

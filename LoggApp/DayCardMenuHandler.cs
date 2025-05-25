@@ -100,13 +100,13 @@ namespace Presentation
                     }
 
                     sessionContext
-                        .DTO_CurrentDayCard!
+                        .DayCardDetailed!
                             .CaffeineDrinksSummary!
-                                .HourlyCaffeineData
+                                .CaffeineDrinksDetails
                                     .Add
                                     (await _caffeineDrinkController
                                         .AddCaffeineDrinkToDayCardAsync
-                                        (sessionContext.DTO_CurrentDayCard!.DayCardId,
+                                        (sessionContext.DayCardDetailed!.DayCardId,
                                             caffeineDrinkInputModel
                                         )
                                     );
@@ -122,8 +122,8 @@ namespace Presentation
         public static TContext SpecificDayCardMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
-            sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.DTO_CurrentUser!.ToString()}";
-            sessionContext.SubHeader = MenuText.Header.CurrentDayCard + "\n[OVERVIEW]\n" + sessionContext.DTO_CurrentDayCard!.ToString();
+            sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.UserDetailed!.ToString()}\n";
+            sessionContext.SubHeader = MenuText.Header.CurrentDayCard + "(OVERVIEW):\n\n" + sessionContext.DayCardDetailed!.ToString() + "\n";
 
             List<string>? specificDayCardMenu = new List<string>()
             {
@@ -133,7 +133,7 @@ namespace Presentation
 
             };
 
-            if (sessionContext.DTO_CurrentDayCard.SupplementsSummary != null)
+            if (sessionContext.DayCardDetailed.SupplementsSummary != null)
             {
                 specificDayCardMenu.Add(MenuText.NavOption.Supplements);
             }
@@ -142,7 +142,7 @@ namespace Presentation
                 specificDayCardMenu.Add(MenuText.NavOption.AddSupplements);
             }
 
-            if (sessionContext.DTO_CurrentDayCard.CaffeineDrinksSummary != null)
+            if (sessionContext.DayCardDetailed.CaffeineDrinksSummary != null && sessionContext.DayCardDetailed.CaffeineDrinksSummary.CaffeineDrinksDetails.Count > 0)
             {
                 specificDayCardMenu.Add(MenuText.NavOption.CaffeineDrinks);
             }
@@ -214,8 +214,8 @@ namespace Presentation
         private async Task<TContext> WeatherDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             Console.Clear();
-            Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.DTO_CurrentUser!.ToString()}");
-            Console.WriteLine(sessionContext.DTO_CurrentDayCard.WeatherSummary.ToString());
+            Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.UserDetailed!.ToString()}");
+            Console.WriteLine(sessionContext.DayCardDetailed.WeatherSummary.ToString());
             Console.ReadLine();
             sessionContext.DayCardMenuState = DayCardMenuState.Overview;
             return sessionContext;
@@ -223,8 +223,8 @@ namespace Presentation
         private async Task<TContext> AirQualityDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             Console.Clear();
-            Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.DTO_CurrentUser!.ToString()}");
-            Console.WriteLine(sessionContext.DTO_CurrentDayCard.AirQualitySummary.ToString());
+            Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.UserDetailed!.ToString()}");
+            Console.WriteLine(sessionContext.DayCardDetailed.AirQualitySummary.ToString());
             Console.ReadLine();
             sessionContext.DayCardMenuState = DayCardMenuState.Overview;
             return sessionContext;
@@ -233,8 +233,8 @@ namespace Presentation
         private async Task<TContext> PollenDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             Console.Clear();
-            Console.WriteLine(sessionContext.DTO_CurrentDayCard.PollenSummary.ToString());
-            Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.DTO_CurrentUser!.ToString()}");
+            Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.UserDetailed!.ToString()}");
+            Console.WriteLine(sessionContext.DayCardDetailed.PollenSummary.ToString());
             Console.ReadLine();
             sessionContext.DayCardMenuState = DayCardMenuState.Overview;
             return sessionContext;

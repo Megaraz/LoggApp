@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Models.Intake.Enums;
 
-namespace AppLogic.Models.DTOs
+namespace AppLogic.Models.DTOs.Detailed
 {
-    public class DTO_SpecificCaffeineDrink
+    public class CaffeineDrinkDetailed
     {
 
         public int? DayCardId { get; set; }

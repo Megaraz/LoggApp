@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Models;
-using AppLogic.Models.DTOs;
+using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.Weather;
 
 namespace AppLogic.Controllers.Interfaces
@@ -14,6 +14,6 @@ namespace AppLogic.Controllers.Interfaces
         Task<WeatherData> GetWeatherDataAsync(string lat, string lon, string date);
         Task<GeoResultResponse> LocationGeoResultList(string cityName);
         Task<GeoResultResponse> UserGeoResultList(UserInputModel input);
-        DTO_AllWeatherData ConvertToDTO(WeatherData weatherData);
+        WeatherDataSummary ConvertToDTO(WeatherData weatherData);
     }
 }

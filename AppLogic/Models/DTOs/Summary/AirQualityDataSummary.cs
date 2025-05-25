@@ -1,14 +1,20 @@
 ﻿using System.Text;
-using AppLogic.Models.Weather.AirQuality;
+using AppLogic.Models.DTOs.Detailed;
+using Microsoft.IdentityModel.Tokens;
 
-namespace AppLogic.Models.DTOs
+namespace AppLogic.Models.DTOs.Summary
 {
-    public class DTO_AllAirQualityData
+    public class AirQualityDataSummary : IPromptRenderable
     {
         public int AirQualityId { get; set; }
         public int? DayCardId { get; set; }
 
-        public List<HourlyAirQualityData>? HourlyAirQualityData { get; set; } = new List<HourlyAirQualityData>();
+        public List<AirQualityDataDetailed>? AirQualityDetails { get; set; } = new List<AirQualityDataDetailed>();
+
+        public string? AISummary { get; set; }
+
+        public string ToPrompt()
+        => ToString();
 
         public override string ToString()
         {
@@ -16,23 +22,22 @@ namespace AppLogic.Models.DTOs
             //sb.Append($"AirQualityId: {AirQualityId}");
             //if (DayCardId.HasValue) sb.Append($", DayCardId: {DayCardId.Value}");
 
+            if (!AISummary.IsNullOrEmpty())
+            {
+                sb.AppendLine();
+                sb.AppendLine(AISummary + "\n\n");
+            }
 
-
-            if (HourlyAirQualityData != null && HourlyAirQualityData.Any())
+            if (AirQualityDetails != null && AirQualityDetails.Any())
             {
 
 
-                var props = typeof(HourlyAirQualityData).GetProperties();
-                string mainHeader = string.Empty;
-                foreach (var prop in props)
-                {
-                    mainHeader += prop.Name.ToUpper() + "\t";
-                }
+                
 
-                sb.AppendLine(mainHeader);
+                sb.AppendLine(DTOHelper.GetPropNamesAsHeader<AirQualityDataDetailed>("\t"));
 
 
-                var first = HourlyAirQualityData.FirstOrDefault();
+                var first = AirQualityDetails.FirstOrDefault();
                 if (first is not null)
                 {
                     sb.AppendLine(string.Join("\t", new[]
@@ -50,7 +55,7 @@ namespace AppLogic.Models.DTOs
 
                 sb.AppendLine();
 
-                foreach (var hour in HourlyAirQualityData)
+                foreach (var hour in AirQualityDetails)
                 {
                     sb.AppendLine($"{hour}");
                 }

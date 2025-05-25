@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AppLogic.Models.DTOs;
+using AppLogic.Models.DTOs.Detailed;
+using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.Intake;
 using AppLogic.Models.Intake.InputModels;
 using AppLogic.Repositories;
@@ -21,7 +22,7 @@ namespace AppLogic.Services
             _caffeineDrinkRepo = caffeineDrinkRepo;
         }
 
-        public async Task<DTO_SpecificCaffeineDrink> AddCaffeineDrinkToDayCardAsync(int dayCardId, CaffeineDrinkInputModel model)
+        public async Task<CaffeineDrinkDetailed> AddCaffeineDrinkToDayCardAsync(int dayCardId, CaffeineDrinkInputModel model)
         {
             CaffeineDrink caffeineDrink = new(
                 dayCardId, 
@@ -32,7 +33,7 @@ namespace AppLogic.Services
 
             caffeineDrink = await _caffeineDrinkRepo.CreateAsync(caffeineDrink);
 
-            return new DTO_SpecificCaffeineDrink()
+            return new CaffeineDrinkDetailed()
             {
                 DayCardId = caffeineDrink.DayCardId,
                 CaffeineDrinkId = caffeineDrink.Id,
@@ -42,18 +43,18 @@ namespace AppLogic.Services
             };
         }
 
-        public DTO_AllCaffeineDrinks ConvertToSummaryDTO(List<CaffeineDrink> caffeineDrinks)
+        public CaffeineDrinkSummary ConvertToSummaryDTO(List<CaffeineDrink> caffeineDrinks)
         {
 
-            DTO_AllCaffeineDrinks DTO_allCaffeineDrinks = new DTO_AllCaffeineDrinks();
+            CaffeineDrinkSummary DTO_allCaffeineDrinks = new CaffeineDrinkSummary();
 
             foreach (var drink in caffeineDrinks)
             {
                 DTO_allCaffeineDrinks
-                    .HourlyCaffeineData
+                    .CaffeineDrinksDetails
                         .Add
                         (
-                            new DTO_SpecificCaffeineDrink()
+                            new CaffeineDrinkDetailed()
                             {
                                 DayCardId = drink.DayCardId,
                                 CaffeineDrinkId = drink.Id,

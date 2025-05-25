@@ -5,12 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Controllers;
-using AppLogic.Models.DTOs;
 using AppLogic.Models;
 using AppLogic.Services;
 using Microsoft.IdentityModel.Tokens;
 using Presentation.MenuState_Enums;
 using AppLogic.Controllers.Interfaces;
+using AppLogic.Models.DTOs.Summary;
+using AppLogic.Models.DTOs.Detailed;
+using AppLogic.Repositories;
 
 namespace Presentation
 {
@@ -62,7 +64,7 @@ namespace Presentation
         {
 
             ResetMenuStates(sessionContext);
-            if (sessionContext.DTO_AllUsers == null || sessionContext.DTO_AllUsers.Count == 0)
+            if (sessionContext.UsersSummary == null || sessionContext.UsersSummary.Count == 0)
             {
                 sessionContext.ErrorMessage = MenuText.Error.NoUsersFound;
                 sessionContext.MainMenuState = MainMenuState.Main;
@@ -71,16 +73,17 @@ namespace Presentation
             else
             {
                 sessionContext.MainHeader = MenuText.Header.AllUsers;
+                //sessionContext.MainHeader = MenuText.Header.SpecificUser;
 
-                var userChoice = GetMenuValue(sessionContext.DTO_AllUsers, sessionContext);
+                var userChoice = GetMenuValue(sessionContext.UsersSummary, sessionContext);
 
                 if (userChoice != null)
                 {
                     sessionContext
-                        .DTO_CurrentUser = await _userController.ReadUserSingleAsync(userChoice.Id);
+                        .UserDetailed = await _userController.ReadUserSingleAsync(userChoice.Id);
 
                     sessionContext
-                        .MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.DTO_CurrentUser!.ToString()}\n\n\n";
+                        .MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.UserDetailed!.ToString()}\n\n\n";
 
                     sessionContext
                         .MainMenuState = MainMenuState.SpecificUser;
@@ -155,7 +158,7 @@ namespace Presentation
                 if (userInputModel.GeoResult != null)
                 {
                     // Create a new user with the updated GeoResult, and sets the CurrentUser to the newly created one
-                    sessionContext.DTO_CurrentUser = await _userController.CreateNewUserAsync(userInputModel);
+                    sessionContext.UserDetailed = await _userController.CreateNewUserAsync(userInputModel);
                     sessionContext.MainMenuState = MainMenuState.SpecificUser;
 
                 }
@@ -170,7 +173,7 @@ namespace Presentation
         private async Task<TContext> GetAllUsers<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
-            List<DTO_AllUser>? allUsers = await _userController.ReadAllUsersAsync()!;
+            List<UserSummary>? allUsers = await _userController.ReadAllUsersAsync()!;
 
             if (allUsers == null || allUsers.Count == 0)
             {
@@ -181,7 +184,7 @@ namespace Presentation
             {
                 sessionContext.MainMenuState = MainMenuState.AllUsers;
                 //sessionContext.CurrentMainMenu = MenuText.NavOption.s_AllUserMenu.ToList();
-                sessionContext.DTO_AllUsers = allUsers;
+                sessionContext.UsersSummary = allUsers;
 
             }
 
@@ -195,17 +198,20 @@ namespace Presentation
             if (username != null)
             {
 
-                DTO_SpecificUser? resultUser = await _userController.ReadUserSingleAsync(username);
+                UserDetailed? resultUser = await _userController.ReadUserSingleAsync(username);
 
                 if (resultUser == null)
                 {
                     sessionContext.ErrorMessage = MenuText.Error.NoUserFound;
+                    Console.Clear();
+                    Console.WriteLine(sessionContext.ErrorMessage);
+                    Thread.Sleep(1500);
                     sessionContext.MainMenuState = MainMenuState.Main;
 
                 }
                 else
                 {
-                    sessionContext.DTO_CurrentUser = resultUser;
+                    sessionContext.UserDetailed = resultUser;
                     sessionContext.MainMenuState = MainMenuState.SpecificUser;
                 }
             }
@@ -220,13 +226,13 @@ namespace Presentation
         public TContext SpecificUserMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
-            sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.DTO_CurrentUser!.ToString()}";
+            sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.UserDetailed!.ToString()}\n";
 
             var specificUserMenu = MenuText.NavOption.s_SpecificUserMenu.ToList();
 
-            if (sessionContext.DTO_CurrentUser.DTO_AllDayCards!.Count > 0)
+            if (sessionContext.UserDetailed.DTO_AllDayCards!.Count > 0)
             {
-                sessionContext.SubHeader = "Number of Daycards: " + sessionContext.DTO_CurrentUser.DTO_AllDayCards.Count;
+                //sessionContext.SubHeader = "Number of Daycards: " + sessionContext.DTO_CurrentUser.DTO_AllDayCards.Count + "\n";
                 specificUserMenu = specificUserMenu.Prepend(MenuText.NavOption.ShowAllDayCards).ToList();
             }
 
@@ -280,14 +286,27 @@ namespace Presentation
                 // Get list of locations that match users input location%
                 GeoResultResponse geoResultResponse = await _weatherController.LocationGeoResultList(location!);
                 // User chooses a Location from the list of locations
-                GeoResult geoResult = GetMenuValue(geoResultResponse.Results, sessionContext);
+                GeoResult? geoResult = GetMenuValue(geoResultResponse.Results, sessionContext);
 
                 if (geoResult != null)
                 {
                     string lat = geoResult.Lat?.ToString(CultureInfo.InvariantCulture)!;
                     string lon = geoResult.Lon?.ToString(CultureInfo.InvariantCulture)!;
                     string date = DateTime.Today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)!;
-                    DTO_AllWeatherData todayWeather = _weatherController.ConvertToDTO(await _weatherController.GetWeatherDataAsync(lat, lon, date));
+                    var weatherData = await _weatherController.GetWeatherDataAsync(lat, lon, date);
+                    var prompt = AiPromptBuilder.BuildWeatherPrompt(weatherData);
+
+
+                    var ai = new OpenAiResponseClient();
+
+                    weatherData.AISummary = await ai.GenerateSummaryAsync(prompt);
+
+                    WeatherDataSummary todayWeather = _weatherController.ConvertToDTO(weatherData);
+
+                    //var apiKey = Environment.GetEnvironmentVariable("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")
+                    //    ?? throw new InvalidOperationException("Sätt OPENAI_API_KEY!");
+
+                    
 
                     Console.WriteLine(todayWeather.ToString());
 

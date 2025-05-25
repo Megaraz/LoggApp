@@ -1,14 +1,17 @@
 ﻿using System.Text.Json.Serialization;
 using AppLogic.Interfaces;
+using AppLogic.Models.DTOs;
 
 namespace AppLogic.Models.Weather
 {
-    public class WeatherData : ITimeOfEntry
+    public class WeatherData : ITimeOfEntry, IPromptRenderable
     {
         public int Id { get; set; }
         public int? DayCardId { get; set; }
         public virtual DayCard? DayCard { get; set; }
         public TimeOnly? TimeOf { get; set; }
+
+        public string? AISummary { get; set; }
 
         [JsonPropertyName("latitude")]
         public double? Lat { get; set; }
@@ -33,6 +36,9 @@ namespace AppLogic.Models.Weather
 
         [JsonPropertyName("hourly_units")]
         public WeatherDataHourlyUnits? HourlyUnits { get; set; }
+
+        public string ToPrompt()
+        => ToString();
 
     }
 

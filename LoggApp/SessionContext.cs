@@ -1,4 +1,5 @@
-﻿using AppLogic.Models.DTOs;
+﻿using AppLogic.Models.DTOs.Detailed;
+using AppLogic.Models.DTOs.Summary;
 using Presentation.MenuState_Enums;
 
 namespace Presentation
@@ -25,13 +26,13 @@ namespace Presentation
 
         // DYNAMIC MENU OPTIONS
 
-        public DTO_SpecificUser? DTO_CurrentUser { get; set; }
-        public DTO_SpecificDayCard? DTO_CurrentDayCard { get; set; }
-        public List<DTO_AllUser>? DTO_AllUsers { get; set; }
-        public List<DTO_AllDayCard>? DTO_AllDayCards { get; set; }
+        public UserDetailed? UserDetailed { get; set; }
+        public DayCardDetailed? DayCardDetailed { get; set; }
+        public List<UserSummary>? UsersSummary { get; set; }
+        public List<DayCardSummary>? DayCardsSummary { get; set; }
 
-        public DTO_AllAirQualityData DTO_AllAirQualityData { get; set; }
-        public DTO_AllWeatherData DTO_AllWeatherData { get; set; }
+        public AirQualityDataSummary AirQualityDataSummary { get; set; }
+        public WeatherDataSummary WeatherDataSummary { get; set; }
 
         //public User? CurrentUser { get; set; }
         //public DayCard? CurrentDayCard { get; set; }

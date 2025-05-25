@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Controllers.Interfaces;
-using AppLogic.Models.DTOs;
+using AppLogic.Models.DTOs.Detailed;
 using AppLogic.Models.Intake.InputModels;
 using AppLogic.Services.Interfaces;
 
@@ -21,7 +21,7 @@ namespace AppLogic.Controllers
         }
 
 
-        public async Task<DTO_SpecificCaffeineDrink> AddCaffeineDrinkToDayCardAsync(int dayCardId, CaffeineDrinkInputModel input)
+        public async Task<CaffeineDrinkDetailed> AddCaffeineDrinkToDayCardAsync(int dayCardId, CaffeineDrinkInputModel input)
         {
             return await _caffeineDrinkService.AddCaffeineDrinkToDayCardAsync(dayCardId, input);
         }

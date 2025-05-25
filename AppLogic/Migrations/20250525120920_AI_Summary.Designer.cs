@@ -4,6 +4,7 @@ using AppLogic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppLogic.Migrations
 {
     [DbContext(typeof(LoggAppContext))]
-    partial class LoggAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250525120920_AI_Summary")]
+    partial class AI_Summary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,7 +234,7 @@ namespace AppLogic.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AQI_AISummary")
+                    b.Property<string>("AISummary")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("DayCardId")
@@ -248,9 +251,6 @@ namespace AppLogic.Migrations
                     b.Property<double?>("Lon")
                         .HasColumnType("float")
                         .HasAnnotation("Relational:JsonPropertyName", "longitude");
-
-                    b.Property<string>("Pollen_AISummary")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<TimeOnly?>("TimeOf")
                         .HasColumnType("time");

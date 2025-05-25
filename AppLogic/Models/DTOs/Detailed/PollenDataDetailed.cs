@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AppLogic.Models.Weather;
 
-namespace AppLogic.Models.Weather.AirQuality
+namespace AppLogic.Models.DTOs.Detailed
 {
-    public class HourlyPollenData
+    public class PollenDataDetailed
     {
         public int? Time { get; set; }
         public Measurement<double?>? Birch { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using AppLogic.Models;
-using AppLogic.Models.DTOs;
+using AppLogic.Models.DTOs.Detailed;
+using AppLogic.Models.DTOs.Summary;
 using AppLogic.Repositories;
 using AppLogic.Repositories.Interfaces;
 using AppLogic.Services.Interfaces;
@@ -19,14 +20,14 @@ namespace AppLogic.Services
         
 
 
-        public async Task<DTO_SpecificUser> RegisterNewUserAsync(UserInputModel input)
+        public async Task<UserDetailed> RegisterNewUserAsync(UserInputModel input)
         {
 
             User newUser = new User(input);
 
             newUser = await _userRepository.CreateAsync(newUser);
 
-            return new DTO_SpecificUser()
+            return new UserDetailed()
             {
                 Id = newUser.Id,
                 Username = newUser.Username!,
@@ -34,7 +35,7 @@ namespace AppLogic.Services
                 Lat = newUser.Lat,
                 Lon = newUser.Lon,
                 DTO_AllDayCards = newUser.DayCards!
-                    .Select(d => new DTO_AllDayCard
+                    .Select(d => new DayCardSummary
                     {
                         DayCardId = d.Id,
                         UserId = d.UserId,
@@ -48,7 +49,7 @@ namespace AppLogic.Services
 
 
 
-        public async Task<List<DTO_AllUser>?> ReadAllUsersAsync()
+        public async Task<List<UserSummary>?> ReadAllUsersAsync()
         {
             List<User>? users = await _userRepository.GetAllUsersIncludeAsync();
 
@@ -57,13 +58,13 @@ namespace AppLogic.Services
                 return null;
             }
 
-            List<DTO_AllUser> DTO_AllUsers = new List<DTO_AllUser>();
+            List<UserSummary> DTO_AllUsers = new List<UserSummary>();
 
             foreach (var user in users)
             {
                 DTO_AllUsers.Add
                     (
-                        new DTO_AllUser()
+                        new UserSummary()
                         {
                             Id = user.Id,
                             Username = user.Username!,
@@ -77,14 +78,14 @@ namespace AppLogic.Services
             return DTO_AllUsers.OrderBy(x => x.Username).ToList();
         }
 
-        public async Task<DTO_SpecificUser?> ReadSingleUserAsync(int id)
+        public async Task<UserDetailed?> ReadSingleUserAsync(int id)
         {
             var user = await _userRepository.GetUserByIdIncludeAsync(id);
 
             if (user == null) return null;
 
 
-            return new DTO_SpecificUser()
+            return new UserDetailed()
             {
                 Id = user!.Id,
                 Username = user.Username!,
@@ -92,7 +93,7 @@ namespace AppLogic.Services
                 Lat = user.Lat,
                 Lon = user.Lon,
                 DTO_AllDayCards = user.DayCards!
-                    .Select(d => new DTO_AllDayCard
+                    .Select(d => new DayCardSummary
                     {
                         DayCardId = d.Id,
                         UserId = d.UserId,
@@ -102,13 +103,13 @@ namespace AppLogic.Services
                     }).ToList()
             };
         }
-        public async Task<DTO_SpecificUser?> ReadSingleUserAsync(string username)
+        public async Task<UserDetailed?> ReadSingleUserAsync(string username)
         {
             var user = await _userRepository.GetUserByUsernameIncludeAsync(username);
 
             if ( user == null ) return null;
 
-            return new DTO_SpecificUser()
+            return new UserDetailed()
             {
                 Id = user.Id,
                 Username = user.Username!,
@@ -116,7 +117,7 @@ namespace AppLogic.Services
                 Lat = user.Lat,
                 Lon = user.Lon,
                 DTO_AllDayCards = user.DayCards!
-               .Select(d => new DTO_AllDayCard
+               .Select(d => new DayCardSummary
                {
                    DayCardId = d.Id,
                    UserId = d.UserId,

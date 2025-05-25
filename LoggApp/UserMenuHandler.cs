@@ -47,21 +47,21 @@ namespace Presentation
         {
 
             ResetMenuStates(sessionContext);
-            if (sessionContext.DTO_CurrentUser!.DTO_AllDayCards == null || sessionContext.DTO_CurrentUser.DTO_AllDayCards.Count == 0)
+            if (sessionContext.UserDetailed!.DTO_AllDayCards == null || sessionContext.UserDetailed.DTO_AllDayCards.Count == 0)
             {
                 sessionContext.ErrorMessage = MenuText.Error.NoDayCardsFound;
                 sessionContext.UserMenuState = UserMenuState.Back;
             }
             else
             {
-                sessionContext.MainHeader = sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.DTO_CurrentUser!.ToString()}";
+                sessionContext.MainHeader = sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.UserDetailed!.ToString()}\n";
                 sessionContext.SubHeader = MenuText.Header.AllDayCards;
 
-                var dayCardChoice = GetMenuValue(sessionContext!.DTO_CurrentUser!.DTO_AllDayCards!, sessionContext);
+                var dayCardChoice = GetMenuValue(sessionContext!.UserDetailed!.DTO_AllDayCards!, sessionContext);
 
                 if (dayCardChoice != null)
                 {
-                    sessionContext.DTO_CurrentDayCard = await _dayCardController.ReadDayCardSingleAsync(dayCardChoice.DayCardId, sessionContext.DTO_CurrentUser.Id);
+                    sessionContext.DayCardDetailed = await _dayCardController.ReadDayCardSingleAsync(dayCardChoice.DayCardId, sessionContext.UserDetailed.Id);
                     sessionContext.DayCardMenuState = DayCardMenuState.Overview;
                 }
                 else
@@ -83,7 +83,7 @@ namespace Presentation
 
             if (dayCardInputModel != null)
             {
-                sessionContext.DTO_CurrentDayCard = await _dayCardController.CreateNewDayCardAsync(sessionContext.DTO_CurrentUser!.Id, dayCardInputModel);
+                sessionContext.DayCardDetailed = await _dayCardController.CreateNewDayCardAsync(sessionContext.UserDetailed!.Id, dayCardInputModel);
                 sessionContext.DayCardMenuState = DayCardMenuState.Overview;
 
             }

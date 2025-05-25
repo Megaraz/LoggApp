@@ -1,17 +1,20 @@
 ﻿using System.Text;
-using AppLogic.Models.Weather;
+using AppLogic.Models.DTOs.Detailed;
+using Microsoft.IdentityModel.Tokens;
 
-namespace AppLogic.Models.DTOs
+namespace AppLogic.Models.DTOs.Summary
 {
-    public class DTO_AllWeatherData
+    public class WeatherDataSummary : IPromptRenderable
     {
         public int WeatherDataId { get; set; }
         public int? DayCardId { get; set; }
-        public List<HourlyWeatherData>? HourlyWeatherData { get; set; } = new List<HourlyWeatherData>();
+        public List<WeatherDataDetailed>? WeatherDataDetails { get; set; } = new List<WeatherDataDetailed>();
 
-        public string MainHeader { get; set; } = "TIME\tTEMP\tFEELSLIKE\tHUMIDITY\tPRECIP\tRAIN\tCLOUD\tUV\tWIND\tPRESSURE";
+        public string? AISummary { get; set; }
+        
 
-
+        public string ToPrompt()
+        => ToString();
 
         public override string ToString()
         {
@@ -21,15 +24,20 @@ namespace AppLogic.Models.DTOs
             //if (DayCardId.HasValue)
             //    sb.Append($", DayCardId: {DayCardId.Value}");
 
+            if (!AISummary.IsNullOrEmpty())
+            {
+                sb.AppendLine();
+                sb.AppendLine(AISummary + "\n\n");
+            }
+            string mainHeader = "TIME\tTEMP\tFEELSLIKE\tHUMIDITY\tPRECIP\tRAIN\tCLOUD\tUV\tWIND\tPRESSURE";
+            sb.AppendLine(mainHeader);
 
-            sb.AppendLine(MainHeader);
-
-            if (HourlyWeatherData != null && HourlyWeatherData.Any())
+            if (WeatherDataDetails != null && WeatherDataDetails.Any())
             {
                 //sb.AppendLine();
                 //sb.AppendLine("Hourly readings:");
 
-                var first = HourlyWeatherData.FirstOrDefault();
+                var first = WeatherDataDetails.FirstOrDefault();
                 if (first is not null)
                 {
                     sb.AppendLine(string.Join("\t", new[]
@@ -52,7 +60,7 @@ namespace AppLogic.Models.DTOs
                 sb.AppendLine();
 
 
-                foreach (var hour in HourlyWeatherData)
+                foreach (var hour in WeatherDataDetails)
                 {
                     sb.AppendLine($"{hour}");
                 }

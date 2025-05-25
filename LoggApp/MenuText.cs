@@ -8,13 +8,14 @@
         {
             // PAGE HEADERS
             public const string InitMenu = "WELCOME TO LOGGAPP!";
-            public const string AllUsers = "ALL USERS IN DB";
+            //public const string AllUsers = "ALL USERS IN DB";
 
-            public const string CurrentDayCard = "CURRENT DAYCARD: ";
+            public const string CurrentDayCard = "CURRENT DAYCARD ";
 
             public const string AllDayCards = "DAYCARD ID\tDATE\t\tENTRIES";
 
-            public const string SpecificUser = "USER ID\t\tUSERNAME\tCITY\n";
+            public static string SpecificUser = "ID".PadRight(6) + "USERNAME".PadRight(12) + "CITY\n\n";
+            public static string AllUsers = "ID".PadRight(6) + "USERNAME".PadRight(12) + "CITY".PadRight(15) + "DAYCARDS";
 
 
             public const string WeatherDetails = "TIME\tTEMP\tFEELSLIKE\tHumidity\tPrecip\tRain\tCloud\tUV\tWind\tPressure";

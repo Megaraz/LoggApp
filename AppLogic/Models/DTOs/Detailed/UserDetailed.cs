@@ -1,6 +1,8 @@
-﻿namespace AppLogic.Models.DTOs
+﻿using AppLogic.Models.DTOs.Summary;
+
+namespace AppLogic.Models.DTOs.Detailed
 {
-    public class DTO_SpecificUser
+    public class UserDetailed
     {
         public int Id { get; set; }
         public string? Username { get; set; }
@@ -10,12 +12,13 @@
 
         public int? DayCardCount { get; set; }
 
-        public List<DTO_AllDayCard>? DTO_AllDayCards { get; set; }
+        public List<DayCardSummary>? DTO_AllDayCards { get; set; }
 
 
         public override string ToString()
         {
-            return $"[{Id}].\t\t{Username}\t\t{CityName}\n";
+            return $"[{Id.ToString()}]" + string.Empty.PadRight(3) +
+                $"{Username?.PadRight(12)}{CityName}";
         }
     }
 }

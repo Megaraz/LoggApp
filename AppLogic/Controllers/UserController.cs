@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AppLogic.Models.DTOs;
 using AppLogic.Models;
 using AppLogic.Services.Interfaces;
 using AppLogic.Controllers.Interfaces;
+using AppLogic.Models.DTOs.Summary;
+using AppLogic.Models.DTOs.Detailed;
 
 namespace AppLogic.Controllers
 {
@@ -19,12 +20,12 @@ namespace AppLogic.Controllers
             _userService = userService;
         }
 
-        public async Task<DTO_SpecificUser> CreateNewUserAsync(UserInputModel input)
+        public async Task<UserDetailed> CreateNewUserAsync(UserInputModel input)
         {
             return await _userService.RegisterNewUserAsync(input);
         }
 
-        public async Task<List<DTO_AllUser>?> ReadAllUsersAsync()
+        public async Task<List<UserSummary>?> ReadAllUsersAsync()
         {
 
             var users = await _userService.ReadAllUsersAsync();
@@ -42,13 +43,13 @@ namespace AppLogic.Controllers
 
         }
 
-        public async Task<DTO_SpecificUser?> ReadUserSingleAsync(int id)
+        public async Task<UserDetailed?> ReadUserSingleAsync(int id)
         {
             return await _userService.ReadSingleUserAsync(id)!;
 
         }
 
-        public async Task<DTO_SpecificUser?> ReadUserSingleAsync(string username)
+        public async Task<UserDetailed?> ReadUserSingleAsync(string username)
         {
 
             return await _userService.ReadSingleUserAsync(username)!;
