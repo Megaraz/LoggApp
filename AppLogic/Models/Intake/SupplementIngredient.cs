@@ -3,7 +3,7 @@
     public class SupplementIngredient
     {
         public int Id { get; set; }
-        public int? SupplementId { get; set; }
+        public int SupplementId { get; set; }
         public virtual Supplement? Supplement { get; set; }
         public string? Name { get; set; }
         public int? DosageInMg { get; set; }

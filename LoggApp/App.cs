@@ -11,7 +11,7 @@ namespace Presentation
 {
     internal class App
     {
-
+        // Presentation, Context and Menu Handlers
         private LoggAppContext _dbContext;
         private SessionContext _sessionContext;
         private View _view;
@@ -26,7 +26,12 @@ namespace Presentation
         private ICaffeineDrinkRepo _caffeineDrinkRepo;
         private IWeatherRepo _weatherRepo;
         private IAirQualityRepo _airQualityRepo;
-        //private IOpenAiResponseClient _openAiResponseClient;
+        private ISleepRepo _sleepRepo;
+        private IActivityRepo _activityRepo;
+        private IExerciseRepo _exerciseRepo;
+        private ISupplementRepo _supplementRepo;
+        private IWellnessCheckInRepo _wellnessCheckInRepo;
+
 
         // Services
         private IUserService _userService;
@@ -34,6 +39,11 @@ namespace Presentation
         private IAirQualityService _airQualityService;
         private IDayCardService _dayCardService;
         private ICaffeineDrinkService _caffeineDrinkService;
+        private ISleepService _sleepService;
+        private IActivityService _activityService;
+        private IExerciseService _exerciseService;
+        private ISupplementService _supplementService;
+        private IWellnessCheckInService _wellnessCheckInService;
 
         // Controllers
         private IUserController _userController;
@@ -41,6 +51,12 @@ namespace Presentation
         private IAirQualityController _airQualityController;
         private IDayCardController _dayCardController;
         private ICaffeineDrinkController _caffeineDrinkController;
+        private ISleepController _sleepController;
+        private IActivityController _activityController;
+        private IExerciseController _exerciseController;
+        private ISupplementController _supplementController;
+        private IWellnessCheckInController _wellnessCheckInController;
+
 
         public App(LoggAppContext dbContext)
         {
@@ -56,6 +72,12 @@ namespace Presentation
             _weatherRepo = new WeatherRepo(_dbContext);
             _airQualityRepo = new AirQualityRepo(_dbContext);
             _openAiResponseClient = new OpenAiResponseClient();
+
+            _sleepRepo = new SleepRepo(_dbContext);
+            _activityRepo = new ActivityRepo(_dbContext);
+            _exerciseRepo = new ExerciseRepo(_dbContext);
+            _supplementRepo = new SupplementRepo(_dbContext);
+            _wellnessCheckInRepo = new WellnessCheckInRepo(_dbContext);
         }
 
         public void InitServices()
@@ -65,6 +87,12 @@ namespace Presentation
             _airQualityService = new AirQualityService(_airQualityRepo);
             _caffeineDrinkService = new CaffeineDrinkService(_caffeineDrinkRepo);
             _dayCardService = new DayCardService(_dayCardRepo, _weatherService, _airQualityService, _caffeineDrinkService, _openAiResponseClient);
+
+            _sleepService = new SleepService(_sleepRepo);
+            _activityService = new ActivityService(_activityRepo);
+            _exerciseService = new ExerciseService(_exerciseRepo);
+            _supplementService = new SupplementService(_supplementRepo);
+            _wellnessCheckInService = new WellnessCheckInService(_wellnessCheckInRepo);
         }
 
         public void InitControllers()
@@ -75,12 +103,18 @@ namespace Presentation
             _dayCardController = new DayCardController(_dayCardService);
             _caffeineDrinkController = new CaffeineDrinkController(_caffeineDrinkService);
 
+            _sleepController = new SleepController(_sleepService);
+            _activityController = new ActivityController(_activityService);
+            _exerciseController = new ExerciseController(_exerciseService);
+            _supplementController = new SupplementController(_supplementService);
+            _wellnessCheckInController = new WellnessCheckInController(_wellnessCheckInService);
+
         }
 
         public void InitPresentation()
         {
             _mainMenuHandler = new MainMenuHandler(_userController, _weatherController);
-            _userMenuHandler = new UserMenuHandler(_dayCardController);
+            _userMenuHandler = new UserMenuHandler(_dayCardController, _userController, _weatherController);
             _dayCardMenuHandler = new DayCardMenuHandler(_caffeineDrinkController);
             _view = new View(_mainMenuHandler, _userMenuHandler, _dayCardMenuHandler);
 

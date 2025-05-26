@@ -7,7 +7,7 @@ namespace AppLogic.Models.Weather.AirQuality
     public class AirQualityData
     {
         public int Id { get; set; }
-        public int? DayCardId { get; set; }
+        public int DayCardId { get; set; }
         public virtual DayCard? DayCard { get; set; }
         public TimeOnly? TimeOf { get; set; }
 

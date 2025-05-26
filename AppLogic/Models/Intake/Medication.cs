@@ -5,7 +5,7 @@ namespace AppLogic.Models.Intake
     public class Medication : ITimeOfEntry, IDailyLogId
     {
         public int Id { get; set; }
-        public int? DayCardId { get; set; }
+        public int DayCardId { get; set; }
         public virtual DayCard? DayCard { get; set; }
         public TimeOnly? TimeOf { get; }
         public string? NameOfMedication { get; }

@@ -12,12 +12,16 @@ namespace AppLogic.Services.Interfaces
     public interface IUserService
     {
 
-        Task<UserDetailed> RegisterNewUserAsync(UserInputModel input);
+        Task<UserDetailed> RegisterNewUserAsync(UserInputModel inputModel);
 
-        Task<List<UserSummary>?> ReadAllUsersAsync();
+        Task<List<UserSummary>?> GetAllUsersIncludeAsync();
 
-        Task<UserDetailed?> ReadSingleUserAsync(int id);
+        Task<UserDetailed?> GetUserByIdIncludeAsync(int userId);
 
-        Task<UserDetailed?> ReadSingleUserAsync(string username);
+        Task<UserDetailed?> GetUserByUsernameIncludeAsync(string username);
+
+        Task<UserDetailed> UpdateUserAsync(int userId, UserInputModel inputModel);
+
+        Task<bool> DeleteUserAsync(int userId);
     }
 }

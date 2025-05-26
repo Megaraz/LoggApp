@@ -13,7 +13,7 @@
         public User(UserInputModel userInputModel)
         {
             Username = userInputModel.Username;
-            CityName = userInputModel.GeoResult.Name;
+            CityName = userInputModel.GeoResult?.Name ?? userInputModel.CityName;
             Lat = userInputModel.GeoResult.Lat;
             Lon = userInputModel.GeoResult.Lon;
         }
@@ -24,15 +24,15 @@
         }
 
 
-        public override string ToString()
-        {
-            return $"{Username}, ID: {Id}\n"
-                + $"{CityName} \n"
-                + $"DayCards: {DayCards!.Count}\n\n"
-                + "------------------------\n"
-                + $"[DAYCARDS] for [{Username}]\n"
-                + $"{string.Join("\n", DayCards?.Select(x => x.Date)!)}"
-                + "------------------------\n";   
-        }
+        //public override string ToString()
+        //{
+        //    return $"{Username}, ID: {Id}\n"
+        //        + $"{CityName} \n"
+        //        + $"DayCards: {DayCards!.Count}\n\n"
+        //        + "------------------------\n"
+        //        + $"[DAYCARDS] for [{Username}]\n"
+        //        + $"{string.Join("\n", DayCards?.Select(x => x.Date)!)}"
+        //        + "------------------------\n";   
+        //}
     }
 }

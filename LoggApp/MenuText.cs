@@ -12,7 +12,13 @@
 
             public const string CurrentDayCard = "CURRENT DAYCARD ";
 
+            public const string CurrentUserName = "CURRENT USERNAME: ";
+            public const string CurrentLocation = "CURRENT LOCATION: ";
+
             public const string AllDayCards = "DAYCARD ID\tDATE\t\tENTRIES";
+
+            public const string UserDeleted = "USER DELETED SUCCESSFULLY!";
+
 
             public static string SpecificUser = "ID".PadRight(6) + "USERNAME".PadRight(12) + "CITY\n\n";
             public static string AllUsers = "ID".PadRight(6) + "USERNAME".PadRight(12) + "CITY".PadRight(15) + "DAYCARDS";
@@ -28,11 +34,17 @@
 
             public const string CreateDayCard = "ENTER A DATE FOR THE NEW DAYCARD, OR LEAVE EMPTY FOR TODAYS DATE";
 
-            public const string CreateUser = "ENTER A USERNAME";
-            public const string CreateUserCity = "ENTER A CITY OR LOCATION";
-            public const string CreateUserLocationChoice = "CHOOSE YOUR LOCATION";
+            public const string EnterUserName = "ENTER A USERNAME";
+            public const string EnterUserLocation = "ENTER A CITY OR LOCATION";
+            public const string ChooseLocation = "CHOOSE YOUR LOCATION";
+
+            public const string EnterNewUserName = "ENTER A NEW USERNAME";
+            public const string EnterNewUserLocation = "ENTER A NEW LOCATION";
 
             public const string ChooseSizeOfDrink = "CHOOSE SIZE OF DRINK";
+
+            public const string PromptDeleteUserConfirmation = "ARE YOU SURE YOU WANT TO DELETE THIS USER? (Y/N)";
+
 
         }
 
@@ -50,11 +62,19 @@
             public const string InvalidUserNameInput = "NOT A VALID USERNAME";
             public const string InvalidUserCityInput = "NOT A VALID LOCATION";
 
+            public const string UserDeleteFailed = "USER DELETE FAILED, PLEASE TRY AGAIN";
+
 
         }
 
         public static class NavOption
         {
+            
+            public const string UpdateUsername = "[CHANGE USERNAME]";
+            public const string UpdateLocation = "[CHANGE LOCATION]";
+            public const string DeleteUser = "[DELETE USER]";
+
+
             public const string Login = "[LOG IN]";
             public const string GetAllUsers = "[GET ALL USERS]";
             public const string GetTodaysWeather = "[GET WEATHER FOR TODAY]";
@@ -71,6 +91,7 @@
             public const string CreateNewDayCard = "[CREATE NEW DAYCARD]";
             public const string SearchDayCard = "[SEARCH DAYCARD]";
             public const string ShowAllDayCards = "[SHOW ALL DAYCARDS]";
+            public const string UserSettings = "[USER SETTINGS]";
 
             public const string Weather = "[WEATHER SPECIFICS]";
             public const string AirQuality = "[AIRQUALITY SPECIFICS]";
@@ -89,7 +110,8 @@
             // STATIC MENU OPTIONS
             public static string[] s_InitMenu = [Login, GetAllUsers, CreateNewUser, GetTodaysWeather, Exit];
             public static string[] s_AllUserMenu = [Login, CreateNewUser];
-            public static string[] s_SpecificUserMenu = [CreateNewDayCard, SearchDayCard];
+            public static string[] s_SpecificUserMenu = [CreateNewDayCard, SearchDayCard, UserSettings];
+            public static string[] s_UserSettingsMenu = [UpdateUsername, UpdateLocation, DeleteUser];
             public static string[] s_SpecificDayCardMenu = [Weather, AirQuality, Pollen, Supplements, CaffeineDrinks, Exercise, ComputerActivity, Sleep];
             public static string[] s_DrinkSize = [DrinkLarge, DrinkMedium, DrinkSmall];
 

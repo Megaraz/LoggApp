@@ -24,6 +24,10 @@ namespace AppLogic.Repositories
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.Activities)
                     .Include(u => u.DayCards!)
+                        .ThenInclude(dc => dc.Sleep)
+                    .Include(u => u.DayCards!)
+                        .ThenInclude(dc => dc.WellnessCheckIns)
+                    .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.CaffeineDrinks)
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.Supplements)
@@ -48,6 +52,10 @@ namespace AppLogic.Repositories
                 return await _dbContext.Users
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.Activities)
+                    .Include(u => u.DayCards!)
+                        .ThenInclude(dc => dc.Sleep)
+                    .Include(u => u.DayCards!)
+                        .ThenInclude(dc => dc.WellnessCheckIns)
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.CaffeineDrinks)
                     .Include(u => u.DayCards!)
@@ -76,6 +84,10 @@ namespace AppLogic.Repositories
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.Activities)
                     .Include(u => u.DayCards!)
+                        .ThenInclude(dc => dc.Sleep)
+                    .Include(u => u.DayCards!)
+                        .ThenInclude(dc => dc.WellnessCheckIns)
+                    .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.CaffeineDrinks)
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.Supplements)
@@ -85,6 +97,47 @@ namespace AppLogic.Repositories
                         .ThenInclude(dc => dc.AirQualityData)
                     .AsSplitQuery()
                     .ToListAsync();
+
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException($"Something went wrong, {e.Message}");
+            }
+        }
+
+        public async Task<User> UpdateUserIncludeAsync(User updatedUser)
+        {
+            try
+            {
+
+                var existingUser = await _dbContext.Set<User>().FindAsync(updatedUser.Id) 
+                    ?? throw new ArgumentException("User not found.");
+
+                var changed = false;
+
+                if (existingUser.Username != updatedUser.Username)
+                {
+                    existingUser.Username = updatedUser.Username;
+                    changed = true;
+                }
+                if (existingUser.CityName != updatedUser.CityName)
+                {
+                    existingUser.CityName = updatedUser.CityName;
+                    changed = true;
+                }
+                if (existingUser.Lat != updatedUser.Lat || existingUser.Lon != updatedUser.Lon)
+                {
+                    existingUser.Lat = updatedUser.Lat;
+                    existingUser.Lon = updatedUser.Lon;
+                    changed = true;
+                }
+                
+                if (changed)
+                {
+                    await _dbContext.SaveChangesAsync();
+                }
+
+                return existingUser;
 
             }
             catch (Exception e)

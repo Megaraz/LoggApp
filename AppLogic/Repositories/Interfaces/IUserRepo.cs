@@ -7,6 +7,8 @@ namespace AppLogic.Repositories.Interfaces
         Task<User?> GetUserByIdIncludeAsync(int id);
         Task<User?> GetUserByUsernameIncludeAsync(string username);
         Task<List<User>?> GetAllUsersIncludeAsync();
+
+        Task<User> UpdateUserIncludeAsync(User user);
     }
 
 }

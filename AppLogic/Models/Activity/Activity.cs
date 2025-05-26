@@ -5,8 +5,8 @@ namespace AppLogic.Models.Activity
     public abstract class Activity : ITimeOfEntry, ITimeRange, IDailyLogId
     {
         public int Id { get; set; }
-        public int? DayCardId { get; set; }
-        public virtual DayCard? DayCard { get; set; }
+        public int DayCardId { get; set; }
+        public virtual DayCard DayCard { get; set; }
         public TimeOnly? TimeOf { get; set; }
         public TimeOnly? EndTime { get; set; }
 
@@ -23,7 +23,7 @@ namespace AppLogic.Models.Activity
             
         }
 
-        protected Activity(int? dayCardId, TimeOnly? timeOf, TimeOnly? endTime, TimeSpan? duration)
+        protected Activity(int dayCardId, TimeOnly? timeOf, TimeOnly? endTime, TimeSpan? duration)
         {
             DayCardId = dayCardId;
             TimeOf = timeOf;

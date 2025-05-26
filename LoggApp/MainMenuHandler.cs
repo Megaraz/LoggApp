@@ -151,8 +151,8 @@ namespace Presentation
                 GeoResultResponse geoResultResponse = await _weatherController.UserGeoResultList(userInputModel);
 
                 // User chooses a Location from the list of locations
-                sessionContext.CurrentPrompt = MenuText.Prompt.CreateUserLocationChoice;
-                userInputModel.GeoResult = GetMenuValue(geoResultResponse.Results, sessionContext);
+                sessionContext.CurrentPrompt = MenuText.Prompt.ChooseLocation;
+                userInputModel.GeoResult = GetMenuValue(geoResultResponse.Results, sessionContext)!;
 
 
                 if (userInputModel.GeoResult != null)
@@ -173,7 +173,7 @@ namespace Presentation
         private async Task<TContext> GetAllUsers<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
-            List<UserSummary>? allUsers = await _userController.ReadAllUsersAsync()!;
+            List<UserSummary>? allUsers = await _userController.GetAllUsersIncludeAsync()!;
 
             if (allUsers == null || allUsers.Count == 0)
             {
@@ -193,7 +193,7 @@ namespace Presentation
         private async Task<TContext> Login<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
-            string? username = View.GetValidUserInput(MenuText.Prompt.CreateUser, MenuText.Error.InvalidUserNameInput);
+            string? username = View.GetValidUserInput(null, MenuText.Prompt.EnterUserName, MenuText.Error.InvalidUserNameInput);
 
             if (username != null)
             {
@@ -260,6 +260,11 @@ namespace Presentation
                         sessionContext.UserMenuState = UserMenuState.SearchDayCard;
                         break;
 
+                    case MenuText.NavOption.UserSettings:
+                        ResetMenuStates(sessionContext);
+                        sessionContext.UserMenuState = UserMenuState.UserSettings;
+                        break;
+
                     case MenuText.NavOption.Back:
                         ResetMenuStates(sessionContext);
                         sessionContext.MainMenuState = MainMenuState.AllUsers;
@@ -283,7 +288,7 @@ namespace Presentation
 
             if (!location.IsNullOrEmpty())
             {
-                // Get list of locations that match users input location%
+                // Get list of locations that match users input location
                 GeoResultResponse geoResultResponse = await _weatherController.LocationGeoResultList(location!);
                 // User chooses a Location from the list of locations
                 GeoResult? geoResult = GetMenuValue(geoResultResponse.Results, sessionContext);

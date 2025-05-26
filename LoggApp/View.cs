@@ -41,9 +41,18 @@ namespace Presentation
             return sessionContext;
         }
 
-        public static string? Input_Location()
+        public static string? Input_Location(string? header = null, bool newLocation = false)
         {
-            return GetValidUserInput(MenuText.Prompt.CreateUserCity, MenuText.Error.InvalidUserCityInput);
+            string prompt;
+            if (newLocation)
+            {
+                prompt = MenuText.Prompt.EnterNewUserLocation;
+            }
+            else
+            {
+                prompt = MenuText.Prompt.EnterUserLocation;
+            }
+            return GetValidUserInput(header, prompt, MenuText.Error.InvalidUserCityInput);
 
         }
 
@@ -52,17 +61,31 @@ namespace Presentation
             return GetValidUserInput(MenuText.Prompt.EnterTimeOfIntake, MenuText.Error.InvalidTimeInput);
         }
 
+        public static string? Input_Username(string? header = null, bool newUsername = false)
+        {
+            string prompt;
+            if (newUsername)
+            {
+                prompt = MenuText.Prompt.EnterNewUserName;
+            }
+            else
+            {
+                prompt = MenuText.Prompt.EnterUserName;
+            }
+            return GetValidUserInput(header, prompt, MenuText.Error.InvalidUserNameInput);
+
+        }
 
 
-        public static UserInputModel? Input_User()
+        public static UserInputModel? Input_User(string? header = null)
         {
 
-            var userName = GetValidUserInput(MenuText.Prompt.CreateUser, MenuText.Error.InvalidUserNameInput);
+            var userName = Input_Username(header);
             if (userName.IsNullOrEmpty())
             {
                 return null;
             }
-            var city = GetValidUserInput(MenuText.Prompt.CreateUserCity, MenuText.Error.InvalidUserCityInput);
+            var city = Input_Location(header);
             if (city.IsNullOrEmpty())
             {
                 return null;
@@ -138,7 +161,7 @@ namespace Presentation
         }
 
 
-        public static string? GetValidUserInput(string prompt, string? errorMessage = null)
+        public static string? GetValidUserInput(string? header = null, string? prompt = null, string? errorMessage = null)
         {
             string? userInput = null;
             bool validInput;
@@ -146,6 +169,13 @@ namespace Presentation
             do
             {
                 Console.Clear();
+
+                if (!header.IsNullOrEmpty())
+                {
+                    Console.WriteLine(header);
+
+                }
+
                 if (!prompt.IsNullOrEmpty())
                 {
                     Console.WriteLine(prompt);
@@ -250,6 +280,33 @@ namespace Presentation
             }
         }
 
+        internal static bool Input_Confirmation(string? prompt = null)
+        {
+            ConsoleKey keyPress;
+            bool validInput;
+            bool isConfirm;
+
+            Console.Clear();
+            if (!prompt.IsNullOrEmpty())
+            {
+                Console.WriteLine(prompt);
+
+            }
+
+            do
+            {
+                keyPress = Console.ReadKey(true).Key;
+
+                validInput = keyPress == ConsoleKey.Y || keyPress == ConsoleKey.N || keyPress == ConsoleKey.Enter || keyPress == ConsoleKey.Escape;
+
+                isConfirm = keyPress == ConsoleKey.Y || keyPress == ConsoleKey.Enter;
+
+
+            } while (!validInput);
+
+            return isConfirm;
+
+        }
     }
 
 

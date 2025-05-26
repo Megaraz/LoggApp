@@ -17,6 +17,7 @@
         CreateNewDayCard,
         SpecificDayCard,
         SearchDayCard,
+        UserSettings,
         Back,
         None
     };

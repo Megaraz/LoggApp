@@ -14,9 +14,9 @@ namespace AppLogic
         public DbSet<DayCard> DayCards { get; set; }
         public DbSet<WeatherData> WeatherData { get; set; }
         public DbSet<AirQualityData> AirQualityData { get; set; }
-        public DbSet<Medication> Medications { get; set; }
         public DbSet<CaffeineDrink> CaffeineDrinks { get; set; }
-        public DbSet<Food> Foods { get; set; }
+        public DbSet<WellnessCheckIn> WellnessCheckIns { get; set; }
+        public DbSet<Sleep> Sleep { get; set; }
         public DbSet<Supplement> Supplements { get; set; }
         public DbSet<SupplementIngredient> SupplementIngredients { get; set; }
         public DbSet<Activity> Activities { get; set; }

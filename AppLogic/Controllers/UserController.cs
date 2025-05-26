@@ -20,15 +20,25 @@ namespace AppLogic.Controllers
             _userService = userService;
         }
 
-        public async Task<UserDetailed> CreateNewUserAsync(UserInputModel input)
+        public async Task<UserDetailed> CreateNewUserAsync(UserInputModel inputModel)
         {
-            return await _userService.RegisterNewUserAsync(input);
+            return await _userService.RegisterNewUserAsync(inputModel);
         }
 
-        public async Task<List<UserSummary>?> ReadAllUsersAsync()
+        public async Task<UserDetailed> UpdateUserAsync(int userId, UserInputModel inputModel)
+        {
+            return await _userService.UpdateUserAsync(userId, inputModel);
+        }
+
+        public async Task<bool> DeleteUserAsync(int userId)
+        {
+            return await _userService.DeleteUserAsync(userId);
+        }
+
+        public async Task<List<UserSummary>?> GetAllUsersIncludeAsync()
         {
 
-            var users = await _userService.ReadAllUsersAsync();
+            var users = await _userService.GetAllUsersIncludeAsync();
 
 
             if (users != null && users.Count > 0)
@@ -43,16 +53,19 @@ namespace AppLogic.Controllers
 
         }
 
+
+
+
         public async Task<UserDetailed?> ReadUserSingleAsync(int id)
         {
-            return await _userService.ReadSingleUserAsync(id)!;
+            return await _userService.GetUserByIdIncludeAsync(id)!;
 
         }
 
         public async Task<UserDetailed?> ReadUserSingleAsync(string username)
         {
 
-            return await _userService.ReadSingleUserAsync(username)!;
+            return await _userService.GetUserByUsernameIncludeAsync(username)!;
 
         }
     }

@@ -20,10 +20,10 @@ namespace AppLogic.Services
         
 
 
-        public async Task<UserDetailed> RegisterNewUserAsync(UserInputModel input)
+        public async Task<UserDetailed> RegisterNewUserAsync(UserInputModel inputModel)
         {
 
-            User newUser = new User(input);
+            User newUser = new User(inputModel);
 
             newUser = await _userRepository.CreateAsync(newUser);
 
@@ -49,7 +49,7 @@ namespace AppLogic.Services
 
 
 
-        public async Task<List<UserSummary>?> ReadAllUsersAsync()
+        public async Task<List<UserSummary>?> GetAllUsersIncludeAsync()
         {
             List<User>? users = await _userRepository.GetAllUsersIncludeAsync();
 
@@ -78,7 +78,7 @@ namespace AppLogic.Services
             return DTO_AllUsers.OrderBy(x => x.Username).ToList();
         }
 
-        public async Task<UserDetailed?> ReadSingleUserAsync(int id)
+        public async Task<UserDetailed?> GetUserByIdIncludeAsync(int id)
         {
             var user = await _userRepository.GetUserByIdIncludeAsync(id);
 
@@ -103,7 +103,7 @@ namespace AppLogic.Services
                     }).ToList()
             };
         }
-        public async Task<UserDetailed?> ReadSingleUserAsync(string username)
+        public async Task<UserDetailed?> GetUserByUsernameIncludeAsync(string username)
         {
             var user = await _userRepository.GetUserByUsernameIncludeAsync(username);
 
@@ -128,5 +128,36 @@ namespace AppLogic.Services
             };
         }
 
+        public async Task<UserDetailed> UpdateUserAsync(int userId, UserInputModel inputModel)
+        {
+            User user = new User(inputModel)
+            {
+                Id = userId,
+            };
+            user = await _userRepository.UpdateUserIncludeAsync(user);
+
+            return new UserDetailed()
+            {
+                Id = user.Id,
+                Username = user.Username!,
+                CityName = user.CityName,
+                Lat = user.Lat,
+                Lon = user.Lon,
+                DTO_AllDayCards = user.DayCards!
+                    .Select(d => new DayCardSummary
+                    {
+                        DayCardId = d.Id,
+                        UserId = d.UserId,
+                        Date = d.Date,
+                        Entries = (d.Activities!.Count + d.CaffeineDrinks!.Count + d.Supplements!.Count)
+
+                    }).ToList()
+            };
+        }
+
+        public async Task<bool> DeleteUserAsync(int userId)
+        {
+            return await _userRepository.DeleteAsync(userId);
+        }
     }
 }

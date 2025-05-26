@@ -12,8 +12,10 @@ namespace AppLogic.Controllers.Interfaces
     public interface IUserController
     {
         Task<UserDetailed> CreateNewUserAsync(UserInputModel input);
-        Task<List<UserSummary>?> ReadAllUsersAsync();
-        Task<UserDetailed?> ReadUserSingleAsync(int id);
+        Task<UserDetailed> UpdateUserAsync(int userId, UserInputModel input);
+        Task<List<UserSummary>?> GetAllUsersIncludeAsync();
+        Task<UserDetailed?> ReadUserSingleAsync(int userId);
         Task<UserDetailed?> ReadUserSingleAsync(string username);
+        Task<bool> DeleteUserAsync(int userId);
     }
 }
