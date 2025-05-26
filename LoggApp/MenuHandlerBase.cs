@@ -20,11 +20,12 @@ namespace Presentation
             sessionContext.CurrentPrompt = string.Empty;
             sessionContext.MainHeader = string.Empty;
             sessionContext.SubHeader = string.Empty;
-            //sessionContext.ErrorMessage = string.Empty;
+            sessionContext.ErrorMessage = string.Empty;
 
             sessionContext.MainMenuState = MainMenuState.None;
             sessionContext.UserMenuState = UserMenuState.None;
             sessionContext.DayCardMenuState = DayCardMenuState.None;
+            sessionContext.IntakeMenuState = IntakeMenuState.None;
             return sessionContext;
         }
 
@@ -62,6 +63,10 @@ namespace Presentation
                     if (sessionContext.DayCardMenuState != DayCardMenuState.None)
                     {
                         sessionContext.DayCardMenuState = DayCardMenuState.Back;
+                    }
+                    if (sessionContext.IntakeMenuState != IntakeMenuState.None)
+                    {
+                        sessionContext.DayCardMenuState = DayCardMenuState.Overview;
                     }
                 }
 

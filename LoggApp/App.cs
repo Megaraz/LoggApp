@@ -15,9 +15,10 @@ namespace Presentation
         private LoggAppContext _dbContext;
         private SessionContext _sessionContext;
         private View _view;
-        private DayCardMenuHandler _dayCardMenuHandler;
-        private UserMenuHandler _userMenuHandler;
         private MainMenuHandler _mainMenuHandler;
+        private UserMenuHandler _userMenuHandler;
+        private DayCardMenuHandler _dayCardMenuHandler;
+        private IntakeMenuHandler _intakeMenuHandler;
         private OpenAiResponseClient _openAiResponseClient;
 
         // Repos
@@ -115,8 +116,9 @@ namespace Presentation
         {
             _mainMenuHandler = new MainMenuHandler(_userController, _weatherController);
             _userMenuHandler = new UserMenuHandler(_dayCardController, _userController, _weatherController);
-            _dayCardMenuHandler = new DayCardMenuHandler(_caffeineDrinkController);
-            _view = new View(_mainMenuHandler, _userMenuHandler, _dayCardMenuHandler);
+            _dayCardMenuHandler = new DayCardMenuHandler();
+            _intakeMenuHandler = new IntakeMenuHandler(_caffeineDrinkController);
+            _view = new View(_mainMenuHandler, _userMenuHandler, _dayCardMenuHandler, _intakeMenuHandler);
 
 
             _sessionContext = new SessionContext();
@@ -125,6 +127,7 @@ namespace Presentation
             _sessionContext.CurrentMenuIndex = 0;
             _sessionContext.UserMenuState = UserMenuState.None;
             _sessionContext.DayCardMenuState = DayCardMenuState.None;
+            _sessionContext.IntakeMenuState = IntakeMenuState.None;
 
         }
 

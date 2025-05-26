@@ -11,11 +11,14 @@ namespace Presentation
         public UserMenuHandler UserMenuHandler { get; }
         public DayCardMenuHandler DayCardMenuHandler { get; }
 
-        public View(MainMenuHandler mainMenuHandler, UserMenuHandler userMenuHandler, DayCardMenuHandler menuHandler)
+        public IntakeMenuHandler IntakeMenuHandler { get; set; }
+
+        public View(MainMenuHandler mainMenuHandler, UserMenuHandler userMenuHandler, DayCardMenuHandler menuHandler, IntakeMenuHandler intakeMenuHandler)
         {
             MainMenuHandler = mainMenuHandler;
             UserMenuHandler = userMenuHandler;
             DayCardMenuHandler = menuHandler;
+            IntakeMenuHandler = intakeMenuHandler;
         }
 
 
@@ -38,6 +41,11 @@ namespace Presentation
                 sessionContext = await DayCardMenuHandler.HandleMenuState(sessionContext);
             }
 
+            if (sessionContext.IntakeMenuState != IntakeMenuState.None)
+            {
+                sessionContext = await IntakeMenuHandler.HandleMenuState(sessionContext);
+            }
+
             return sessionContext;
         }
 
@@ -56,9 +64,9 @@ namespace Presentation
 
         }
 
-        public static string? Input_TimeOfIntake()
+        public static string? Input_TimeOfIntake(string? header = null)
         {
-            return GetValidUserInput(MenuText.Prompt.EnterTimeOfIntake, MenuText.Error.InvalidTimeInput);
+            return GetValidUserInput(header, MenuText.Prompt.EnterTimeOfIntake, MenuText.Error.InvalidTimeInput);
         }
 
         public static string? Input_Username(string? header = null, bool newUsername = false)
@@ -104,7 +112,7 @@ namespace Presentation
 
         public static DayCardInputModel? Input_DayCard<TContext>(TContext sessionContext) where TContext : SessionContext
         {
-            string? dateString = GetValidUserInput(MenuText.Prompt.CreateDayCard, MenuText.Error.InvalidDayCardInput)!;
+            string? dateString = GetValidUserInput(null, MenuText.Prompt.CreateDayCard, MenuText.Error.InvalidDayCardInput)!;
 
             DayCardInputModel? dayCardInputModel = null;
 

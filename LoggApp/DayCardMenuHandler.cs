@@ -13,12 +13,6 @@ namespace Presentation
 {
     public class DayCardMenuHandler : MenuHandlerBase
     {
-        private readonly ICaffeineDrinkController _caffeineDrinkController;
-
-        public DayCardMenuHandler(ICaffeineDrinkController caffeineDrinkController)
-        {
-            _caffeineDrinkController = caffeineDrinkController;
-        }
 
         public override async Task<TContext> HandleMenuState<TContext>(TContext sessionContext)
         {
@@ -26,36 +20,38 @@ namespace Presentation
             switch (sessionContext.DayCardMenuState)
             {
                 case DayCardMenuState.Overview:
-                    SpecificDayCardMenuHandler(sessionContext);
+                    sessionContext = SpecificDayCardMenuHandler(sessionContext);
                     break;
 
-                case DayCardMenuState.AllData:
-                    //sessionContext = ;
-                    break;
 
                 case DayCardMenuState.AirQualityDetails:
-                    await AirQualityDetailsMenuHandler(sessionContext);
+                    sessionContext = await AirQualityDetailsMenuHandler(sessionContext);
                     break;
 
                 case DayCardMenuState.PollenDetails:
-                    await PollenDetailsMenuHandler(sessionContext);
+                    sessionContext = await PollenDetailsMenuHandler(sessionContext);
                     break;
 
                 case DayCardMenuState.WeatherDetails:
-                    await WeatherDetailsMenuHandler(sessionContext);
+                    sessionContext = await WeatherDetailsMenuHandler(sessionContext);
                     break;
+                //// EXERCISE
+                //case DayCardMenuState.AddExercise:
+                //    sessionContext = await ExerciseCreateMenuHandler(sessionContext);
+                //    break;
 
-                case DayCardMenuState.AddCaffeineDrink:
-                    await CaffeineCreateMenuHandler(sessionContext);
-                    break;
+                //case DayCardMenuState.ExerciseDetails:
+                //    sessionContext = await ExerciseDetailsMenuHandler(sessionContext);
+                //    break;
 
-                case DayCardMenuState.Sleep:
-                    //sessionContext = ;
-                    break;
-
-                case DayCardMenuState.Supplements:
-                    //sessionContext = ;
-                    break;
+                //// SLEEP
+                //case DayCardMenuState.AddSleep:
+                //    sessionContext = await SleepCreateMenuHandler(sessionContext);
+                //    break;
+                //case DayCardMenuState.SleepDetails:
+                //    sessionContext = await SleepDetailsMenuHandler;
+                //    break;
+                
 
                 case DayCardMenuState.Back:
                     ResetMenuStates(sessionContext);
@@ -67,56 +63,9 @@ namespace Presentation
 
         }
 
-        private async Task<TContext> CaffeineCreateMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
-        {
-            ResetMenuStates(sessionContext);
 
-            string? timeOf = View.Input_TimeOfIntake();
 
-            if (timeOf != null)
-            {
-                var sizeOfDrinkChoice = GetMenuValue(MenuText.NavOption.s_DrinkSize.ToList(), sessionContext);
-
-                if (sizeOfDrinkChoice != null)
-                {
-
-                    CaffeineDrinkInputModel caffeineDrinkInputModel = new CaffeineDrinkInputModel()
-                    {
-                        TimeOf = TimeOnly.Parse(timeOf)
-                    };
-                    switch (sizeOfDrinkChoice)
-                    {
-                        case MenuText.NavOption.DrinkMedium:
-                            caffeineDrinkInputModel.SizeOfDrink = SizeOfDrink.Medium;
-                            break;
-
-                        case MenuText.NavOption.DrinkSmall:
-                            caffeineDrinkInputModel.SizeOfDrink = SizeOfDrink.Small;
-                            break;
-
-                        case MenuText.NavOption.DrinkLarge:
-                            caffeineDrinkInputModel.SizeOfDrink = SizeOfDrink.Large;
-                            break;
-                    }
-
-                    sessionContext
-                        .DayCardDetailed!
-                            .CaffeineDrinksSummary!
-                                .CaffeineDrinksDetails
-                                    .Add
-                                    (await _caffeineDrinkController
-                                        .AddCaffeineDrinkToDayCardAsync
-                                        (sessionContext.DayCardDetailed!.DayCardId,
-                                            caffeineDrinkInputModel
-                                        )
-                                    );
-
-                }
-            }
-            sessionContext.DayCardMenuState = DayCardMenuState.Overview;
-
-            return sessionContext;
-        }
+        
 
 
         public static TContext SpecificDayCardMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
@@ -174,19 +123,27 @@ namespace Presentation
                         break;
 
                     case MenuText.NavOption.Supplements:
-                        sessionContext.DayCardMenuState = DayCardMenuState.Supplements;
+                        ResetMenuStates(sessionContext);
+                        sessionContext.IntakeMenuState = IntakeMenuState.SupplementsOverview;
                         break;
 
-                    case MenuText.NavOption.AddCaffeine:
-                        sessionContext.DayCardMenuState = DayCardMenuState.AddCaffeineDrink;
+                    case MenuText.NavOption.AddSupplements:
+                        ResetMenuStates(sessionContext);
+                        sessionContext.IntakeMenuState = IntakeMenuState.AddSupplements;
                         break;
 
                     case MenuText.NavOption.CaffeineDrinks:
-                        sessionContext.DayCardMenuState = DayCardMenuState.CaffeineDrinkDetails;
+                        ResetMenuStates(sessionContext);
+                        sessionContext.IntakeMenuState = IntakeMenuState.CaffeineOverview;
+                        break;
+
+                    case MenuText.NavOption.AddCaffeine:
+                        ResetMenuStates(sessionContext);
+                        sessionContext.IntakeMenuState = IntakeMenuState.AddCaffeineDrink;
                         break;
 
                     case MenuText.NavOption.Exercise:
-                        sessionContext.DayCardMenuState = DayCardMenuState.Exercise;
+                        sessionContext.DayCardMenuState = DayCardMenuState.ExerciseDetails;
                         break;
 
                     case MenuText.NavOption.ComputerActivity:

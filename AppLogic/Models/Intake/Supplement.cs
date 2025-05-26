@@ -7,7 +7,7 @@ namespace AppLogic.Models.Intake
 
         public int Id { get; set; }
         public int DayCardId { get; set; }
-        public virtual DayCard? DayCard  { get; set; }
+        public virtual DayCard DayCard  { get; set; }
         public string? Name { get; set; }
         public TimeOnly? TimeOf { get; private set; }
         public virtual ICollection<SupplementIngredient>? Ingredients { get; set; } = new List<SupplementIngredient>();

@@ -7,7 +7,7 @@ namespace AppLogic.Models.Intake
     {
         public int Id { get; set; }
         public int? DayCardId { get; set; }
-        public virtual DayCard? DayCard { get; set; }
+        public virtual DayCard DayCard { get; set; }
         public TimeOnly? TimeOf { get; set; }
         public int? EstimatedMgCaffeine { get; set; }
         public string? TypeOfDrink { get; set; } 

@@ -25,5 +25,10 @@ namespace AppLogic.Controllers
         {
             return await _caffeineDrinkService.AddCaffeineDrinkToDayCardAsync(dayCardId, input);
         }
+
+        public async Task<bool> DeleteCaffeineDrinkAsync(int caffeineDrinkId)
+        {
+            return await _caffeineDrinkService.DeleteCaffeineDrinkAsync(caffeineDrinkId);
+        }
     }
 }

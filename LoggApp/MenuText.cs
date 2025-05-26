@@ -18,6 +18,7 @@
             public const string AllDayCards = "DAYCARD ID\tDATE\t\tENTRIES";
 
             public const string UserDeleted = "USER DELETED SUCCESSFULLY!";
+            public const string CaffeineDrinkDeleted = "CAFFEINE DRINK DELETED SUCCESSFULLY!";
 
 
             public static string SpecificUser = "ID".PadRight(6) + "USERNAME".PadRight(12) + "CITY\n\n";
@@ -30,9 +31,9 @@
         public static class Prompt
         {
             // PROMPTS
-            public const string EnterTimeOfIntake = "ENTER TIME OF";
+            public const string EnterTimeOfIntake = "ENTER TIME OF INTAKE";
 
-            public const string CreateDayCard = "ENTER A DATE FOR THE NEW DAYCARD, OR LEAVE EMPTY FOR TODAYS DATE";
+            public const string CreateDayCard = "ENTER A DATE FOR THE NEW DAYCARD";
 
             public const string EnterUserName = "ENTER A USERNAME";
             public const string EnterUserLocation = "ENTER A CITY OR LOCATION";
@@ -43,7 +44,8 @@
 
             public const string ChooseSizeOfDrink = "CHOOSE SIZE OF DRINK";
 
-            public const string PromptDeleteUserConfirmation = "ARE YOU SURE YOU WANT TO DELETE THIS USER? (Y/N)";
+            public const string DeleteUserConfirmation = "ARE YOU SURE YOU WANT TO DELETE THIS USER? (Y/N)";
+            public const string DeleteCaffeineDrinkConfirmation = "ARE YOU SURE YOU WANT TO DELETE THIS CAFFEINE DRINK? (Y/N)";
 
 
         }
@@ -63,6 +65,7 @@
             public const string InvalidUserCityInput = "NOT A VALID LOCATION";
 
             public const string UserDeleteFailed = "USER DELETE FAILED, PLEASE TRY AGAIN";
+            public const string CaffeineDrinkDeleteFailed = "CAFFEINE DRINK DELETE FAILED, PLEASE TRY AGAIN";
 
 
         }
@@ -105,6 +108,14 @@
             public const string AddSupplements = "[ADD SUPPLEMENTS]";
             public const string AddCaffeine = "[ADD CAFFEINE]";
 
+            public const string ShowAllCaffeineDrinks = "[SHOW ALL CAFFEINE DRINKS]";
+
+            public const string UpdateCaffeineDrink = "[EDIT CAFFEINE DRINK]";
+            public const string DeleteCaffeineDrink = "[DELETE CAFFEINE DRINK]";
+            public const string UpdateSupplement = "[EDIT SUPPLEMENT]";
+            public const string AddIngredient = "[ADD INGREDIENT]";
+            public const string DeleteSupplement = "[DELETE SUPPLEMENT]";
+
             public const string Back = "[BACK]";
 
             // STATIC MENU OPTIONS
@@ -113,7 +124,13 @@
             public static string[] s_SpecificUserMenu = [CreateNewDayCard, SearchDayCard, UserSettings];
             public static string[] s_UserSettingsMenu = [UpdateUsername, UpdateLocation, DeleteUser];
             public static string[] s_SpecificDayCardMenu = [Weather, AirQuality, Pollen, Supplements, CaffeineDrinks, Exercise, ComputerActivity, Sleep];
+
+            public static string[] s_CaffeineOverviewMenu = [ShowAllCaffeineDrinks, AddCaffeine, Back];
+
             public static string[] s_DrinkSize = [DrinkLarge, DrinkMedium, DrinkSmall];
+
+            public static string[] s_CaffeineDetailsMenu = [UpdateCaffeineDrink, DeleteCaffeineDrink, Back];
+            public static string[] s_SupplementDetailsMenu = [UpdateSupplement, DeleteSupplement, AddIngredient, Back];
 
         }
 

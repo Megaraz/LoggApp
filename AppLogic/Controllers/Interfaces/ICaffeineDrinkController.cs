@@ -11,5 +11,6 @@ namespace AppLogic.Controllers.Interfaces
     public interface ICaffeineDrinkController
     {
         Task<CaffeineDrinkDetailed> AddCaffeineDrinkToDayCardAsync(int dayCardId, CaffeineDrinkInputModel input);
+        Task<bool> DeleteCaffeineDrinkAsync(int caffeineDrinkId);
     }
 }

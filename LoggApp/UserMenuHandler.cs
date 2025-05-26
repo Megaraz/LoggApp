@@ -89,7 +89,7 @@ namespace Presentation
         {
 
             // Get user input for confirmation
-            bool confirmDelete = View.Input_Confirmation(MenuText.Prompt.PromptDeleteUserConfirmation);
+            bool confirmDelete = View.Input_Confirmation(MenuText.Prompt.DeleteUserConfirmation);
 
             bool userDeleted = false;
 

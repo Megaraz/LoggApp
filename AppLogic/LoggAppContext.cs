@@ -45,14 +45,20 @@ namespace AppLogic
                 
             });
 
+            modelBuilder.Entity<CaffeineDrink>()
+                .HasOne(cd => cd.DayCard)
+                .WithMany(dc => dc.CaffeineDrinks)
+                .HasForeignKey(cd => cd.DayCardId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-            optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=HealthLogApp;Trusted_Connection=True;TrustServerCertificate=True;");
-            //optionsBuilder.UseSqlServer(@"Server=tcp:rlack.database.windows.net,1433;Initial Catalog=HealthLogg;Persist Security Info=False;User ID=rlack;Password=Tellus46;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            //optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=HealthLogApp;Trusted_Connection=True;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer(@"Server=tcp:rlack.database.windows.net,1433;Initial Catalog=HealthLogg;Persist Security Info=False;User ID=rlack;Password=Tellus46;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
         }
     }

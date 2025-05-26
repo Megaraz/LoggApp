@@ -23,7 +23,7 @@ namespace AppLogic.Models.DTOs.Detailed
 
             if (AirQualitySummary?.AirQualityDetails != null && AirQualitySummary.AirQualityDetails.Count > 0)
             {
-                sb.AppendLine("\t\t" + AirQualitySummary.AISummary);
+                sb.AppendLine("\n" + AirQualitySummary.AISummary);
             }
             else
             {
@@ -32,7 +32,7 @@ namespace AppLogic.Models.DTOs.Detailed
 
             if (PollenSummary?.PollenDataDetails != null && PollenSummary.PollenDataDetails.Count > 0)
             {
-                sb.AppendLine("\t\t" + PollenSummary.AISummary);
+                sb.AppendLine("\n" + PollenSummary.AISummary);
             }
             else
             {
@@ -42,7 +42,7 @@ namespace AppLogic.Models.DTOs.Detailed
 
             if (WeatherSummary?.WeatherDataDetails != null && WeatherSummary.WeatherDataDetails.Any())
             {
-                sb.AppendLine("\t\t" + WeatherSummary.AISummary);
+                sb.AppendLine("\n" + WeatherSummary.AISummary);
             }
             else
             {

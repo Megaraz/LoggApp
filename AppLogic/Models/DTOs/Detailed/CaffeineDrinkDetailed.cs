@@ -10,7 +10,7 @@ namespace AppLogic.Models.DTOs.Detailed
     public class CaffeineDrinkDetailed
     {
 
-        public int? DayCardId { get; set; }
+        public int DayCardId { get; set; }
         public int CaffeineDrinkId { get; set; }
 
         public TimeOnly? TimeOf { get; set; }

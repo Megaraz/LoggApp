@@ -18,8 +18,6 @@ namespace AppLogic.Repositories
             _dbContext = dbContext;
         }
 
-
-
-
+        
     }
 }

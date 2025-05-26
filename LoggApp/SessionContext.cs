@@ -11,6 +11,8 @@ namespace Presentation
         public UserMenuState UserMenuState { get; set; }
         public DayCardMenuState DayCardMenuState { get; set; }
 
+        public IntakeMenuState IntakeMenuState { get; set; }
+
 
         // MAIN PAGE HEADER VARIABLE, UPDATE DYNAMICALLY
         public string? MainHeader { get; set; }
@@ -28,6 +30,8 @@ namespace Presentation
 
         public UserDetailed? UserDetailed { get; set; }
         public DayCardDetailed? DayCardDetailed { get; set; }
+
+        public CaffeineDrinkDetailed? CaffeineDrinkDetailed { get; set; }
         public List<UserSummary>? UsersSummary { get; set; }
         public List<DayCardSummary>? DayCardsSummary { get; set; }
 

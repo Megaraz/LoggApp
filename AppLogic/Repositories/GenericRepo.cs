@@ -19,14 +19,11 @@ namespace AppLogic.Repositories
             {
                 await _dbContext.Set<T>().AddAsync(entity);
                 await _dbContext.SaveChangesAsync();
-
                 return entity;
-
             }
             catch (Exception e)
             {
-                throw new ArgumentException($"Something went wrong, {e.Message}");
-
+                throw new InvalidOperationException($"Create failed for {typeof(T).Name}: {e.Message}", e);
             }
         }
 
@@ -35,58 +32,56 @@ namespace AppLogic.Repositories
             try
             {
                 return await _dbContext.Set<T>().FindAsync(id);
-
             }
             catch (Exception e)
             {
-                throw new ArgumentException($"Something went wrong, {e.Message}");
-
+                throw new InvalidOperationException($"GetById failed for {typeof(T).Name}: {e.Message}", e);
             }
         }
-        
+
         public async Task<List<T>?> GetAllAsync()
         {
-
             try
             {
                 return await _dbContext.Set<T>().ToListAsync();
             }
             catch (Exception e)
             {
-                throw new ArgumentException($"Something went wrong, {e.Message}");
-
+                throw new InvalidOperationException($"GetAll failed for {typeof(T).Name}: {e.Message}", e);
             }
-
         }
 
         public async Task<T> UpdateAsync(T entity)
         {
-            _dbContext.Set<T>().Update(entity);
-            await _dbContext.SaveChangesAsync();
-            return entity;
+            try
+            {
+                _dbContext.Set<T>().Update(entity);
+                await _dbContext.SaveChangesAsync();
+                return entity;
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException($"Update failed for {typeof(T).Name}: {e.Message}", e);
+            }
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-
             try
             {
                 var dbSet = _dbContext.Set<T>();
-
                 var entity = await dbSet.FindAsync(id);
+
                 if (entity == null) return false;
 
-                dbSet.Remove(entity!);
+                dbSet.Remove(entity);
                 await _dbContext.SaveChangesAsync();
                 return true;
-
             }
             catch (Exception e)
             {
-                throw new ArgumentException($"Something went wrong, {e.Message}");
-
+                throw new InvalidOperationException($"Delete failed for {typeof(T).Name}: {e.Message}", e);
             }
         }
-
     }
 }

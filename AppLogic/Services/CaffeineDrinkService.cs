@@ -35,7 +35,7 @@ namespace AppLogic.Services
 
             return new CaffeineDrinkDetailed()
             {
-                DayCardId = caffeineDrink.DayCardId,
+                DayCardId = (int)caffeineDrink!.DayCardId!,
                 CaffeineDrinkId = caffeineDrink.Id,
                 TimeOf = caffeineDrink.TimeOf,
                 EstimatedMgCaffeine = caffeineDrink.EstimatedMgCaffeine,
@@ -56,7 +56,7 @@ namespace AppLogic.Services
                         (
                             new CaffeineDrinkDetailed()
                             {
-                                DayCardId = drink.DayCardId,
+                                DayCardId = (int)drink.DayCardId!,
                                 CaffeineDrinkId = drink.Id,
                                 TimeOf = drink.TimeOf,
                                 EstimatedMgCaffeine = drink.EstimatedMgCaffeine,
@@ -67,22 +67,12 @@ namespace AppLogic.Services
             DTO_allCaffeineDrinks.TotalCaffeineInMg = caffeineDrinks.Sum(x => x.EstimatedMgCaffeine);
             return DTO_allCaffeineDrinks;
 
-            //return new DTO_AllCaffeineDrinks()
-            //{
-            //    DayCardId = caffeineDrink.
-            //    HourlyCaffeineData = new List<DTO_SpecificCaffeineDrink>()
-            //    {
-            //        new DTO_SpecificCaffeineDrink()
-            //        {
-            //            CaffeineDrinkId = caffeineDrink.Id,
-            //            DayCardId = caffeineDrink.DayCardId,
-            //            EstimatedMgCaffeine = caffeineDrink.EstimatedMgCaffeine,
-            //            TimeOf = caffeineDrink.TimeOf
-            //        }
-            //    }
-            //};
         }
 
+        public async Task<bool> DeleteCaffeineDrinkAsync(int caffeineDrinkId)
+        {
 
+            return await _caffeineDrinkRepo.DeleteAsync(caffeineDrinkId);
+        }
     }
 }

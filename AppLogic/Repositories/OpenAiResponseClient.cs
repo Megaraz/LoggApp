@@ -82,7 +82,7 @@ namespace AppLogic.Repositories
             if (string.IsNullOrWhiteSpace(text))
                 throw new InvalidOperationException("Ingen text hittades i svaret.");
 
-            return string.Join('\n', text.Split([',', '.'])).Trim();
+            return text.ToString().Trim();
         }
 
 

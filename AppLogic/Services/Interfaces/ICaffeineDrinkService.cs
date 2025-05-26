@@ -15,5 +15,6 @@ namespace AppLogic.Services.Interfaces
         Task<CaffeineDrinkDetailed> AddCaffeineDrinkToDayCardAsync(int dayCardId, CaffeineDrinkInputModel model);
 
         CaffeineDrinkSummary ConvertToSummaryDTO(List<CaffeineDrink> caffeineDrinks);
+        Task<bool> DeleteCaffeineDrinkAsync(int caffeineDrinkId);
     }
 }

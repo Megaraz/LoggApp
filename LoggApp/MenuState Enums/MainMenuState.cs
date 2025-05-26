@@ -25,19 +25,35 @@
     public enum DayCardMenuState
     {
         Overview,
-        AllData,
         WeatherDetails,
         AirQualityDetails,
         PollenDetails,
-        Exercise,
+        AddWellnessCheckIn,
+        WellnessCheckInDetails,
+        ExerciseDetails,
+        AddExercise,
         ComputerActivity,
-        Sleep,
-        AddCaffeineDrink,
-        CaffeineDrinkDetails,
-        Supplements,
+        AddSleep,
+        SleepDetails,
         Back,
         None
     };
+
+    public enum IntakeMenuState
+    {
+        CaffeineOverview,
+        ShowAllCaffeineDrinks,
+        AddCaffeineDrink,
+        CaffeineDrinkDetails,
+        UpdateCaffeineDrink,
+        DeleteCaffeineDrink,
+        CaffeineEmpty,
+        SupplementsOverview,
+        AddSupplements,
+        SupplementsDetails,
+        DeleteSupplements,
+        None
+    }
 
 
 }
