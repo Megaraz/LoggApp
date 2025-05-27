@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Controllers;
-using AppLogic.Controllers.Interfaces;
 using AppLogic.Models;
 using Microsoft.IdentityModel.Tokens;
 using Presentation.MenuState_Enums;
@@ -14,11 +13,11 @@ namespace Presentation
 {
     public class UserMenuHandler : MenuHandlerBase
     {
-        private readonly IDayCardController _dayCardController;
-        private readonly IUserController _userController;
-        private readonly IWeatherController _weatherController;
+        private readonly DayCardController _dayCardController;
+        private readonly UserController _userController;
+        private readonly WeatherController _weatherController;
 
-        public UserMenuHandler(IDayCardController dayCardController, IUserController userController, IWeatherController weatherController)
+        public UserMenuHandler(DayCardController dayCardController, UserController userController, WeatherController weatherController)
         {
             _weatherController = weatherController;
             _dayCardController = dayCardController;
@@ -43,10 +42,6 @@ namespace Presentation
                     sessionContext = await UserSettingsMenuHandler(sessionContext);
                     break;
 
-                case UserMenuState.Back:
-                    ResetMenuStates(sessionContext);
-                    sessionContext.MainMenuState = MainMenuState.SpecificUser;
-                    break;
             }
 
             return sessionContext;
@@ -67,19 +62,20 @@ namespace Presentation
                 {
                     case MenuText.NavOption.UpdateUsername:
                         sessionContext = await UpdateUserNameAsync(sessionContext);
-                        sessionContext.UserMenuState = UserMenuState.Back;
                         break;
 
                     case MenuText.NavOption.UpdateLocation:
                         sessionContext = await UpdateUserLocationAsync(sessionContext);
-                        sessionContext.UserMenuState = UserMenuState.Back;
                         break;
 
                     case MenuText.NavOption.DeleteUser:
                         sessionContext = await DeleteUserAsync(sessionContext);
-                        
                         break;
                 }
+            }
+            else
+            {
+                sessionContext.MainMenuState = MainMenuState.SpecificUser;
             }
 
             return sessionContext;
@@ -95,23 +91,30 @@ namespace Presentation
 
             if (confirmDelete)
             {
-                userDeleted = await _userController.DeleteUserAsync(sessionContext.UserDetailed!.Id);
+                userDeleted = await _userController.DeleteUserAsync(sessionContext.CurrentUser!.Id);
 
                 if (userDeleted)
                 {
-                    sessionContext.UserDetailed = null;
+                    sessionContext.CurrentUser = null;
                     Console.Clear();
                     Console.WriteLine(MenuText.Header.UserDeleted);
                     Thread.Sleep(1500);
                     sessionContext.MainMenuState = MainMenuState.Main;
+
+
                 }
                 else
                 {
                     Console.Clear();
                     Console.WriteLine(MenuText.Error.UserDeleteFailed);
                     Thread.Sleep(1500);
+                    sessionContext.UserMenuState = UserMenuState.UserSettings;
                 }
 
+            }
+            else
+            {
+                sessionContext.UserMenuState = UserMenuState.UserSettings;
             }
 
             return sessionContext;
@@ -121,7 +124,7 @@ namespace Presentation
         private async Task<TContext> UpdateUserNameAsync<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             // Get user input for username
-            string? usernameInput = View.Input_Username(MenuText.Header.CurrentUserName + sessionContext.UserDetailed!.Username, true);
+            string? usernameInput = View.Input_Username(MenuText.Header.CurrentUserName + sessionContext.CurrentUser!.Username, true);
 
             if (usernameInput is not null)
             {
@@ -130,14 +133,18 @@ namespace Presentation
                 {
                     GeoResult = new GeoResult()
                     {
-                        Name = sessionContext.UserDetailed!.CityName,
-                        Lat = sessionContext.UserDetailed.Lat,
-                        Lon = sessionContext.UserDetailed.Lon
+                        Name = sessionContext.CurrentUser!.CityName,
+                        Lat = sessionContext.CurrentUser.Lat,
+                        Lon = sessionContext.CurrentUser.Lon
                     },
                     Username = usernameInput
                 };
 
-                sessionContext.UserDetailed = await _userController.UpdateUserAsync(sessionContext.UserDetailed!.Id, userInputModel);
+                sessionContext.CurrentUser = await _userController.UpdateUserAsync(sessionContext.CurrentUser!.Id, userInputModel);
+            }
+            else
+            {
+                sessionContext.UserMenuState = UserMenuState.UserSettings;
             }
             return sessionContext;
         }
@@ -145,7 +152,7 @@ namespace Presentation
         private async Task<TContext> UpdateUserLocationAsync<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             // Get user input for geocode/location search
-            string? locationInput = View.Input_Location(MenuText.Header.CurrentLocation + sessionContext.UserDetailed!.CityName, true);
+            string? locationInput = View.Input_Location(MenuText.Header.CurrentLocation + sessionContext.CurrentUser!.CityName, true);
 
 
             if (locationInput is not null)
@@ -156,7 +163,7 @@ namespace Presentation
                 // Create a new inputModel with users existing name
                 UserInputModel userInputModel = new UserInputModel()
                 {
-                    Username = sessionContext.UserDetailed!.Username!
+                    Username = sessionContext.CurrentUser!.Username!
                 };
 
                 // User chooses a Location from the list of locations
@@ -164,8 +171,12 @@ namespace Presentation
 
                 if (userInputModel.GeoResult is not null)
                 {
-                    sessionContext.UserDetailed = await _userController.UpdateUserAsync(sessionContext.UserDetailed!.Id, userInputModel);
+                    sessionContext.CurrentUser = await _userController.UpdateUserAsync(sessionContext.CurrentUser!.Id, userInputModel);
                 }
+            }
+            else
+            {
+                sessionContext.UserMenuState = UserMenuState.UserSettings;
             }
             return sessionContext;
         }
@@ -174,21 +185,21 @@ namespace Presentation
         {
 
             ResetMenuStates(sessionContext);
-            if (sessionContext.UserDetailed!.DTO_AllDayCards == null || sessionContext.UserDetailed.DTO_AllDayCards.Count == 0)
+            if (sessionContext.CurrentUser!.DayCardSummary == null || sessionContext.CurrentUser.DayCardSummary.Count == 0)
             {
                 sessionContext.ErrorMessage = MenuText.Error.NoDayCardsFound;
                 sessionContext.UserMenuState = UserMenuState.Back;
             }
             else
             {
-                sessionContext.MainHeader = sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.UserDetailed!.ToString()}\n";
+                sessionContext.MainHeader = sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.CurrentUser!.ToString()}\n";
                 sessionContext.SubHeader = MenuText.Header.AllDayCards;
 
-                var dayCardChoice = GetMenuValue(sessionContext!.UserDetailed!.DTO_AllDayCards!, sessionContext);
+                var dayCardChoice = GetMenuValue(sessionContext!.CurrentUser!.DayCardSummary!, sessionContext);
 
                 if (dayCardChoice != null)
                 {
-                    sessionContext.DayCardDetailed = await _dayCardController.ReadDayCardSingleAsync(dayCardChoice.DayCardId, sessionContext.UserDetailed.Id);
+                    sessionContext.CurrentDayCard = await _dayCardController.ReadDayCardSingleAsync(dayCardChoice.DayCardId, sessionContext.CurrentUser.Id);
                     sessionContext.DayCardMenuState = DayCardMenuState.Overview;
                 }
                 else
@@ -210,7 +221,7 @@ namespace Presentation
 
             if (dayCardInputModel != null)
             {
-                sessionContext.DayCardDetailed = await _dayCardController.CreateNewDayCardAsync(sessionContext.UserDetailed!.Id, dayCardInputModel);
+                sessionContext.CurrentDayCard = await _dayCardController.CreateNewDayCardAsync(sessionContext.CurrentUser!.Id, dayCardInputModel);
                 sessionContext.DayCardMenuState = DayCardMenuState.Overview;
 
             }

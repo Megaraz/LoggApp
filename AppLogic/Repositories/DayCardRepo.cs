@@ -15,7 +15,7 @@ namespace AppLogic.Repositories
         }
 
 
-        public async Task<DayCard?> GetDayCardByDate(DateOnly date, int userId)
+        public async Task<DayCard?> GetDayCardByDateIncludeAsync(DateOnly date, int userId)
         {
 
             try
@@ -37,7 +37,7 @@ namespace AppLogic.Repositories
 
             }
         }
-        public async Task<DayCard?> GetDayCardById(int id, int userId)
+        public async Task<DayCard?> GetDayCardByIdIncludeAsync(int id, int userId)
         {
 
             try
@@ -60,7 +60,7 @@ namespace AppLogic.Repositories
             }
         }
 
-        public async Task<List<DayCard>?> GetAllDayCardsAsync(int userId)
+        public async Task<List<DayCard>?> GetAllDayCardsIncludeAsync(int userId)
         {
 
             try

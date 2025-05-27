@@ -28,15 +28,15 @@ namespace Presentation
 
         // DYNAMIC MENU OPTIONS
 
-        public UserDetailed? UserDetailed { get; set; }
-        public DayCardDetailed? DayCardDetailed { get; set; }
+        public UserDetailed? CurrentUser { get; set; }
+        public DayCardDetailed? CurrentDayCard { get; set; }
 
-        public CaffeineDrinkDetailed? CaffeineDrinkDetailed { get; set; }
-        public List<UserSummary>? UsersSummary { get; set; }
-        public List<DayCardSummary>? DayCardsSummary { get; set; }
+        public CaffeineDrinkDetailed? CurrentCaffeineDrink { get; set; }
+        public List<UserSummary>? CurrentUsersSummary { get; set; }
+        public List<DayCardSummary>? CurrentDayCardsSummary { get; set; }
 
-        public AirQualityDataSummary AirQualityDataSummary { get; set; }
-        public WeatherDataSummary WeatherDataSummary { get; set; }
+        public AirQualityDataSummary CurrentAirQualityDataSummary { get; set; }
+        public WeatherDataSummary CurrentWeatherDataSummary { get; set; }
 
         //public User? CurrentUser { get; set; }
         //public DayCard? CurrentDayCard { get; set; }

@@ -45,6 +45,13 @@ namespace AppLogic
                 
             });
 
+            modelBuilder.Entity<DayCard>()
+                .HasOne(dc => dc.User)
+                .WithMany(u => u.DayCards)
+                .HasForeignKey(dc => dc.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
             modelBuilder.Entity<CaffeineDrink>()
                 .HasOne(cd => cd.DayCard)
                 .WithMany(dc => dc.CaffeineDrinks)

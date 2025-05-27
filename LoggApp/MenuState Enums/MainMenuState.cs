@@ -36,6 +36,7 @@
         AddSleep,
         SleepDetails,
         Back,
+        DeleteDayCard,
         None
     };
 

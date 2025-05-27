@@ -116,14 +116,14 @@ namespace Presentation
 
             DayCardInputModel? dayCardInputModel = null;
 
-            if (!dateString.IsNullOrEmpty() && sessionContext.UserDetailed != null)
+            if (!dateString.IsNullOrEmpty() && sessionContext.CurrentUser != null)
             {
                 dayCardInputModel = new DayCardInputModel()
                 {
-                    UserId = sessionContext.UserDetailed!.Id,
+                    UserId = sessionContext.CurrentUser!.Id,
                     Date = DateOnly.Parse(dateString),
-                    Lat = sessionContext.UserDetailed.Lat,
-                    Lon = sessionContext.UserDetailed.Lon
+                    Lat = sessionContext.CurrentUser.Lat,
+                    Lon = sessionContext.CurrentUser.Lon
 
                 };
             }

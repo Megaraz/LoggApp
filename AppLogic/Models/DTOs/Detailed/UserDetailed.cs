@@ -12,7 +12,7 @@ namespace AppLogic.Models.DTOs.Detailed
 
         public int? DayCardCount { get; set; }
 
-        public List<DayCardSummary>? DTO_AllDayCards { get; set; }
+        public List<DayCardSummary>? DayCardSummary { get; set; }
 
 
         public override string ToString()

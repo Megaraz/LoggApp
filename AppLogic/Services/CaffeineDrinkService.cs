@@ -46,11 +46,11 @@ namespace AppLogic.Services
         public CaffeineDrinkSummary ConvertToSummaryDTO(List<CaffeineDrink> caffeineDrinks)
         {
 
-            CaffeineDrinkSummary DTO_allCaffeineDrinks = new CaffeineDrinkSummary();
+            CaffeineDrinkSummary CaffeineDrinksSummary = new CaffeineDrinkSummary();
 
             foreach (var drink in caffeineDrinks)
             {
-                DTO_allCaffeineDrinks
+                CaffeineDrinksSummary
                     .CaffeineDrinksDetails
                         .Add
                         (
@@ -64,8 +64,8 @@ namespace AppLogic.Services
                             }
                         );
             }
-            DTO_allCaffeineDrinks.TotalCaffeineInMg = caffeineDrinks.Sum(x => x.EstimatedMgCaffeine);
-            return DTO_allCaffeineDrinks;
+            CaffeineDrinksSummary.TotalCaffeineInMg = caffeineDrinks.Sum(x => x.EstimatedMgCaffeine);
+            return CaffeineDrinksSummary;
 
         }
 

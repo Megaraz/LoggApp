@@ -9,7 +9,6 @@ using AppLogic.Models;
 using AppLogic.Services;
 using Microsoft.IdentityModel.Tokens;
 using Presentation.MenuState_Enums;
-using AppLogic.Controllers.Interfaces;
 using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.DTOs.Detailed;
 using AppLogic.Repositories;
@@ -19,10 +18,10 @@ namespace Presentation
     public class MainMenuHandler : MenuHandlerBase
     {
 
-        private readonly IUserController _userController;
-        private readonly IWeatherController _weatherController;
+        private readonly UserController _userController;
+        private readonly WeatherController _weatherController;
 
-        public MainMenuHandler(IUserController userController, IWeatherController weatherController)
+        public MainMenuHandler(UserController userController, WeatherController weatherController)
         {
             _userController = userController;
             _weatherController = weatherController;
@@ -59,44 +58,6 @@ namespace Presentation
             }
             return sessionContext;
         }
-
-        public async Task<TContext> AllUsersMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
-        {
-
-            ResetMenuStates(sessionContext);
-            if (sessionContext.UsersSummary == null || sessionContext.UsersSummary.Count == 0)
-            {
-                sessionContext.ErrorMessage = MenuText.Error.NoUsersFound;
-                sessionContext.MainMenuState = MainMenuState.Main;
-
-            }
-            else
-            {
-                sessionContext.MainHeader = MenuText.Header.AllUsers;
-                //sessionContext.MainHeader = MenuText.Header.SpecificUser;
-
-                var userChoice = GetMenuValue(sessionContext.UsersSummary, sessionContext);
-
-                if (userChoice != null)
-                {
-                    sessionContext
-                        .UserDetailed = await _userController.ReadUserSingleAsync(userChoice.Id);
-
-                    sessionContext
-                        .MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.UserDetailed!.ToString()}\n\n\n";
-
-                    sessionContext
-                        .MainMenuState = MainMenuState.SpecificUser;
-                }
-                else
-                {
-                    sessionContext.MainMenuState = MainMenuState.Back;
-                }
-
-            }
-            return sessionContext;
-        }
-
         public async Task<TContext> InitMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
@@ -128,7 +89,6 @@ namespace Presentation
                         sessionContext.MainMenuState = MainMenuState.Exit;
                         break;
                 }
-
             }
             else
             {
@@ -137,6 +97,45 @@ namespace Presentation
 
             return sessionContext;
         }
+
+        public async Task<TContext> AllUsersMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
+        {
+
+            ResetMenuStates(sessionContext);
+            if (sessionContext.CurrentUsersSummary == null || sessionContext.CurrentUsersSummary.Count == 0)
+            {
+                sessionContext.ErrorMessage = MenuText.Error.NoUsersFound;
+                sessionContext.MainMenuState = MainMenuState.Main;
+
+            }
+            else
+            {
+                sessionContext.MainHeader = MenuText.Header.AllUsers;
+                //sessionContext.MainHeader = MenuText.Header.SpecificUser;
+
+                var userChoice = GetMenuValue(sessionContext.CurrentUsersSummary, sessionContext);
+
+                if (userChoice != null)
+                {
+                    sessionContext
+                        .CurrentUser = await _userController.ReadUserSingleAsync(userChoice.Id);
+
+                    sessionContext
+                        .MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.CurrentUser!.ToString()}\n\n\n";
+
+                    sessionContext
+                        .MainMenuState = MainMenuState.SpecificUser;
+                }
+                else
+                {
+                    sessionContext.MainMenuState = MainMenuState.Back;
+                }
+
+            }
+            return sessionContext;
+        }
+
+        
 
         private async Task<TContext> CreateNewUser<TContext>(TContext sessionContext) where TContext : SessionContext
         {
@@ -158,7 +157,7 @@ namespace Presentation
                 if (userInputModel.GeoResult != null)
                 {
                     // Create a new user with the updated GeoResult, and sets the CurrentUser to the newly created one
-                    sessionContext.UserDetailed = await _userController.CreateNewUserAsync(userInputModel);
+                    sessionContext.CurrentUser = await _userController.CreateNewUserAsync(userInputModel);
                     sessionContext.MainMenuState = MainMenuState.SpecificUser;
 
                 }
@@ -184,7 +183,7 @@ namespace Presentation
             {
                 sessionContext.MainMenuState = MainMenuState.AllUsers;
                 //sessionContext.CurrentMainMenu = MenuText.NavOption.s_AllUserMenu.ToList();
-                sessionContext.UsersSummary = allUsers;
+                sessionContext.CurrentUsersSummary = allUsers;
 
             }
 
@@ -211,7 +210,7 @@ namespace Presentation
                 }
                 else
                 {
-                    sessionContext.UserDetailed = resultUser;
+                    sessionContext.CurrentUser = resultUser;
                     sessionContext.MainMenuState = MainMenuState.SpecificUser;
                 }
             }
@@ -226,11 +225,11 @@ namespace Presentation
         public TContext SpecificUserMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
-            sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.UserDetailed!.ToString()}\n";
+            sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.CurrentUser!.ToString()}\n";
 
             var specificUserMenu = MenuText.NavOption.s_SpecificUserMenu.ToList();
 
-            if (sessionContext.UserDetailed.DTO_AllDayCards!.Count > 0)
+            if (sessionContext.CurrentUser.DayCardSummary!.Count > 0)
             {
                 //sessionContext.SubHeader = "Number of Daycards: " + sessionContext.DTO_CurrentUser.DTO_AllDayCards.Count + "\n";
                 specificUserMenu = specificUserMenu.Prepend(MenuText.NavOption.ShowAllDayCards).ToList();

@@ -5,13 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Models;
 using AppLogic.Services.Interfaces;
-using AppLogic.Controllers.Interfaces;
 using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.DTOs.Detailed;
 
 namespace AppLogic.Controllers
 {
-    public class UserController : IUserController
+    public class UserController
     {
         private readonly IUserService _userService;
 

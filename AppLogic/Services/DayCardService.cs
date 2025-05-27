@@ -65,13 +65,14 @@ namespace AppLogic.Services
             };
         }
 
-
-
-
+        public async Task<bool> DeleteDayCardAsync(int dayCardId)
+        {
+            return await _dayCardRepo.DeleteAsync(dayCardId);
+        }
 
         public async Task<List<DayCardSummary>?> ReadAllDayCardsAsync(int userId)
         {
-            List<DayCard>? dayCards = await _dayCardRepo.GetAllDayCardsAsync(userId);
+            List<DayCard>? dayCards = await _dayCardRepo.GetAllDayCardsIncludeAsync(userId);
 
             if (dayCards == null) return null;
 
@@ -98,7 +99,7 @@ namespace AppLogic.Services
 
         public async Task<DayCardDetailed?> ReadSingleDayCardAsync(int id, int userId)
         {
-            DayCard? dayCard = await _dayCardRepo.GetDayCardById(id, userId);
+            DayCard? dayCard = await _dayCardRepo.GetDayCardByIdIncludeAsync(id, userId);
 
             return new DayCardDetailed
             {
@@ -115,7 +116,7 @@ namespace AppLogic.Services
 
         public async Task<DayCardDetailed?> ReadSingleDayCardAsync(DateOnly date, int userId)
         {
-            DayCard? dayCard = await _dayCardRepo.GetDayCardByDate(date, userId);
+            DayCard? dayCard = await _dayCardRepo.GetDayCardByDateIncludeAsync(date, userId);
 
             return new DayCardDetailed
             {

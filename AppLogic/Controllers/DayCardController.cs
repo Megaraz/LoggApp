@@ -5,13 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Models;
 using AppLogic.Services.Interfaces;
-using AppLogic.Controllers.Interfaces;
 using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.DTOs.Detailed;
 
 namespace AppLogic.Controllers
 {
-    public class DayCardController : IDayCardController
+    public class DayCardController
     {
 
         private readonly IDayCardService _dayCardService;   
@@ -25,6 +24,11 @@ namespace AppLogic.Controllers
         {
             return await _dayCardService.CreateNewDayCardAsync(userId, input);
 
+        }
+
+        public async Task<bool> DeleteDayCardAsync(int dayCardId)
+        {
+            return await _dayCardService.DeleteDayCardAsync(dayCardId);
         }
 
         public async Task<List<DayCardSummary>?> ReadAllDayCardsAsync(int userId)

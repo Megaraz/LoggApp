@@ -27,14 +27,7 @@ namespace AppLogic.Repositories
                 $"&hourly={_hourlyParams}" +
                 $"&start_date={date}&end_date={date}";
 
-            //var stopwatch = Stopwatch.StartNew();
-
-            //var response = await _httpClient.GetStringAsync(fullUrl);
-
-            //stopwatch.Stop();
-            //Console.WriteLine($"Total response time: {stopwatch.ElapsedMilliseconds} ms");
-            //Console.ReadKey();
-            //return response;
+            
             return await _httpClient.GetStringAsync(fullUrl);
 
         }

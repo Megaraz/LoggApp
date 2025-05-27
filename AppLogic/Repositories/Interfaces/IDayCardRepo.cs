@@ -9,9 +9,9 @@ namespace AppLogic.Repositories.Interfaces
 {
     public interface IDayCardRepo : IGenericRepo<DayCard>
     {
-        Task<DayCard?> GetDayCardByDate(DateOnly date, int userId);
-        Task<DayCard?> GetDayCardById(int id, int userId);
-        Task<List<DayCard>?> GetAllDayCardsAsync(int userId);
+        Task<DayCard?> GetDayCardByDateIncludeAsync(DateOnly date, int userId);
+        Task<DayCard?> GetDayCardByIdIncludeAsync(int id, int userId);
+        Task<List<DayCard>?> GetAllDayCardsIncludeAsync(int userId);
     }
 
 }

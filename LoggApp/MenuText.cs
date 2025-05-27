@@ -46,6 +46,7 @@
 
             public const string DeleteUserConfirmation = "ARE YOU SURE YOU WANT TO DELETE THIS USER? (Y/N)";
             public const string DeleteCaffeineDrinkConfirmation = "ARE YOU SURE YOU WANT TO DELETE THIS CAFFEINE DRINK? (Y/N)";
+            public const string DeleteDayCardConfirmation = "ARE YOU SURE YOU WANT TO DELETE THIS DAYCARD? (Y/N)";
 
 
         }
@@ -73,6 +74,7 @@
         public static class NavOption
         {
             
+            public const string UserSettings = "[USER SETTINGS]";
             public const string UpdateUsername = "[CHANGE USERNAME]";
             public const string UpdateLocation = "[CHANGE LOCATION]";
             public const string DeleteUser = "[DELETE USER]";
@@ -94,7 +96,7 @@
             public const string CreateNewDayCard = "[CREATE NEW DAYCARD]";
             public const string SearchDayCard = "[SEARCH DAYCARD]";
             public const string ShowAllDayCards = "[SHOW ALL DAYCARDS]";
-            public const string UserSettings = "[USER SETTINGS]";
+            public const string DeleteDayCard = "[DELETE DAYCARD]";
 
             public const string Weather = "[WEATHER SPECIFICS]";
             public const string AirQuality = "[AIRQUALITY SPECIFICS]";

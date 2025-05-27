@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AppLogic.Controllers.Interfaces;
 using AppLogic.Models.DTOs.Detailed;
 using AppLogic.Models.Intake.InputModels;
 using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Controllers
 {
-    public class CaffeineDrinkController : ICaffeineDrinkController
+    public class CaffeineDrinkController
     {
 
         private readonly ICaffeineDrinkService _caffeineDrinkService;

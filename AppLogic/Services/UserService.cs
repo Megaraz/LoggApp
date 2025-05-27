@@ -34,7 +34,7 @@ namespace AppLogic.Services
                 CityName = newUser.CityName,
                 Lat = newUser.Lat,
                 Lon = newUser.Lon,
-                DTO_AllDayCards = newUser.DayCards!
+                DayCardSummary = newUser.DayCards!
                     .Select(d => new DayCardSummary
                     {
                         DayCardId = d.Id,
@@ -92,7 +92,7 @@ namespace AppLogic.Services
                 CityName = user.CityName,
                 Lat = user.Lat,
                 Lon = user.Lon,
-                DTO_AllDayCards = user.DayCards!
+                DayCardSummary = user.DayCards!
                     .Select(d => new DayCardSummary
                     {
                         DayCardId = d.Id,
@@ -116,7 +116,7 @@ namespace AppLogic.Services
                 CityName = user.CityName,
                 Lat = user.Lat,
                 Lon = user.Lon,
-                DTO_AllDayCards = user.DayCards!
+                DayCardSummary = user.DayCards!
                .Select(d => new DayCardSummary
                {
                    DayCardId = d.Id,
@@ -143,7 +143,7 @@ namespace AppLogic.Services
                 CityName = user.CityName,
                 Lat = user.Lat,
                 Lon = user.Lon,
-                DTO_AllDayCards = user.DayCards!
+                DayCardSummary = user.DayCards!
                     .Select(d => new DayCardSummary
                     {
                         DayCardId = d.Id,

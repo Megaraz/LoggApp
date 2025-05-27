@@ -1,6 +1,5 @@
 ﻿using AppLogic;
 using AppLogic.Controllers;
-using AppLogic.Controllers.Interfaces;
 using AppLogic.Repositories;
 using AppLogic.Repositories.Interfaces;
 using AppLogic.Services;
@@ -47,16 +46,16 @@ namespace Presentation
         private IWellnessCheckInService _wellnessCheckInService;
 
         // Controllers
-        private IUserController _userController;
-        private IWeatherController _weatherController;
-        private IAirQualityController _airQualityController;
-        private IDayCardController _dayCardController;
-        private ICaffeineDrinkController _caffeineDrinkController;
-        private ISleepController _sleepController;
-        private IActivityController _activityController;
-        private IExerciseController _exerciseController;
-        private ISupplementController _supplementController;
-        private IWellnessCheckInController _wellnessCheckInController;
+        private UserController _userController;
+        private WeatherController _weatherController;
+        private AirQualityController _airQualityController;
+        private DayCardController _dayCardController;
+        private CaffeineDrinkController _caffeineDrinkController;
+        private SleepController _sleepController;
+        private ActivityController _activityController;
+        private ExerciseController _exerciseController;
+        private SupplementController _supplementController;
+        private WellnessCheckInController _wellnessCheckInController;
 
 
         public App(LoggAppContext dbContext)
@@ -116,7 +115,7 @@ namespace Presentation
         {
             _mainMenuHandler = new MainMenuHandler(_userController, _weatherController);
             _userMenuHandler = new UserMenuHandler(_dayCardController, _userController, _weatherController);
-            _dayCardMenuHandler = new DayCardMenuHandler();
+            _dayCardMenuHandler = new DayCardMenuHandler(_dayCardController);
             _intakeMenuHandler = new IntakeMenuHandler(_caffeineDrinkController);
             _view = new View(_mainMenuHandler, _userMenuHandler, _dayCardMenuHandler, _intakeMenuHandler);
 

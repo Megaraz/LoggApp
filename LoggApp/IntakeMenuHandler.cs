@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Controllers;
-using AppLogic.Controllers.Interfaces;
 using AppLogic.Models.Intake.Enums;
 using AppLogic.Models.Intake.InputModels;
 using Presentation.MenuState_Enums;
@@ -13,9 +12,9 @@ namespace Presentation
 {
     public class IntakeMenuHandler : MenuHandlerBase
     {
-        private readonly ICaffeineDrinkController _caffeineDrinkController;
+        private readonly CaffeineDrinkController _caffeineDrinkController;
 
-        public IntakeMenuHandler(ICaffeineDrinkController caffeineDrinkController)
+        public IntakeMenuHandler(CaffeineDrinkController caffeineDrinkController)
         {
             _caffeineDrinkController = caffeineDrinkController;
         }
@@ -72,12 +71,12 @@ namespace Presentation
 
             if (confirmDelete)
             {
-                sessionContext?.DayCardDetailed?.CaffeineDrinksSummary?.CaffeineDrinksDetails.Remove(sessionContext.CaffeineDrinkDetailed!);
-                drinkDeleted = await _caffeineDrinkController.DeleteCaffeineDrinkAsync(sessionContext!.CaffeineDrinkDetailed!.CaffeineDrinkId);
+                sessionContext?.CurrentDayCard?.CaffeineDrinksSummary?.CaffeineDrinksDetails.Remove(sessionContext.CurrentCaffeineDrink!);
+                drinkDeleted = await _caffeineDrinkController.DeleteCaffeineDrinkAsync(sessionContext!.CurrentCaffeineDrink!.CaffeineDrinkId);
 
                 if (drinkDeleted)
                 {
-                    sessionContext.CaffeineDrinkDetailed = null;
+                    sessionContext.CurrentCaffeineDrink = null;
                     Console.Clear();
                     Console.WriteLine(MenuText.Header.CaffeineDrinkDeleted);
                     Thread.Sleep(1500);
@@ -144,15 +143,15 @@ namespace Presentation
         private static TContext CaffeineShowAllMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
-            if (sessionContext!.DayCardDetailed!.CaffeineDrinksSummary != null && sessionContext.DayCardDetailed.CaffeineDrinksSummary.CaffeineDrinksDetails.Count > 0)
+            if (sessionContext!.CurrentDayCard!.CaffeineDrinksSummary != null && sessionContext.CurrentDayCard.CaffeineDrinksSummary.CaffeineDrinksDetails.Count > 0)
             {
-                sessionContext.MainHeader = "Caffeine Drinks " + sessionContext.DayCardDetailed.Date + ":\n";
+                sessionContext.MainHeader = "Caffeine Drinks " + sessionContext.CurrentDayCard.Date + ":\n";
 
-                var caffeineMenuChoice = GetMenuValue(sessionContext.DayCardDetailed.CaffeineDrinksSummary.CaffeineDrinksDetails, sessionContext);
+                var caffeineMenuChoice = GetMenuValue(sessionContext.CurrentDayCard.CaffeineDrinksSummary.CaffeineDrinksDetails, sessionContext);
 
                 if (caffeineMenuChoice != null)
                 {
-                    sessionContext.CaffeineDrinkDetailed = caffeineMenuChoice;
+                    sessionContext.CurrentCaffeineDrink = caffeineMenuChoice;
                     sessionContext.IntakeMenuState = IntakeMenuState.CaffeineDrinkDetails;
                 }
                 else
@@ -260,18 +259,30 @@ namespace Presentation
                             break;
                     }
 
+                    //sessionContext
+                    //    .DayCardDetailed!
+                    //        .CaffeineDrinksSummary!
+                    //            .CaffeineDrinksDetails
+                    //                .Add
+                    //                (await _caffeineDrinkController
+                    //                    .AddCaffeineDrinkToDayCardAsync
+                    //                    (sessionContext.DayCardDetailed!.DayCardId,
+                    //                        caffeineDrinkInputModel
+                    //                    )
+                    //                );
+                    sessionContext.CurrentCaffeineDrink = await _caffeineDrinkController
+                                        .AddCaffeineDrinkToDayCardAsync(sessionContext
+                                                                        .CurrentDayCard!.DayCardId,
+                                                                        caffeineDrinkInputModel
+                                                                        );
+
                     sessionContext
-                        .DayCardDetailed!
+                        .CurrentDayCard!
                             .CaffeineDrinksSummary!
                                 .CaffeineDrinksDetails
-                                    .Add
-                                    (await _caffeineDrinkController
-                                        .AddCaffeineDrinkToDayCardAsync
-                                        (sessionContext.DayCardDetailed!.DayCardId,
-                                            caffeineDrinkInputModel
-                                        )
-                                    );
+                                    .Add(sessionContext.CurrentCaffeineDrink!);
 
+                    sessionContext.CurrentDayCard!.CaffeineDrinksSummary.TotalCaffeineInMg += sessionContext.CurrentCaffeineDrink.EstimatedMgCaffeine;
                 }
                 else
                 {
@@ -280,10 +291,8 @@ namespace Presentation
                 }
 
             }
-            else
-            {
-                sessionContext.IntakeMenuState = IntakeMenuState.CaffeineOverview;
-            }
+
+            sessionContext.IntakeMenuState = IntakeMenuState.CaffeineOverview;
 
             return sessionContext;
         }

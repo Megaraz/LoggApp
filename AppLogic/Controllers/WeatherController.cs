@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AppLogic.Controllers.Interfaces;
 using AppLogic.Models;
 using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.Weather;
@@ -11,7 +10,7 @@ using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Controllers
 {
-    public class WeatherController : IWeatherController
+    public class WeatherController
     {
 
         private readonly IWeatherService _weatherService;
