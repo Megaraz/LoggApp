@@ -1,7 +1,8 @@
 ﻿using System.Text.Json;
-using AppLogic.Models;
 using AppLogic.Models.DTOs.Detailed;
 using AppLogic.Models.DTOs.Summary;
+using AppLogic.Models.Entities;
+using AppLogic.Models.InputModels;
 using AppLogic.Repositories;
 using AppLogic.Repositories.Interfaces;
 using AppLogic.Services.Interfaces;

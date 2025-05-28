@@ -2,8 +2,7 @@
 using AppLogic.Controllers;
 using AppLogic.Models;
 using AppLogic.Models.DTOs;
-using AppLogic.Models.Intake.Enums;
-using AppLogic.Models.Intake.InputModels;
+using AppLogic.Models.InputModels;
 using AppLogic.Services;
 using Microsoft.IdentityModel.Tokens;
 using Presentation.MenuState_Enums;
@@ -30,15 +29,15 @@ namespace Presentation
 
 
                 case DayCardMenuState.AirQualityDetails:
-                    sessionContext = await AirQualityDetailsMenuHandler(sessionContext);
+                    sessionContext = AirQualityDetailsMenuHandler(sessionContext);
                     break;
 
                 case DayCardMenuState.PollenDetails:
-                    sessionContext = await PollenDetailsMenuHandler(sessionContext);
+                    sessionContext = PollenDetailsMenuHandler(sessionContext);
                     break;
 
                 case DayCardMenuState.WeatherDetails:
-                    sessionContext = await WeatherDetailsMenuHandler(sessionContext);
+                    sessionContext = WeatherDetailsMenuHandler(sessionContext);
                     break;
                 //// EXERCISE
                 //case DayCardMenuState.AddExercise:
@@ -57,19 +56,39 @@ namespace Presentation
                 //    sessionContext = await SleepDetailsMenuHandler;
                 //    break;
 
+                case DayCardMenuState.UpdateDayCard:
+                    sessionContext = await UpdateDayCardDateAsync(sessionContext);
+                    break;
 
                 case DayCardMenuState.DeleteDayCard:
                     sessionContext = await DayCardDeleteMenuHandler(sessionContext);
                     break;
 
-                case DayCardMenuState.Back:
-                    ResetMenuStates(sessionContext);
-                    sessionContext.UserMenuState = UserMenuState.AllDayCards;
-                    break;
             }
 
             return sessionContext;
 
+        }
+
+        private async Task<TContext> UpdateDayCardDateAsync<TContext>(TContext sessionContext) where TContext : SessionContext
+        {
+
+            ResetMenuStates(sessionContext);
+
+            // Get user input for date
+            DayCardInputModel? dayCardInputModel = View.Input_DayCard(sessionContext);
+
+            if (dayCardInputModel != null)
+            {
+                sessionContext.CurrentDayCard = await _dayCardController.CreateNewDayCardAsync(sessionContext.CurrentUser!.Id, dayCardInputModel);
+                sessionContext.DayCardMenuState = DayCardMenuState.Overview;
+
+            }
+            else
+            {
+                sessionContext.MainMenuState = MainMenuState.SpecificUser;
+            }
+            return sessionContext;
         }
 
         private async Task<TContext> DayCardDeleteMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
@@ -78,29 +97,30 @@ namespace Presentation
             // Get user input for confirmation
             bool confirmDelete = View.Input_Confirmation(MenuText.Prompt.DeleteDayCardConfirmation);
 
-            bool userDeleted = false;
-
             if (confirmDelete)
             {
-                userDeleted = await _dayCardController.DeleteDayCardAsync(sessionContext.CurrentDayCard!.DayCardId);
+                bool dayCardDelete = await _dayCardController.DeleteDayCardAsync(sessionContext.CurrentDayCard!.DayCardId);
 
-                if (userDeleted)
+                if (dayCardDelete)
                 {
                     sessionContext.CurrentUser = null;
                     Console.Clear();
-                    Console.WriteLine(MenuText.Header.UserDeleted);
+                    Console.WriteLine(MenuText.Header.DayCardDeleted);
                     Thread.Sleep(1500);
                     sessionContext.MainMenuState = MainMenuState.Main;
                 }
                 else
                 {
                     Console.Clear();
-                    Console.WriteLine(MenuText.Error.UserDeleteFailed);
+                    Console.WriteLine(MenuText.Error.DayCardDeleteFailed);
                     Thread.Sleep(1500);
+                    sessionContext.UserMenuState = UserMenuState.SpecificDayCard;
                 }
-
             }
-
+            else
+            {
+                sessionContext.DayCardMenuState = DayCardMenuState.Overview;
+            }
             return sessionContext;
         }
 
@@ -195,21 +215,19 @@ namespace Presentation
                         break;
 
                     case MenuText.NavOption.Back:
-                        sessionContext.DayCardMenuState = DayCardMenuState.Back;
+                        sessionContext.UserMenuState = UserMenuState.AllDayCards;
                         break;
-
                 }
-
             }
             else
             {
-                sessionContext.DayCardMenuState = DayCardMenuState.Back;
+                sessionContext.UserMenuState = UserMenuState.AllDayCards;
             }
 
             return sessionContext;
 
         }
-        private async Task<TContext> WeatherDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
+        private TContext WeatherDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             Console.Clear();
             Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.CurrentUser!.ToString()}");
@@ -218,7 +236,7 @@ namespace Presentation
             sessionContext.DayCardMenuState = DayCardMenuState.Overview;
             return sessionContext;
         }
-        private async Task<TContext> AirQualityDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
+        private TContext AirQualityDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             Console.Clear();
             Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.CurrentUser!.ToString()}");
@@ -228,7 +246,7 @@ namespace Presentation
             return sessionContext;
         }
 
-        private async Task<TContext> PollenDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
+        private TContext PollenDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             Console.Clear();
             Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.CurrentUser!.ToString()}");

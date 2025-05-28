@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Models.DTOs.Detailed;
-using AppLogic.Models.Intake.InputModels;
+using AppLogic.Models.InputModels;
 using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Controllers

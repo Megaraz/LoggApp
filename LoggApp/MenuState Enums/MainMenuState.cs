@@ -18,7 +18,6 @@
         SpecificDayCard,
         SearchDayCard,
         UserSettings,
-        Back,
         None
     };
 
@@ -35,7 +34,7 @@
         ComputerActivity,
         AddSleep,
         SleepDetails,
-        Back,
+        UpdateDayCard,
         DeleteDayCard,
         None
     };

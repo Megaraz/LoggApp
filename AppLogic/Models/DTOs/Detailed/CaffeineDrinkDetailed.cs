@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AppLogic.Models.Intake.Enums;
+using AppLogic.Models.Enums;
 
 namespace AppLogic.Models.DTOs.Detailed
 {

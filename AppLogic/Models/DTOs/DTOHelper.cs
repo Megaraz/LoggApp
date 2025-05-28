@@ -4,7 +4,6 @@ using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AppLogic.Models.Weather.AirQuality;
 
 namespace AppLogic.Models.DTOs
 {

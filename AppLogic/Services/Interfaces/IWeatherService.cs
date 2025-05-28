@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using AppLogic.Models;
 using AppLogic.Models.DTOs.Detailed;
 using AppLogic.Models.DTOs.Summary;
-using AppLogic.Models.Weather;
+using AppLogic.Models.Entities.WeatherAndAQI;
 
 namespace AppLogic.Services.Interfaces
 {

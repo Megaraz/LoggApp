@@ -2,8 +2,7 @@
 using AppLogic.Models;
 using AppLogic.Models.DTOs.Detailed;
 using AppLogic.Models.DTOs.Summary;
-using AppLogic.Models.Weather;
-using AppLogic.Repositories;
+using AppLogic.Models.Entities.WeatherAndAQI;
 using AppLogic.Repositories.Interfaces;
 using AppLogic.Services.Interfaces;
 

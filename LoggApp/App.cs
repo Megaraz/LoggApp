@@ -123,12 +123,17 @@ namespace Presentation
             _sessionContext = new SessionContext();
             _sessionContext.MainMenuState = MainMenuState.Main;
             _sessionContext.MainHeader = MenuText.Header.InitMenu;
-            _sessionContext.CurrentMenuIndex = 0;
             _sessionContext.UserMenuState = UserMenuState.None;
             _sessionContext.DayCardMenuState = DayCardMenuState.None;
             _sessionContext.IntakeMenuState = IntakeMenuState.None;
 
         }
+
+        //public async Task ReloadAll()
+        //{
+        //    _sessionContext.AllUsersSummary = await _userController.GetAllUsersIncludeAsync();
+        //    //_sessionContext.
+        //}
 
         public async Task Run()
         {

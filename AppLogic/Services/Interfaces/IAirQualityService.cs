@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Models.DTOs.Summary;
-using AppLogic.Models.Weather.AirQuality;
+using AppLogic.Models.Entities.WeatherAndAQI;
 
 namespace AppLogic.Services.Interfaces
 {

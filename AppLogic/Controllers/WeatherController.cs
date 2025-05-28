@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Models;
 using AppLogic.Models.DTOs.Summary;
-using AppLogic.Models.Weather;
+using AppLogic.Models.Entities.WeatherAndAQI;
+using AppLogic.Models.InputModels;
 using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Controllers

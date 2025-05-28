@@ -1,4 +1,4 @@
-﻿using AppLogic.Models;
+﻿using AppLogic.Models.Entities;
 using AppLogic.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -57,6 +57,36 @@ namespace AppLogic.Repositories
             {
                 throw new ArgumentException($"Something went wrong, {e.Message}");
 
+            }
+        }
+
+        public async Task<DayCard> UpdateDayCardAsync(DayCard updatedDayCard)
+        {
+            try
+            {
+
+                var existingDayCard = await _dbContext.Set<DayCard>().FindAsync(updatedDayCard.Id)
+                    ?? throw new ArgumentException("Daycard not found.");
+
+                var changed = false;
+
+                if (existingDayCard.Date != updatedDayCard.Date)
+                {
+                    existingDayCard.Date = updatedDayCard.Date;
+                    changed = true;
+                }
+
+                if (changed)
+                {
+                    await _dbContext.SaveChangesAsync();
+                }
+
+                return existingDayCard;
+
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException($"Something went wrong, {e.Message}");
             }
         }
 

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Controllers;
-using AppLogic.Models.Intake.Enums;
-using AppLogic.Models.Intake.InputModels;
+using AppLogic.Models.Enums;
+using AppLogic.Models.InputModels;
 using Presentation.MenuState_Enums;
 
 namespace Presentation

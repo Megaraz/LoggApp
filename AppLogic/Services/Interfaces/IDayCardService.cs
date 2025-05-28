@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AppLogic.Models;
 using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.DTOs.Detailed;
+using AppLogic.Models.InputModels;
 
 namespace AppLogic.Services.Interfaces
 {
@@ -16,5 +16,6 @@ namespace AppLogic.Services.Interfaces
         Task<List<DayCardSummary>?> ReadAllDayCardsAsync(int userId);
         Task<DayCardDetailed?> ReadSingleDayCardAsync(int id, int userId);
         Task<DayCardDetailed?> ReadSingleDayCardAsync(DateOnly date, int userId);
+        Task<DayCardDetailed> UpdateDayCardAsync(int dayCardId, DayCardInputModel input);
     }
 }

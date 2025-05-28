@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AppLogic.Models;
 using AppLogic.Services.Interfaces;
 using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.DTOs.Detailed;
+using AppLogic.Models.InputModels;
 
 namespace AppLogic.Controllers
 {
@@ -24,6 +24,11 @@ namespace AppLogic.Controllers
         {
             return await _dayCardService.CreateNewDayCardAsync(userId, input);
 
+        }
+
+        public async Task<DayCardDetailed> UpdateDayCardAsync(int dayCardId, DayCardInputModel input)
+        {
+            return await _dayCardService.UpdateDayCardAsync(dayCardId, input);
         }
 
         public async Task<bool> DeleteDayCardAsync(int dayCardId)

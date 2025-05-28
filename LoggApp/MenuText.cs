@@ -19,6 +19,7 @@
 
             public const string UserDeleted = "USER DELETED SUCCESSFULLY!";
             public const string CaffeineDrinkDeleted = "CAFFEINE DRINK DELETED SUCCESSFULLY!";
+            public const string DayCardDeleted = "DAYCARD DELETED SUCCESSFULLY!";
 
 
             public static string SpecificUser = "ID".PadRight(6) + "USERNAME".PadRight(12) + "CITY\n\n";
@@ -54,7 +55,7 @@
         public static class Error
         {
             // ERROR-MESSAGES
-            public const string NoUserFound = "NO USER WITH THAT ID FOUND";
+            public const string NoUserFound = "NO USER WITH THAT NAME/ID FOUND";
             public const string NoUsersFound = "NO USERS FOUND";
 
             public const string NoDayCardsFound = "NO DAYCARDS FOUND FOR THIS USER";
@@ -67,6 +68,7 @@
 
             public const string UserDeleteFailed = "USER DELETE FAILED, PLEASE TRY AGAIN";
             public const string CaffeineDrinkDeleteFailed = "CAFFEINE DRINK DELETE FAILED, PLEASE TRY AGAIN";
+            public const string DayCardDeleteFailed = "DAYCARD DELETE FAILED, PLEASE TRY AGAIN";
 
 
         }

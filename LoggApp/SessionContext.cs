@@ -20,8 +20,6 @@ namespace Presentation
 
         public string? CurrentPrompt { get; set; }
 
-        public int CurrentMenuIndex { get; set; }
-
 
         // ERROR VARIABLE, UPDATE DYNAMICALLY
         public string? ErrorMessage { get; set; }
@@ -32,18 +30,32 @@ namespace Presentation
         public DayCardDetailed? CurrentDayCard { get; set; }
 
         public CaffeineDrinkDetailed? CurrentCaffeineDrink { get; set; }
-        public List<UserSummary>? CurrentUsersSummary { get; set; }
-        public List<DayCardSummary>? CurrentDayCardsSummary { get; set; }
+        public List<UserSummary>? AllUsersSummary { get; set; }
+        public List<DayCardSummary>? AllDayCardsSummary { get; set; }
 
-        public AirQualityDataSummary CurrentAirQualityDataSummary { get; set; }
-        public WeatherDataSummary CurrentWeatherDataSummary { get; set; }
+        public AirQualityDataSummary? CurrentAirQualityDataSummary { get; set; }
+        public WeatherDataSummary? CurrentWeatherDataSummary { get; set; }
 
         //public User? CurrentUser { get; set; }
         //public DayCard? CurrentDayCard { get; set; }
         //public List<User>? AllUsers { get; set; }
         //public List<DayCard>? AllDayCards { get; set; }
 
+        public void ClearAllSessionData()
+        {
+            MainHeader = null;
+            SubHeader = null;
+            CurrentPrompt = null;
+            ErrorMessage = null;
+            CurrentUser = null;
+            CurrentDayCard = null;
+            CurrentCaffeineDrink = null;
+            AllUsersSummary = null;
+            AllDayCardsSummary = null;
+            CurrentAirQualityDataSummary = null;
+            CurrentWeatherDataSummary = null;
 
+        }
 
 
 

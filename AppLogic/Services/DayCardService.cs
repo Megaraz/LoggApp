@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
-using AppLogic.Models;
 using AppLogic.Models.DTOs.Detailed;
 using AppLogic.Models.DTOs.Summary;
+using AppLogic.Models.Entities;
+using AppLogic.Models.InputModels;
 using AppLogic.Repositories;
 using AppLogic.Repositories.Interfaces;
 using AppLogic.Services.Interfaces;
@@ -30,6 +31,28 @@ namespace AppLogic.Services
 
         public async Task<DayCardDetailed> CreateNewDayCardAsync(int userId, DayCardInputModel dayCardInputModel)
         {
+            DayCard newDayCard = await GenerateDayCard(userId, dayCardInputModel);
+
+            newDayCard = await _dayCardRepo.CreateAsync(newDayCard);
+            return MapToDtoDetailed(newDayCard);
+        }
+
+        private DayCardDetailed MapToDtoDetailed(DayCard newDayCard)
+        {
+            return new DayCardDetailed
+            {
+                DayCardId = newDayCard.Id,
+                UserId = newDayCard.UserId,
+                Date = newDayCard.Date,
+                CaffeineDrinksSummary = _caffeineDrinkService.ConvertToSummaryDTO(newDayCard.CaffeineDrinks!.ToList()),
+                AirQualitySummary = _airQualityService.ConvertToAQDTO(newDayCard.AirQualityData!),
+                PollenSummary = _airQualityService.ConvertToPollenDTO(newDayCard.AirQualityData!),
+                WeatherSummary = _weatherService.ConvertToDTO(newDayCard.WeatherData!)
+            };
+        }
+
+        private async Task<DayCard> GenerateDayCard(int userId, DayCardInputModel dayCardInputModel)
+        {
             string lat = dayCardInputModel.Lat?.ToString(CultureInfo.InvariantCulture)!;
             string lon = dayCardInputModel.Lon?.ToString(CultureInfo.InvariantCulture)!;
             string date = dayCardInputModel.Date?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)!;
@@ -50,19 +73,7 @@ namespace AppLogic.Services
 
             newDayCard.AirQualityData = airQuality;
             newDayCard.WeatherData = weather;
-
-            newDayCard = await _dayCardRepo.CreateAsync(newDayCard);
-
-            return new DayCardDetailed
-            {
-                DayCardId = newDayCard.Id,
-                UserId = newDayCard.UserId,
-                Date = newDayCard.Date,
-                CaffeineDrinksSummary = _caffeineDrinkService.ConvertToSummaryDTO(newDayCard.CaffeineDrinks!.ToList()),
-                AirQualitySummary = _airQualityService.ConvertToAQDTO(newDayCard.AirQualityData!),
-                PollenSummary = _airQualityService.ConvertToPollenDTO(newDayCard.AirQualityData!),
-                WeatherSummary = _weatherService.ConvertToDTO(newDayCard.WeatherData!)
-            };
+            return newDayCard;
         }
 
         public async Task<bool> DeleteDayCardAsync(int dayCardId)
@@ -130,5 +141,13 @@ namespace AppLogic.Services
             };
         }
 
+        public async Task<DayCardDetailed> UpdateDayCardAsync(int dayCardId, DayCardInputModel dayCardInputModel)
+        {
+            DayCard dayCard = await GenerateDayCard(dayCardId, dayCardInputModel);
+
+            dayCard = await _dayCardRepo.UpdateAsync(dayCard);
+
+            return MapToDtoDetailed(dayCard);
+        }
     }
 }

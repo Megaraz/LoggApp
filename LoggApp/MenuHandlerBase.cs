@@ -57,11 +57,11 @@ namespace Presentation
                     }
                     if (sessionContext.UserMenuState != UserMenuState.None)
                     {
-                        sessionContext.UserMenuState = UserMenuState.Back;
+                        sessionContext.MainMenuState = MainMenuState.SpecificUser;
                     }
                     if (sessionContext.DayCardMenuState != DayCardMenuState.None)
                     {
-                        sessionContext.DayCardMenuState = DayCardMenuState.Back;
+                        sessionContext.UserMenuState = UserMenuState.AllDayCards;
                     }
                     if (sessionContext.IntakeMenuState != IntakeMenuState.None)
                     {

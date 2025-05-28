@@ -1,10 +1,7 @@
-﻿using AppLogic.Models;
-using AppLogic.Models.Activity;
-using AppLogic.Models.Intake;
-using AppLogic.Models.Weather;
-using AppLogic.Models.Weather.AirQuality;
+﻿using AppLogic.Models.Entities;
+using AppLogic.Models.Entities.WeatherAndAQI;
 using Microsoft.EntityFrameworkCore;
-using Activity = AppLogic.Models.Activity.Activity;
+using Activity = AppLogic.Models.Entities.Activity;
 
 namespace AppLogic
 {
@@ -51,6 +48,37 @@ namespace AppLogic
                 .HasForeignKey(dc => dc.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Sleep>()
+                .HasOne(s => s.DayCard)
+                .WithOne(dc => dc.Sleep)
+                .HasForeignKey<Sleep>(s => s.DayCardId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<WellnessCheckIn>()
+                .HasOne(wc => wc.DayCard)
+                .WithMany(dc => dc.WellnessCheckIns)
+                .HasForeignKey(wc => wc.DayCardId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Activity>()
+                .HasOne(a => a.DayCard)
+                .WithMany(dc => dc.Activities)
+                .HasForeignKey(a => a.DayCardId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<SupplementIngredient>()
+                .HasOne(si => si.Supplement)
+                .WithMany(s => s.Ingredients)
+                .HasForeignKey(si => si.SupplementId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<Supplement>()
+                .HasOne(s => s.DayCard)
+                .WithMany(dc => dc.Supplements)
+                .HasForeignKey(s => s.DayCardId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CaffeineDrink>()
                 .HasOne(cd => cd.DayCard)
@@ -64,8 +92,8 @@ namespace AppLogic
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-            //optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=HealthLogApp;Trusted_Connection=True;TrustServerCertificate=True;");
-            optionsBuilder.UseSqlServer(@"Server=tcp:rlack.database.windows.net,1433;Initial Catalog=HealthLogg;Persist Security Info=False;User ID=rlack;Password=Tellus46;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=HealthLogApp;Trusted_Connection=True;TrustServerCertificate=True;");
+            //optionsBuilder.UseSqlServer(@"Server=tcp:rlack.database.windows.net,1433;Initial Catalog=HealthLogg;Persist Security Info=False;User ID=rlack;Password=Tellus46;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
         }
     }

@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using AppLogic.Models.Weather;
+using AppLogic.Models.Entities.WeatherAndAQI;
 using AppLogic.Repositories.Interfaces;
 
 namespace AppLogic.Repositories
@@ -32,31 +32,12 @@ namespace AppLogic.Repositories
                       $"&timezone=auto" +
                       $"&wind_speed_unit=ms";
 
-
-            //var stopwatch = Stopwatch.StartNew();
-
-            //var response = await _httpClient.GetStringAsync(url);
-
-            //stopwatch.Stop();
-            //Console.WriteLine($"Total response time: {stopwatch.ElapsedMilliseconds} ms");
-            //Console.ReadKey();
-            //return response;
-
             return await _httpClient.GetStringAsync(url);
         }
 
         public async Task<string> GetGeoCodeAsync(string city)
         {
             string url = _geoCodeBaseUrl + $"?name={city}";
-
-            //var stopwatch = Stopwatch.StartNew();
-
-            //var response = await _httpClient.GetStringAsync(url);
-
-            //stopwatch.Stop();
-            //Console.WriteLine($"Total response time: {stopwatch.ElapsedMilliseconds} ms");
-            //Console.ReadKey();
-            //return response;
 
             return await _httpClient.GetStringAsync(url);
 

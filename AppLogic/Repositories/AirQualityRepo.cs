@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using AppLogic.Models;
-using AppLogic.Models.Weather.AirQuality;
+using AppLogic.Models.Entities.WeatherAndAQI;
 using AppLogic.Repositories.Interfaces;
 
 namespace AppLogic.Repositories

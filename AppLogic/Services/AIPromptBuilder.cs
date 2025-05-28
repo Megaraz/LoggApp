@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AppLogic.Models.Weather;
-using AppLogic.Models.Weather.AirQuality;
+using AppLogic.Models.Entities.WeatherAndAQI;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AppLogic.Services

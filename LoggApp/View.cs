@@ -1,5 +1,4 @@
-﻿using AppLogic.Models;
-using AppLogic.Models.Intake.InputModels;
+﻿using AppLogic.Models.InputModels;
 using Microsoft.IdentityModel.Tokens;
 using Presentation.MenuState_Enums;
 
@@ -99,9 +98,8 @@ namespace Presentation
                 return null;
             }
 
-            UserInputModel userInputModel = new UserInputModel()
+            UserInputModel userInputModel = new UserInputModel(userName!)
             {
-                Username = userName!,
                 CityName = city!
             };
 

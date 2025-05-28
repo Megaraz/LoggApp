@@ -12,6 +12,7 @@ using Presentation.MenuState_Enums;
 using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.DTOs.Detailed;
 using AppLogic.Repositories;
+using AppLogic.Models.InputModels;
 
 namespace Presentation
 {
@@ -102,7 +103,7 @@ namespace Presentation
         {
 
             ResetMenuStates(sessionContext);
-            if (sessionContext.CurrentUsersSummary == null || sessionContext.CurrentUsersSummary.Count == 0)
+            if (sessionContext.AllUsersSummary == null || sessionContext.AllUsersSummary.Count == 0)
             {
                 sessionContext.ErrorMessage = MenuText.Error.NoUsersFound;
                 sessionContext.MainMenuState = MainMenuState.Main;
@@ -113,10 +114,11 @@ namespace Presentation
                 sessionContext.MainHeader = MenuText.Header.AllUsers;
                 //sessionContext.MainHeader = MenuText.Header.SpecificUser;
 
-                var userChoice = GetMenuValue(sessionContext.CurrentUsersSummary, sessionContext);
+                var userChoice = GetMenuValue(sessionContext.AllUsersSummary, sessionContext);
 
                 if (userChoice != null)
                 {
+                    sessionContext.ClearAllSessionData();
                     sessionContext
                         .CurrentUser = await _userController.ReadUserSingleAsync(userChoice.Id);
 
@@ -176,14 +178,16 @@ namespace Presentation
 
             if (allUsers == null || allUsers.Count == 0)
             {
-                sessionContext.ErrorMessage = MenuText.Error.NoUsersFound;
+                Console.Clear();
+                Console.WriteLine(MenuText.Error.NoUsersFound);
+                Thread.Sleep(1500);
                 sessionContext.MainMenuState = MainMenuState.Main;
             }
             else
             {
                 sessionContext.MainMenuState = MainMenuState.AllUsers;
                 //sessionContext.CurrentMainMenu = MenuText.NavOption.s_AllUserMenu.ToList();
-                sessionContext.CurrentUsersSummary = allUsers;
+                sessionContext.AllUsersSummary = allUsers;
 
             }
 
@@ -201,9 +205,9 @@ namespace Presentation
 
                 if (resultUser == null)
                 {
-                    sessionContext.ErrorMessage = MenuText.Error.NoUserFound;
+                    
                     Console.Clear();
-                    Console.WriteLine(sessionContext.ErrorMessage);
+                    Console.WriteLine(MenuText.Error.NoUserFound);
                     Thread.Sleep(1500);
                     sessionContext.MainMenuState = MainMenuState.Main;
 

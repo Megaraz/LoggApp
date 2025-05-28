@@ -22,7 +22,7 @@ namespace AppLogic.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AppLogic.Models.Activity.Activity", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.Activity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,34 @@ namespace AppLogic.Migrations
                     b.UseTptMappingStrategy();
                 });
 
-            modelBuilder.Entity("AppLogic.Models.DayCard", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.CaffeineDrink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DayCardId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EstimatedMgCaffeine")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly?>("TimeOf")
+                        .HasColumnType("time");
+
+                    b.Property<string>("TypeOfDrink")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DayCardId");
+
+                    b.ToTable("CaffeineDrinks");
+                });
+
+            modelBuilder.Entity("AppLogic.Models.Entities.DayCard", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -72,85 +99,7 @@ namespace AppLogic.Migrations
                     b.ToTable("DayCards");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.Intake.CaffeineDrink", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("DayCardId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EstimatedMgCaffeine")
-                        .HasColumnType("int");
-
-                    b.Property<TimeOnly?>("TimeOf")
-                        .HasColumnType("time");
-
-                    b.Property<string>("TypeOfDrink")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DayCardId");
-
-                    b.ToTable("CaffeineDrinks");
-                });
-
-            modelBuilder.Entity("AppLogic.Models.Intake.Supplement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DayCardId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<TimeOnly?>("TimeOf")
-                        .HasColumnType("time");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DayCardId");
-
-                    b.ToTable("Supplements");
-                });
-
-            modelBuilder.Entity("AppLogic.Models.Intake.SupplementIngredient", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("DosageInMg")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PercentageOfDRI")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SupplementId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SupplementId");
-
-                    b.ToTable("SupplementIngredients");
-                });
-
-            modelBuilder.Entity("AppLogic.Models.Sleep", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.Sleep", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -202,7 +151,60 @@ namespace AppLogic.Migrations
                     b.ToTable("Sleep");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.User", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.Supplement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DayCardId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeOnly?>("TimeOf")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DayCardId");
+
+                    b.ToTable("Supplements");
+                });
+
+            modelBuilder.Entity("AppLogic.Models.Entities.SupplementIngredient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("DosageInMg")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PercentageOfDRI")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SupplementId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SupplementId");
+
+                    b.ToTable("SupplementIngredients");
+                });
+
+            modelBuilder.Entity("AppLogic.Models.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -213,9 +215,6 @@ namespace AppLogic.Migrations
                     b.Property<string>("CityName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CountryCode")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<double?>("Lat")
                         .HasColumnType("float");
 
@@ -223,6 +222,7 @@ namespace AppLogic.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Username")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -230,7 +230,7 @@ namespace AppLogic.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.Weather.AirQuality.AirQualityData", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.WeatherAndAQI.AirQualityData", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -241,7 +241,7 @@ namespace AppLogic.Migrations
                     b.Property<string>("AQI_AISummary")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DayCardId")
+                    b.Property<int?>("DayCardId")
                         .HasColumnType("int");
 
                     b.Property<double>("GenerationTime_ms")
@@ -259,18 +259,16 @@ namespace AppLogic.Migrations
                     b.Property<string>("Pollen_AISummary")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<TimeOnly?>("TimeOf")
-                        .HasColumnType("time");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DayCardId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[DayCardId] IS NOT NULL");
 
                     b.ToTable("AirQualityData");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.Weather.WeatherData", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.WeatherAndAQI.WeatherData", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -281,7 +279,7 @@ namespace AppLogic.Migrations
                     b.Property<string>("AISummary")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DayCardId")
+                    b.Property<int?>("DayCardId")
                         .HasColumnType("int");
 
                     b.Property<double?>("GenerationTimeMs")
@@ -295,9 +293,6 @@ namespace AppLogic.Migrations
                     b.Property<double?>("Lon")
                         .HasColumnType("float")
                         .HasAnnotation("Relational:JsonPropertyName", "longitude");
-
-                    b.Property<TimeOnly?>("TimeOf")
-                        .HasColumnType("time");
 
                     b.Property<string>("Timezone")
                         .HasColumnType("nvarchar(max)")
@@ -314,12 +309,13 @@ namespace AppLogic.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DayCardId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[DayCardId] IS NOT NULL");
 
                     b.ToTable("WeatherData");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.WellnessCheckIn", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.WellnessCheckIn", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -346,9 +342,9 @@ namespace AppLogic.Migrations
                     b.ToTable("WellnessCheckIns");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.Activity.Exercise", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.Exercise", b =>
                 {
-                    b.HasBaseType("AppLogic.Models.Activity.Activity");
+                    b.HasBaseType("AppLogic.Models.Entities.Activity");
 
                     b.Property<int?>("ActiveKcalBurned")
                         .HasColumnType("int");
@@ -386,9 +382,9 @@ namespace AppLogic.Migrations
                     b.ToTable("Exercises", (string)null);
                 });
 
-            modelBuilder.Entity("AppLogic.Models.Activity.Activity", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.Activity", b =>
                 {
-                    b.HasOne("AppLogic.Models.DayCard", "DayCard")
+                    b.HasOne("AppLogic.Models.Entities.DayCard", "DayCard")
                         .WithMany("Activities")
                         .HasForeignKey("DayCardId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -397,9 +393,20 @@ namespace AppLogic.Migrations
                     b.Navigation("DayCard");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.DayCard", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.CaffeineDrink", b =>
                 {
-                    b.HasOne("AppLogic.Models.User", "User")
+                    b.HasOne("AppLogic.Models.Entities.DayCard", "DayCard")
+                        .WithMany("CaffeineDrinks")
+                        .HasForeignKey("DayCardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DayCard");
+                });
+
+            modelBuilder.Entity("AppLogic.Models.Entities.DayCard", b =>
+                {
+                    b.HasOne("AppLogic.Models.Entities.User", "User")
                         .WithMany("DayCards")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -408,18 +415,20 @@ namespace AppLogic.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.Intake.CaffeineDrink", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.Sleep", b =>
                 {
-                    b.HasOne("AppLogic.Models.DayCard", "DayCard")
-                        .WithMany("CaffeineDrinks")
-                        .HasForeignKey("DayCardId");
+                    b.HasOne("AppLogic.Models.Entities.DayCard", "DayCard")
+                        .WithOne("Sleep")
+                        .HasForeignKey("AppLogic.Models.Entities.Sleep", "DayCardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("DayCard");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.Intake.Supplement", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.Supplement", b =>
                 {
-                    b.HasOne("AppLogic.Models.DayCard", "DayCard")
+                    b.HasOne("AppLogic.Models.Entities.DayCard", "DayCard")
                         .WithMany("Supplements")
                         .HasForeignKey("DayCardId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -428,9 +437,9 @@ namespace AppLogic.Migrations
                     b.Navigation("DayCard");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.Intake.SupplementIngredient", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.SupplementIngredient", b =>
                 {
-                    b.HasOne("AppLogic.Models.Intake.Supplement", "Supplement")
+                    b.HasOne("AppLogic.Models.Entities.Supplement", "Supplement")
                         .WithMany("Ingredients")
                         .HasForeignKey("SupplementId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -439,26 +448,13 @@ namespace AppLogic.Migrations
                     b.Navigation("Supplement");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.Sleep", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.WeatherAndAQI.AirQualityData", b =>
                 {
-                    b.HasOne("AppLogic.Models.DayCard", "DayCard")
-                        .WithOne("Sleep")
-                        .HasForeignKey("AppLogic.Models.Sleep", "DayCardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DayCard");
-                });
-
-            modelBuilder.Entity("AppLogic.Models.Weather.AirQuality.AirQualityData", b =>
-                {
-                    b.HasOne("AppLogic.Models.DayCard", "DayCard")
+                    b.HasOne("AppLogic.Models.Entities.DayCard", "DayCard")
                         .WithOne("AirQualityData")
-                        .HasForeignKey("AppLogic.Models.Weather.AirQuality.AirQualityData", "DayCardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AppLogic.Models.Entities.WeatherAndAQI.AirQualityData", "DayCardId");
 
-                    b.OwnsOne("AppLogic.Models.Weather.AirQuality.AirQualityHourlyBlock", "HourlyBlock", b1 =>
+                    b.OwnsOne("AppLogic.Models.Entities.WeatherAndAQI.AirQualityHourlyBlock", "HourlyBlock", b1 =>
                         {
                             b1.Property<int>("AirQualityDataId")
                                 .HasColumnType("int");
@@ -529,7 +525,7 @@ namespace AppLogic.Migrations
                                 .HasForeignKey("AirQualityDataId");
                         });
 
-                    b.OwnsOne("AppLogic.Models.Weather.AirQuality.AirQualityHourlyUnits", "HourlyUnits", b1 =>
+                    b.OwnsOne("AppLogic.Models.Entities.WeatherAndAQI.AirQualityHourlyUnits", "HourlyUnits", b1 =>
                         {
                             b1.Property<int>("AirQualityDataId")
                                 .HasColumnType("int");
@@ -603,15 +599,13 @@ namespace AppLogic.Migrations
                     b.Navigation("HourlyUnits");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.Weather.WeatherData", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.WeatherAndAQI.WeatherData", b =>
                 {
-                    b.HasOne("AppLogic.Models.DayCard", "DayCard")
+                    b.HasOne("AppLogic.Models.Entities.DayCard", "DayCard")
                         .WithOne("WeatherData")
-                        .HasForeignKey("AppLogic.Models.Weather.WeatherData", "DayCardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AppLogic.Models.Entities.WeatherAndAQI.WeatherData", "DayCardId");
 
-                    b.OwnsOne("AppLogic.Models.Weather.WeatherDataHourlyBlock", "HourlyBlock", b1 =>
+                    b.OwnsOne("AppLogic.Models.Entities.WeatherAndAQI.WeatherDataHourlyBlock", "HourlyBlock", b1 =>
                         {
                             b1.Property<int>("WeatherDataId")
                                 .HasColumnType("int");
@@ -678,7 +672,7 @@ namespace AppLogic.Migrations
                                 .HasForeignKey("WeatherDataId");
                         });
 
-                    b.OwnsOne("AppLogic.Models.Weather.WeatherDataHourlyUnits", "HourlyUnits", b1 =>
+                    b.OwnsOne("AppLogic.Models.Entities.WeatherAndAQI.WeatherDataHourlyUnits", "HourlyUnits", b1 =>
                         {
                             b1.Property<int>("WeatherDataId")
                                 .HasColumnType("int");
@@ -748,9 +742,9 @@ namespace AppLogic.Migrations
                     b.Navigation("HourlyUnits");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.WellnessCheckIn", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.WellnessCheckIn", b =>
                 {
-                    b.HasOne("AppLogic.Models.DayCard", "DayCard")
+                    b.HasOne("AppLogic.Models.Entities.DayCard", "DayCard")
                         .WithMany("WellnessCheckIns")
                         .HasForeignKey("DayCardId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -759,16 +753,16 @@ namespace AppLogic.Migrations
                     b.Navigation("DayCard");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.Activity.Exercise", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.Exercise", b =>
                 {
-                    b.HasOne("AppLogic.Models.Activity.Activity", null)
+                    b.HasOne("AppLogic.Models.Entities.Activity", null)
                         .WithOne()
-                        .HasForeignKey("AppLogic.Models.Activity.Exercise", "Id")
+                        .HasForeignKey("AppLogic.Models.Entities.Exercise", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AppLogic.Models.DayCard", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.DayCard", b =>
                 {
                     b.Navigation("Activities");
 
@@ -785,12 +779,12 @@ namespace AppLogic.Migrations
                     b.Navigation("WellnessCheckIns");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.Intake.Supplement", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.Supplement", b =>
                 {
                     b.Navigation("Ingredients");
                 });
 
-            modelBuilder.Entity("AppLogic.Models.User", b =>
+            modelBuilder.Entity("AppLogic.Models.Entities.User", b =>
                 {
                     b.Navigation("DayCards");
                 });

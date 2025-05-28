@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Models;
-using AppLogic.Models.Intake;
+using AppLogic.Models.Entities;
 using AppLogic.Repositories.Interfaces;
 
 namespace AppLogic.Repositories

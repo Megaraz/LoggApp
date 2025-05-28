@@ -1,5 +1,5 @@
 ﻿using AppLogic;
-using AppLogic.Models;
+using AppLogic.Models.Entities;
 using AppLogic.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

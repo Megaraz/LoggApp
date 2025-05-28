@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Controllers;
 using AppLogic.Models;
+using AppLogic.Models.DTOs.Summary;
+using AppLogic.Models.InputModels;
 using Microsoft.IdentityModel.Tokens;
 using Presentation.MenuState_Enums;
 
@@ -95,7 +97,18 @@ namespace Presentation
 
                 if (userDeleted)
                 {
+
+                    // CLIENT SIDE
+                    var userSummary = sessionContext.AllUsersSummary?.FirstOrDefault(u => u.Id == sessionContext.CurrentUser!.Id);
+
+                    // Remove the deleted user from the AllUsersSummary list
+                    if (userSummary != null)
+                    {
+                        sessionContext.AllUsersSummary?.Remove(userSummary);
+                    }
+
                     sessionContext.CurrentUser = null;
+
                     Console.Clear();
                     Console.WriteLine(MenuText.Header.UserDeleted);
                     Thread.Sleep(1500);
@@ -128,8 +141,8 @@ namespace Presentation
 
             if (usernameInput is not null)
             {
-                // Create a new inputModel with users existing location
-                UserInputModel userInputModel = new UserInputModel()
+                // Create a new inputModel with user's existing location
+                UserInputModel userInputModel = new UserInputModel(usernameInput)
                 {
                     GeoResult = new GeoResult()
                     {
@@ -137,10 +150,26 @@ namespace Presentation
                         Lat = sessionContext.CurrentUser.Lat,
                         Lon = sessionContext.CurrentUser.Lon
                     },
-                    Username = usernameInput
+
                 };
 
                 sessionContext.CurrentUser = await _userController.UpdateUserAsync(sessionContext.CurrentUser!.Id, userInputModel);
+
+
+                // UPDATE CLIENT-SIDE
+                var userSummary = sessionContext.AllUsersSummary?.FirstOrDefault(u => u.Id == sessionContext.CurrentUser!.Id);
+
+                // Update Username on client-side as well
+                if (userSummary != null)
+                {
+                    userSummary.Username = sessionContext.CurrentUser.Username!;
+                }
+
+
+                Console.WriteLine();
+                Console.WriteLine("USERNAME UPDATED");
+                Thread.Sleep(1500);
+                sessionContext.UserMenuState = UserMenuState.UserSettings;
             }
             else
             {
@@ -161,10 +190,8 @@ namespace Presentation
                 GeoResultResponse geoResultResponse = await _weatherController.LocationGeoResultList(locationInput!);
 
                 // Create a new inputModel with users existing name
-                UserInputModel userInputModel = new UserInputModel()
-                {
-                    Username = sessionContext.CurrentUser!.Username!
-                };
+                UserInputModel userInputModel = new UserInputModel(sessionContext.CurrentUser!.Username!);
+
 
                 // User chooses a Location from the list of locations
                 userInputModel.GeoResult = GetMenuValue(geoResultResponse.Results, sessionContext)!;
@@ -172,6 +199,19 @@ namespace Presentation
                 if (userInputModel.GeoResult is not null)
                 {
                     sessionContext.CurrentUser = await _userController.UpdateUserAsync(sessionContext.CurrentUser!.Id, userInputModel);
+
+                    //var userSummary = sessionContext.AllUsersSummary?.FirstOrDefault(u => u.Id == sessionContext.CurrentUser!.Id);
+
+                    //// Update Cityname on client side as well
+                    //if (userSummary != null)
+                    //{
+                    //    userSummary.CityName = sessionContext.CurrentUser.CityName;
+                    //}
+
+                    Console.WriteLine();
+                    Console.WriteLine("LOCATION UPDATED");
+                    Thread.Sleep(1500);
+                    sessionContext.UserMenuState = UserMenuState.UserSettings;
                 }
             }
             else
@@ -188,7 +228,7 @@ namespace Presentation
             if (sessionContext.CurrentUser!.DayCardSummary == null || sessionContext.CurrentUser.DayCardSummary.Count == 0)
             {
                 sessionContext.ErrorMessage = MenuText.Error.NoDayCardsFound;
-                sessionContext.UserMenuState = UserMenuState.Back;
+                sessionContext.MainMenuState = MainMenuState.SpecificUser;
             }
             else
             {
@@ -204,7 +244,7 @@ namespace Presentation
                 }
                 else
                 {
-                    sessionContext.UserMenuState = UserMenuState.Back;
+                    sessionContext.MainMenuState = MainMenuState.SpecificUser;
                 }
 
 
@@ -222,12 +262,13 @@ namespace Presentation
             if (dayCardInputModel != null)
             {
                 sessionContext.CurrentDayCard = await _dayCardController.CreateNewDayCardAsync(sessionContext.CurrentUser!.Id, dayCardInputModel);
+
                 sessionContext.DayCardMenuState = DayCardMenuState.Overview;
 
             }
             else
             {
-                sessionContext.UserMenuState = UserMenuState.Back;
+                sessionContext.MainMenuState = MainMenuState.SpecificUser;
             }
 
             return sessionContext;

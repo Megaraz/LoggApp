@@ -1,4 +1,4 @@
-﻿using AppLogic.Models;
+﻿using AppLogic.Models.Entities;
 
 namespace AppLogic.Repositories.Interfaces
 {
