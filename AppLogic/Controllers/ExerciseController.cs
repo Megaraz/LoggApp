@@ -9,6 +9,9 @@ using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Controllers
 {
+    /// <summary>
+    /// Controller for managing exercises associated with day cards, providing methods to add, update, delete, and read exercises.
+    /// </summary>
     public class ExerciseController
     {
         private IExerciseService _exerciseService;
@@ -18,7 +21,7 @@ namespace AppLogic.Controllers
             _exerciseService = exerciseService;
         }
 
-        public async Task<ExerciseDetailed?> AddExerciseToDayCardAsync(int dayCardId, ExerciseInputModel exerciseInputModel)
+        public async Task<ExerciseDetailed> AddExerciseToDayCardAsync(int dayCardId, ExerciseInputModel exerciseInputModel)
         {
             return await _exerciseService.AddExerciseToDayCardAsync(dayCardId, exerciseInputModel);
         }
@@ -26,6 +29,11 @@ namespace AppLogic.Controllers
         public async Task<bool> DeleteExerciseAsync(int exerciseId)
         {
             return await _exerciseService.DeleteExerciseAsync(exerciseId);
+        }
+
+        public async Task<ExerciseDetailed?> ReadSingleExerciseAsync(int dayCardId, int exerciseId)
+        {
+            return await _exerciseService.ReadSingleExerciseAsync(dayCardId, exerciseId);
         }
 
         public async Task<ExerciseDetailed?> UpdateExerciseAsync(int exerciseId, ExerciseInputModel updateInputModel)

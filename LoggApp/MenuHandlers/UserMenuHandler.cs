@@ -6,14 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Controllers;
 using AppLogic.Models;
+using AppLogic.Models.DTOs.Detailed;
 using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.InputModels;
 using Microsoft.IdentityModel.Tokens;
 using Presentation.Input;
 using Presentation.MenuState_Enums;
 
-namespace Presentation
+namespace Presentation.MenuHandlers
 {
+    /// <summary>
+    /// Handles user-specific menu states in the console application, including user overview, day card management, and user settings.
+    /// </summary>
     public class UserMenuHandler : MenuHandlerBase
     {
         private readonly DayCardController _dayCardController;
@@ -43,6 +47,7 @@ namespace Presentation
                     sessionContext = await CreateDayCardMenuHandlerAsync(sessionContext);
                     break;
                 case UserMenuState.SearchDayCard:
+                    sessionContext = await SearchDayCardAsync(sessionContext);
                     break;
 
                 case UserMenuState.UserSettings:
@@ -54,6 +59,46 @@ namespace Presentation
             return sessionContext;
 
         }
+
+        private async Task<TContext> SearchDayCardAsync<TContext>(TContext sessionContext) where TContext : SessionContext
+        {
+            ResetMenuStates(sessionContext);
+
+            string? searchDate = ConsoleInput.GetValidUserInput(MenuText.Prompt.SearchDayCard);
+
+            if (searchDate != null)
+            {
+
+                if (!DateOnly.TryParse(searchDate, out DateOnly parsedDate))
+                {
+                    Console.Clear();
+                    Console.WriteLine(MenuText.Error.InvalidDayCardInput);
+                    Thread.Sleep(1500);
+                    sessionContext.UserMenuState = UserMenuState.Overview;
+                    return sessionContext;
+                }
+                DayCardDetailed? dayCardResult = await _dayCardController.ReadDayCardSingleAsync(parsedDate, sessionContext.CurrentUser!.Id);
+                if (dayCardResult == null)
+                {
+                    Console.Clear();
+                    Console.WriteLine(MenuText.Error.NoDayCardFound);
+                    Thread.Sleep(1500);
+                    sessionContext.UserMenuState = UserMenuState.Overview;
+                }
+                else
+                {
+                    sessionContext.CurrentDayCard = dayCardResult;
+                    sessionContext.DayCardMenuState = DayCardMenuState.Overview;
+                }
+            }
+            else
+            {
+                sessionContext.UserMenuState = UserMenuState.Overview;
+            }
+            return sessionContext;
+
+        }
+
         public TContext UserOverviewMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
@@ -105,6 +150,7 @@ namespace Presentation
 
             return sessionContext;
         }
+
         public async Task<TContext> UserSettingsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);

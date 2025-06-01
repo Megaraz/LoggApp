@@ -1,11 +1,13 @@
 ﻿using System.Text;
-using AppLogic.Migrations;
 using AppLogic.Models.DTOs.Detailed;
 using AppLogic.Models.Entities.WeatherAndAQI;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AppLogic.Models.DTOs.Summary
 {
+    /// <summary>
+    /// DTO for summarizing air quality data, including detailed measurements and an AI-generated summary.
+    /// </summary>
     public class AirQualityDataSummary : IPromptRenderable
     {
         public int AirQualityId { get; set; }
@@ -85,12 +87,7 @@ namespace AppLogic.Models.DTOs.Summary
 
             if (AirQualityDetails != null && AirQualityDetails.Any())
             {
-
-
-                
-
                 sb.AppendLine(DTOHelper.GetPropNamesAsHeader<AirQualityDataDetailed>("\t"));
-
 
                 var first = AirQualityDetails.FirstOrDefault();
                 if (first is not null)

@@ -1,5 +1,6 @@
 ﻿namespace Presentation.MenuState_Enums
 {
+    // Enumerations representing the various states of menus in the application.
     public enum MainMenuState
     {
         Main,
@@ -69,4 +70,14 @@
         None
     }
 
+    public enum WellnessCheckInMenuState
+    {
+        CheckInOverview,
+        AddCheckIn,
+        ShowAllCheckIns,
+        CheckInDetails,
+        UpdateCheckIn,
+        DeleteCheckIn,
+        None
+    }
 }

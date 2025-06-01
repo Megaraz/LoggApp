@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AppLogic.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class Initial_Create : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,9 +17,8 @@ namespace AppLogic.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CountryCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Lat = table.Column<double>(type: "float", nullable: true),
                     Lon = table.Column<double>(type: "float", nullable: true)
                 },
@@ -35,7 +34,7 @@ namespace AppLogic.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -44,28 +43,8 @@ namespace AppLogic.Migrations
                         name: "FK_DayCards_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Activities",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DayCardId = table.Column<int>(type: "int", nullable: true),
-                    TimeOf = table.Column<TimeOnly>(type: "time", nullable: true),
-                    EndTime = table.Column<TimeOnly>(type: "time", nullable: true),
-                    Duration = table.Column<TimeSpan>(type: "time", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Activities", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Activities_DayCards_DayCardId",
-                        column: x => x.DayCardId,
-                        principalTable: "DayCards",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,7 +54,8 @@ namespace AppLogic.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DayCardId = table.Column<int>(type: "int", nullable: true),
-                    TimeOf = table.Column<TimeOnly>(type: "time", nullable: true),
+                    AQI_AISummary = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Pollen_AISummary = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Lat = table.Column<double>(type: "float", nullable: true),
                     Lon = table.Column<double>(type: "float", nullable: true),
                     GenerationTime_ms = table.Column<double>(type: "float", nullable: false),
@@ -89,8 +69,8 @@ namespace AppLogic.Migrations
                     HourlyUnits_AQI = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HourlyUnits_PM25 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HourlyUnits_Ozone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HourlyUnits_CarbonMonoxide = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HourlyUnits_NitrogenDioxide = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_CO = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HourlyUnits_NO2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HourlyUnits_Dust = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HourlyBlock_Marker = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HourlyBlock_Time = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -114,7 +94,8 @@ namespace AppLogic.Migrations
                         name: "FK_AirQualityData_DayCards_DayCardId",
                         column: x => x.DayCardId,
                         principalTable: "DayCards",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -123,7 +104,7 @@ namespace AppLogic.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DayCardId = table.Column<int>(type: "int", nullable: true),
+                    DayCardId = table.Column<int>(type: "int", nullable: false),
                     TimeOf = table.Column<TimeOnly>(type: "time", nullable: true),
                     EstimatedMgCaffeine = table.Column<int>(type: "int", nullable: true),
                     TypeOfDrink = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -135,66 +116,71 @@ namespace AppLogic.Migrations
                         name: "FK_CaffeineDrinks_DayCards_DayCardId",
                         column: x => x.DayCardId,
                         principalTable: "DayCards",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Foods",
+                name: "Exercises",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DayCardId = table.Column<int>(type: "int", nullable: true),
+                    ExerciseType = table.Column<int>(type: "int", nullable: true),
+                    PerceivedIntensity = table.Column<int>(type: "int", nullable: true),
+                    TrainingLoad = table.Column<int>(type: "int", nullable: true),
+                    AvgHeartRate = table.Column<int>(type: "int", nullable: true),
+                    ActiveKcalBurned = table.Column<int>(type: "int", nullable: true),
+                    DistanceInKm = table.Column<double>(type: "float", nullable: true),
+                    AvgKmTempo = table.Column<TimeSpan>(type: "time", nullable: true),
+                    Steps = table.Column<int>(type: "int", nullable: true),
+                    AvgStepLengthInCm = table.Column<int>(type: "int", nullable: true),
+                    AvgStepPerMin = table.Column<int>(type: "int", nullable: true),
+                    DayCardId = table.Column<int>(type: "int", nullable: false),
                     TimeOf = table.Column<TimeOnly>(type: "time", nullable: true),
-                    EstimatedKcal = table.Column<int>(type: "int", nullable: true),
-                    EstimatedProteinInGrams = table.Column<int>(type: "int", nullable: true)
+                    EndTime = table.Column<TimeOnly>(type: "time", nullable: true),
+                    Duration = table.Column<TimeSpan>(type: "time", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Foods", x => x.Id);
+                    table.PrimaryKey("PK_Exercises", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Foods_DayCards_DayCardId",
+                        name: "FK_Exercises_DayCards_DayCardId",
                         column: x => x.DayCardId,
                         principalTable: "DayCards",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Medications",
+                name: "Sleep",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DayCardId = table.Column<int>(type: "int", nullable: true)
+                    DayCardId = table.Column<int>(type: "int", nullable: false),
+                    SleepStart = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SleepEnd = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    TotalSleepTime = table.Column<TimeSpan>(type: "time", nullable: true),
+                    DeepSleepDuration = table.Column<TimeSpan>(type: "time", nullable: true),
+                    LightSleepDuration = table.Column<TimeSpan>(type: "time", nullable: true),
+                    RemSleepDuration = table.Column<TimeSpan>(type: "time", nullable: true),
+                    SleepScore = table.Column<int>(type: "int", nullable: true),
+                    TimesWokenUp = table.Column<int>(type: "int", nullable: true),
+                    AvgBPM = table.Column<int>(type: "int", nullable: true),
+                    Avg02 = table.Column<int>(type: "int", nullable: true),
+                    AvgBreathsPerMin = table.Column<int>(type: "int", nullable: true),
+                    PerceivedSleepQuality = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Medications", x => x.Id);
+                    table.PrimaryKey("PK_Sleep", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Medications_DayCards_DayCardId",
+                        name: "FK_Sleep_DayCards_DayCardId",
                         column: x => x.DayCardId,
                         principalTable: "DayCards",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Supplements",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DayCardId = table.Column<int>(type: "int", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TimeOf = table.Column<TimeOnly>(type: "time", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Supplements", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Supplements_DayCards_DayCardId",
-                        column: x => x.DayCardId,
-                        principalTable: "DayCards",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -204,7 +190,7 @@ namespace AppLogic.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DayCardId = table.Column<int>(type: "int", nullable: true),
-                    TimeOf = table.Column<TimeOnly>(type: "time", nullable: true),
+                    AISummary = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Lat = table.Column<double>(type: "float", nullable: true),
                     Lon = table.Column<double>(type: "float", nullable: true),
                     GenerationTimeMs = table.Column<double>(type: "float", nullable: true),
@@ -244,62 +230,31 @@ namespace AppLogic.Migrations
                         name: "FK_WeatherData_DayCards_DayCardId",
                         column: x => x.DayCardId,
                         principalTable: "DayCards",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Exercises",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    ExerciseType = table.Column<int>(type: "int", nullable: true),
-                    PerceivedIntensity = table.Column<int>(type: "int", nullable: true),
-                    TrainingLoad = table.Column<int>(type: "int", nullable: true),
-                    AvgHeartRate = table.Column<int>(type: "int", nullable: true),
-                    Intensity = table.Column<int>(type: "int", nullable: true),
-                    ActiveKcalBurned = table.Column<int>(type: "int", nullable: true),
-                    Distance = table.Column<int>(type: "int", nullable: true),
-                    AvgKmTempo = table.Column<int>(type: "int", nullable: true),
-                    Steps = table.Column<int>(type: "int", nullable: true),
-                    AvgStepLength = table.Column<int>(type: "int", nullable: true),
-                    AvgStepPerMin = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Exercises", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Exercises_Activities_Id",
-                        column: x => x.Id,
-                        principalTable: "Activities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SupplementIngredients",
+                name: "WellnessCheckIns",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SupplementId = table.Column<int>(type: "int", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DosageInMg = table.Column<int>(type: "int", nullable: true),
-                    PercentageOfDRI = table.Column<int>(type: "int", nullable: true)
+                    DayCardId = table.Column<int>(type: "int", nullable: false),
+                    TimeOf = table.Column<TimeOnly>(type: "time", nullable: true),
+                    EnergyLevel = table.Column<int>(type: "int", nullable: true),
+                    MoodLevel = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SupplementIngredients", x => x.Id);
+                    table.PrimaryKey("PK_WellnessCheckIns", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SupplementIngredients_Supplements_SupplementId",
-                        column: x => x.SupplementId,
-                        principalTable: "Supplements",
-                        principalColumn: "Id");
+                        name: "FK_WellnessCheckIns_DayCards_DayCardId",
+                        column: x => x.DayCardId,
+                        principalTable: "DayCards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Activities_DayCardId",
-                table: "Activities",
-                column: "DayCardId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AirQualityData_DayCardId",
@@ -319,24 +274,15 @@ namespace AppLogic.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Foods_DayCardId",
-                table: "Foods",
+                name: "IX_Exercises_DayCardId",
+                table: "Exercises",
                 column: "DayCardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Medications_DayCardId",
-                table: "Medications",
-                column: "DayCardId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SupplementIngredients_SupplementId",
-                table: "SupplementIngredients",
-                column: "SupplementId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Supplements_DayCardId",
-                table: "Supplements",
-                column: "DayCardId");
+                name: "IX_Sleep_DayCardId",
+                table: "Sleep",
+                column: "DayCardId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_WeatherData_DayCardId",
@@ -344,6 +290,11 @@ namespace AppLogic.Migrations
                 column: "DayCardId",
                 unique: true,
                 filter: "[DayCardId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WellnessCheckIns_DayCardId",
+                table: "WellnessCheckIns",
+                column: "DayCardId");
         }
 
         /// <inheritdoc />
@@ -359,22 +310,13 @@ namespace AppLogic.Migrations
                 name: "Exercises");
 
             migrationBuilder.DropTable(
-                name: "Foods");
-
-            migrationBuilder.DropTable(
-                name: "Medications");
-
-            migrationBuilder.DropTable(
-                name: "SupplementIngredients");
+                name: "Sleep");
 
             migrationBuilder.DropTable(
                 name: "WeatherData");
 
             migrationBuilder.DropTable(
-                name: "Activities");
-
-            migrationBuilder.DropTable(
-                name: "Supplements");
+                name: "WellnessCheckIns");
 
             migrationBuilder.DropTable(
                 name: "DayCards");

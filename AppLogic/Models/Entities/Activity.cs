@@ -2,6 +2,9 @@
 
 namespace AppLogic.Models.Entities
 {
+    /// <summary>
+    /// Base class for all activities associated with a day card, such as exercises and other daily activities(only exercise for now)
+    /// </summary>
     public abstract class Activity : ITimeOfEntry, ITimeRange, IDailyLogId
     {
         public int Id { get; set; }

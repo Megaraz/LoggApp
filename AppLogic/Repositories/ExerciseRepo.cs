@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AppLogic.Repositories
 {
+    /// <summary>
+    /// Repository for managing exercises associated with day cards, providing methods to create, read, update, and delete exercises.
+    /// </summary>
     public class ExerciseRepo : GenericRepo<Exercise>, IExerciseRepo
     {
         private readonly LoggAppContext _dbContext;
@@ -17,6 +20,20 @@ namespace AppLogic.Repositories
         {
             _dbContext = dbContext;
 
+        }
+
+        public Task<Exercise?> GetExerciseById(int dayCardId, int exerciseId)
+        {
+            try
+            {
+                return _dbContext.Set<Exercise>()
+                    .SingleOrDefaultAsync(e => e.DayCardId == dayCardId && e.Id == exerciseId);
+
+            }
+            catch (Exception e)
+            {
+                throw new NullReferenceException($"No Exercise found by those IDs, {e.Message}");
+            }
         }
 
         public async Task<Exercise> UpdateExerciseAsync(Exercise updatedExercise)
@@ -64,19 +81,14 @@ namespace AppLogic.Repositories
                     existingExercise.AvgHeartRate = updatedExercise.AvgHeartRate;
                     changed = true;
                 }
-                if (existingExercise.Intensity != updatedExercise.Intensity)
-                {
-                    existingExercise.Intensity = updatedExercise.Intensity;
-                    changed = true;
-                }
                 if (existingExercise.ActiveKcalBurned != updatedExercise.ActiveKcalBurned)
                 {
                     existingExercise.ActiveKcalBurned = updatedExercise.ActiveKcalBurned;
                     changed = true;
                 }
-                if (existingExercise.Distance != updatedExercise.Distance)
+                if (existingExercise.DistanceInKm != updatedExercise.DistanceInKm)
                 {
-                    existingExercise.Distance = updatedExercise.Distance;
+                    existingExercise.DistanceInKm = updatedExercise.DistanceInKm;
                     changed = true;
                 }
                 if (existingExercise.AvgKmTempo != updatedExercise.AvgKmTempo)
@@ -89,9 +101,9 @@ namespace AppLogic.Repositories
                     existingExercise.Steps = updatedExercise.Steps;
                     changed = true;
                 }
-                if (existingExercise.AvgStepLength != updatedExercise.AvgStepLength)
+                if (existingExercise.AvgStepLengthInCm != updatedExercise.AvgStepLengthInCm)
                 {
-                    existingExercise.AvgStepLength = updatedExercise.AvgStepLength;
+                    existingExercise.AvgStepLengthInCm = updatedExercise.AvgStepLengthInCm;
                     changed = true;
                 }
                 if (existingExercise.AvgStepPerMin != updatedExercise.AvgStepPerMin)

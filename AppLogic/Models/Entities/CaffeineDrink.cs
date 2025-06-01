@@ -3,6 +3,9 @@ using AppLogic.Models.Enums;
 
 namespace AppLogic.Models.Entities
 {
+    /// <summary>
+    /// Entity representing a caffeine drink consumed on a specific day card.
+    /// </summary>
     public class CaffeineDrink : ITimeOfEntry
     {
         public int Id { get; set; }

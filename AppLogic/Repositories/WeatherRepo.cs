@@ -4,6 +4,9 @@ using AppLogic.Repositories.Interfaces;
 
 namespace AppLogic.Repositories
 {
+    /// <summary>
+    /// Repository for managing weather data, including fetching weather forecasts and geographical information using external APIs.
+    /// </summary>
     public class WeatherRepo : GenericRepo<WeatherData>, IWeatherRepo
     {
         private readonly LoggAppContext _dbContext;

@@ -2,6 +2,7 @@
 
 namespace AppLogic.Models.Entities
 {
+    // NOT IMPLEMENTED YET
     public class Supplement : ITimeOfEntry, IDailyLogId
     {
 

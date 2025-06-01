@@ -8,6 +8,9 @@ using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Services
 {
+    /// <summary>
+    /// Service for retrieving weather data and geographical information based on city names.
+    /// </summary>
     public class WeatherService : IWeatherService
     {
         private readonly IWeatherRepo _weatherRepo;

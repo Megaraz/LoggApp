@@ -9,25 +9,25 @@ using AppLogic.Models.Enums;
 
 namespace AppLogic.Models.DTOs.Detailed
 {
+    /// <summary>
+    /// DTO for detailed exercise information, including various metrics and attributes related to the exercise.
+    /// </summary>
     public class ExerciseDetailed
     {
         public int Id { get; set; }
         public int DayCardId { get; set; }
 
-        // Inherited Activity properties
         public TimeOnly? TimeOf { get; set; }
         public TimeOnly? EndTime { get; set; }
         public TimeSpan? Duration { get; set; }
 
-        // Exercise-specific properties
         public ExerciseType? ExerciseType { get; set; }
         public PerceivedIntensity? PerceivedIntensity { get; set; }
         public int? TrainingLoad { get; set; }
         public int? AvgHeartRate { get; set; }
-        public CLOCK_Intensity? Intensity { get; set; }
         public int? ActiveKcalBurned { get; set; }
-        public int? Distance { get; set; }
-        public int? AvgKmTempo { get; set; }
+        public double? DistanceInKm { get; set; }
+        public TimeSpan? AvgKmTempo { get; set; }
         public int? Steps { get; set; }
         public int? AvgStepLength { get; set; }
         public int? AvgStepPerMin { get; set; }
@@ -43,12 +43,11 @@ namespace AppLogic.Models.DTOs.Detailed
             PerceivedIntensity = exercise.PerceivedIntensity;
             TrainingLoad = exercise.TrainingLoad;
             AvgHeartRate = exercise.AvgHeartRate;
-            Intensity = exercise.Intensity;
             ActiveKcalBurned = exercise.ActiveKcalBurned;
-            Distance = exercise.Distance;
+            DistanceInKm = exercise.DistanceInKm;
             AvgKmTempo = exercise.AvgKmTempo;
             Steps = exercise.Steps;
-            AvgStepLength = exercise.AvgStepLength;
+            AvgStepLength = exercise.AvgStepLengthInCm;
             AvgStepPerMin = exercise.AvgStepPerMin;
         }
 
@@ -70,12 +69,11 @@ namespace AppLogic.Models.DTOs.Detailed
             sb.AppendLine($"END TIME: {(EndTime.HasValue ? EndTime.ToString() : "null")}");
             sb.AppendLine($"DURATION: {(Duration.HasValue ? Duration.ToString() : "null")}");
             sb.AppendLine($"EXERCISE TYPE: {(ExerciseType.HasValue ? ExerciseType.ToString() : "null")}");
-            sb.AppendLine($"PERCEIVED INTENSITY: {(PerceivedIntensity.HasValue ? PerceivedIntensity.ToString() : "null")}");
+            sb.AppendLine($"INTENSITY: {(PerceivedIntensity.HasValue ? PerceivedIntensity.ToString() : "null")}");
             sb.AppendLine($"TRAINING LOAD: {(TrainingLoad.HasValue ? TrainingLoad.ToString() : "null")}");
             sb.AppendLine($"AVG HEART RATE: {(AvgHeartRate.HasValue ? AvgHeartRate.ToString() : "null")}");
-            sb.AppendLine($"INTENSITY: {(Intensity.HasValue ? Intensity.ToString() : "null")}");
             sb.AppendLine($"ACTIVE KCAL BURNED: {(ActiveKcalBurned.HasValue ? ActiveKcalBurned.ToString() : "null")}");
-            sb.AppendLine($"DISTANCE: {(Distance.HasValue ? Distance.ToString() : "null")}");
+            sb.AppendLine($"DISTANCE: {(DistanceInKm.HasValue ? DistanceInKm.ToString() : "null")}");
             sb.AppendLine($"AVG KM TEMPO: {(AvgKmTempo.HasValue ? AvgKmTempo.ToString() : "null")}");
             sb.AppendLine($"STEPS: {(Steps.HasValue ? Steps.ToString() : "null")}");
             sb.AppendLine($"AVG STEP LENGTH: {(AvgStepLength.HasValue ? AvgStepLength.ToString() : "null")}");

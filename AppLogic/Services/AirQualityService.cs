@@ -8,6 +8,9 @@ using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Services
 {
+    /// <summary>
+    /// Service for retrieving air quality data based on geographical coordinates and date.
+    /// </summary>
     public class AirQualityService : IAirQualityService
     {
         private readonly IAirQualityRepo _airQualityRepo;

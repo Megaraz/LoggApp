@@ -9,6 +9,9 @@ using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Controllers
 {
+    /// <summary>
+    /// Controller for managing caffeine drinks, including adding, updating, and deleting caffeine drinks associated with day cards.
+    /// </summary>
     public class CaffeineDrinkController
     {
 

@@ -5,6 +5,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace AppLogic.Models.DTOs.Summary
 {
+    /// <summary>
+    /// DTO for summarizing weather data, including hourly weather details and an AI-generated summary.
+    /// </summary>
     public class WeatherDataSummary : IPromptRenderable
     {
         public int WeatherDataId { get; set; }

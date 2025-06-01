@@ -16,10 +16,12 @@ namespace AppLogic.Models.Entities
         VeryGood,
         Excellent
     }
+    /// <summary>
+    /// Entity representing a sleep record associated with a day card.
+    /// </summary>
     public class Sleep
     {
         public int Id { get; set; }
-
         public int DayCardId { get; set; }
         public virtual DayCard DayCard { get; set; } = null!;
 

@@ -2,6 +2,10 @@
 
 namespace AppLogic.Models.Entities.WeatherAndAQI
 {
+    /// <summary>
+    /// Represents a block of hourly air quality data, including pollen counts, UV index, air quality index, and various pollutants.
+    /// JSON properties are mapped to the Open-Meteo API response structure.
+    /// </summary>
     public class AirQualityHourlyBlock
     {
         [JsonIgnore]

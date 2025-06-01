@@ -7,24 +7,21 @@ using AppLogic.Models.Entities;
 
 namespace AppLogic.Models.DTOs.Detailed
 {
+    /// <summary>
+    /// DTO for detailed sleep information, including various metrics and attributes related to sleep.
+    /// </summary>
     public class SleepDetailed
     {
-
-        
         public int Id { get; set; }
-
         public int DayCardId { get; set; }
         public DateTime? SleepStart { get; set; }
         public DateTime? SleepEnd { get; set; }
-
         public TimeSpan? TotalSleepTime { get; set; }
         //public TimeSpan? TotalSleepTime =>
         //    SleepStart.HasValue && SleepEnd.HasValue ? SleepEnd - SleepStart : null;
-
         public TimeSpan? DeepSleepDuration { get; set; }
         public TimeSpan? LightSleepDuration { get; set; }
         public TimeSpan? RemSleepDuration { get; set; }
-
         public int? SleepScore { get; set; }
         public int? TimesWokenUp { get; set; }
         public int? AvgBPM { get; set; }
@@ -32,8 +29,12 @@ namespace AppLogic.Models.DTOs.Detailed
         public int? AvgBreathsPerMin { get; set; }
         public PerceivedSleepQuality? PerceivedSleepQuality { get; set; }
 
-        public SleepDetailed(Sleep sleep)
+        public SleepDetailed(Sleep? sleep)
         {
+            if (sleep == null)
+            {
+                return;
+            }
             Id = sleep.Id;
             DayCardId = sleep.DayCardId;
             SleepStart = sleep.SleepStart;

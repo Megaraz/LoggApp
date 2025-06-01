@@ -5,6 +5,9 @@ using Activity = AppLogic.Models.Entities.Activity;
 
 namespace AppLogic
 {
+    /// <summary>
+    /// Represents the application's database context for managing health and wellness data.
+    /// </summary>
     public class LoggAppContext : DbContext
     {
         public DbSet<User> Users { get; set; }
@@ -14,22 +17,13 @@ namespace AppLogic
         public DbSet<CaffeineDrink> CaffeineDrinks { get; set; }
         public DbSet<WellnessCheckIn> WellnessCheckIns { get; set; }
         public DbSet<Sleep> Sleep { get; set; }
-        public DbSet<Supplement> Supplements { get; set; }
-        public DbSet<SupplementIngredient> SupplementIngredients { get; set; }
-        public DbSet<Activity> Activities { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Bas-tabell för Activity
-            modelBuilder.Entity<Activity>().ToTable("Activities");
-
-            // Egen tabell för Exercise
-            modelBuilder.Entity<Exercise>().ToTable("Exercises");
-
-            modelBuilder.Entity<AirQualityData>(entity => 
-            { 
+            modelBuilder.Entity<AirQualityData>(entity =>
+            {
                 entity.OwnsOne(a => a.HourlyBlock);
                 entity.OwnsOne(w => w.HourlyUnits);
             });
@@ -39,8 +33,21 @@ namespace AppLogic
             {
                 entity.OwnsOne(w => w.HourlyBlock);
                 entity.OwnsOne(w => w.HourlyUnits);
-                
+
             });
+
+            modelBuilder.Entity<DayCard>()
+                .HasOne(d => d.WeatherData)
+                .WithOne(w => w.DayCard)
+                .HasForeignKey<WeatherData>(w => w.DayCardId)
+                .OnDelete(DeleteBehavior.SetNull); // WeatherData can be worth saving even if daycard is deleted, so sett null instead of on delete cascade
+
+            modelBuilder.Entity<DayCard>()
+                .HasOne(d => d.AirQualityData)
+                .WithOne(a => a.DayCard)
+                .HasForeignKey<AirQualityData>(a => a.DayCardId)
+                .OnDelete(DeleteBehavior.SetNull); // AirQualityData can be worth saving even if daycard is deleted, so sett null instead of on delete cascade
+
 
             modelBuilder.Entity<DayCard>()
                 .HasOne(dc => dc.User)
@@ -60,24 +67,10 @@ namespace AppLogic
                 .HasForeignKey(wc => wc.DayCardId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Activity>()
+            modelBuilder.Entity<Exercise>()
                 .HasOne(a => a.DayCard)
-                .WithMany(dc => dc.Activities)
+                .WithMany(dc => dc.Exercises)
                 .HasForeignKey(a => a.DayCardId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-
-            modelBuilder.Entity<SupplementIngredient>()
-                .HasOne(si => si.Supplement)
-                .WithMany(s => s.Ingredients)
-                .HasForeignKey(si => si.SupplementId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-
-            modelBuilder.Entity<Supplement>()
-                .HasOne(s => s.DayCard)
-                .WithMany(dc => dc.Supplements)
-                .HasForeignKey(s => s.DayCardId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CaffeineDrink>()

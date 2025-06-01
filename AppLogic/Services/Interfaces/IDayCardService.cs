@@ -9,6 +9,9 @@ using AppLogic.Models.InputModels;
 
 namespace AppLogic.Services.Interfaces
 {
+    /// <summary>
+    /// Service interface for managing day cards, including creating, reading, updating, and deleting day cards.
+    /// </summary>
     public interface IDayCardService
     {
         Task<DayCardDetailed> CreateNewDayCardAsync(int userId, DayCardInputModel dayCardInputModel);

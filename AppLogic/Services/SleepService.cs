@@ -11,6 +11,9 @@ using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Services
 {
+    /// <summary>
+    /// Service for managing sleep data, including adding, updating, and deleting sleep records associated with day cards.
+    /// </summary>
     public class SleepService : ISleepService
     {
         private readonly ISleepRepo _sleepRepo;
@@ -28,6 +31,21 @@ namespace AppLogic.Services
 
             return new SleepDetailed(sleep);
 
+        }
+
+        public async Task<bool> DeleteSleepAsync(int id)
+        {
+            return await _sleepRepo.DeleteAsync(id);
+        }
+
+        public async Task<SleepDetailed?> UpdateSleepAsync(int id, SleepInputModel sleepInputModel)
+        {
+            Sleep sleep = new Sleep(sleepInputModel.DayCardId, sleepInputModel);
+            sleep.Id = id;
+
+            sleep = await _sleepRepo.UpdateSleepAsync(sleep);
+
+            return new SleepDetailed(sleep);
         }
     }
 }

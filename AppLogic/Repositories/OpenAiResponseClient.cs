@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace AppLogic.Repositories
 {
+    /// <summary>
+    /// Client for interacting with OpenAI's API to generate summaries based on prompts.
+    /// </summary>
     public sealed class OpenAiResponseClient
     {
         private readonly JsonSerializerOptions _opts = new(JsonSerializerDefaults.Web);

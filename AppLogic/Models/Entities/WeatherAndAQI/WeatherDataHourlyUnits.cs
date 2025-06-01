@@ -2,6 +2,10 @@
 
 namespace AppLogic.Models.Entities.WeatherAndAQI
 {
+    /// <summary>
+    /// Represents the units of various weather data fields for hourly weather reports.
+    /// JSON properties are mapped to the Open-Meteo API response structure.
+    /// </summary>
     public class WeatherDataHourlyUnits
     {
         [JsonIgnore]

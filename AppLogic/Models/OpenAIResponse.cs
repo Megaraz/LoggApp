@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 namespace AppLogic.Models
 {
 
-
-    /// <summary>Grundläggande DTO för Responses-API:t (endast text‐svar).</summary>
-    /// 
+    /// <summary>
+    /// Response from OpenAI API, specifically for the chat completion endpoint.
+    /// </summary>
+    /// <param name="Type"></param>
+    /// <param name="Text"></param>
     public record ContentPart(
         [property: JsonPropertyName("type")] string Type,
         [property: JsonPropertyName("text")] string? Text);

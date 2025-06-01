@@ -3,6 +3,7 @@ using AppLogic.Models.Enums;
 
 namespace AppLogic.Models.Entities
 {
+    // NOT IMPLEMENTED YET
     public class Food : ITimeOfEntry, IDailyLogId
     {
         public int Id { get; set; }

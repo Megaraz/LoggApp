@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace AppLogic.Models.Entities.WeatherAndAQI
 {
+    /// <summary>
+    /// Represents the hourly units for air quality data, including various pollutants and pollen levels.
+    /// JSON properties are mapped to the Open-Meteo API response structure.
+    /// </summary>
     public class AirQualityHourlyUnits
     {
         [JsonIgnore]

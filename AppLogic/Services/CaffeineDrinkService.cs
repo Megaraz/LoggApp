@@ -13,6 +13,9 @@ using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Services
 {
+    /// <summary>
+    /// Service for managing caffeine drink data, including adding, updating, and deleting caffeine drinks associated with day cards.
+    /// </summary>
     public class CaffeineDrinkService : ICaffeineDrinkService
     {
         private readonly ICaffeineDrinkRepo _caffeineDrinkRepo;

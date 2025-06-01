@@ -9,8 +9,11 @@ using Microsoft.IdentityModel.Tokens;
 using Presentation.Input;
 using Presentation.MenuState_Enums;
 
-namespace Presentation
+namespace Presentation.MenuHandlers
 {
+    /// <summary>
+    /// Handles the menu interactions for DayCard-related operations in the LoggApp application.
+    /// </summary>
     public class DayCardMenuHandler : MenuHandlerBase
     {
         private readonly DayCardController _dayCardController;
@@ -130,6 +133,15 @@ namespace Presentation
 
             };
 
+            if (sessionContext.CurrentDayCard.WellnessCheckInsSummaries != null && sessionContext.CurrentDayCard.WellnessCheckInsSummaries.Count > 0)
+            {
+                specificDayCardMenu.Add(MenuText.NavOption.WellnessCheckIns);
+            }
+            else
+            {
+                specificDayCardMenu.Add(MenuText.NavOption.AddWellnessCheckIn);
+            }
+
             if (sessionContext.CurrentDayCard.SleepDetails is null)
             {
                 specificDayCardMenu.Add(MenuText.NavOption.AddSleep);
@@ -170,6 +182,15 @@ namespace Presentation
             {
                 switch (specUserChoice)
                 {
+
+                    case MenuText.NavOption.AddWellnessCheckIn:
+                        sessionContext.WellnessCheckInMenuState = WellnessCheckInMenuState.AddCheckIn;
+                        break;
+
+                    case MenuText.NavOption.WellnessCheckIns:
+                        sessionContext.WellnessCheckInMenuState = WellnessCheckInMenuState.CheckInOverview;
+                        break;
+
                     case MenuText.NavOption.Weather:
                         sessionContext.DayCardMenuState = DayCardMenuState.WeatherDetails;
                         break;
@@ -228,41 +249,40 @@ namespace Presentation
             return sessionContext;
 
         }
+
+        // Lite fulhackad men hinner inte göra bra, funkar i alla fall
         private TContext WeatherDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
             Console.Clear();
             Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.CurrentUser!.ToString()}");
             Console.WriteLine(sessionContext.CurrentDayCard.WeatherSummary.ToString());
-            Console.ReadLine();
+            Console.ReadKey();
             sessionContext.DayCardMenuState = DayCardMenuState.Overview;
             return sessionContext;
         }
+        // Lite fulhackad men hinner inte göra bra, funkar i alla fall
         private TContext AirQualityDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
             Console.Clear();
             Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.CurrentUser!.ToString()}");
             Console.WriteLine(sessionContext.CurrentDayCard.AirQualitySummary.ToString());
-            Console.ReadLine();
+            Console.ReadKey();
             sessionContext.DayCardMenuState = DayCardMenuState.Overview;
             return sessionContext;
         }
-
+        // Lite fulhackad men hinner inte göra bra, funkar i alla fall
         private TContext PollenDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
             Console.Clear();
             Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.CurrentUser!.ToString()}");
             Console.WriteLine(sessionContext.CurrentDayCard.PollenSummary.ToString());
-            Console.ReadLine();
+            Console.ReadKey();
             sessionContext.DayCardMenuState = DayCardMenuState.Overview;
             return sessionContext;
         }
-
-
-
-
 
     }
 

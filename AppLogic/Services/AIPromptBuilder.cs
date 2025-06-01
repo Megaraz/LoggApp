@@ -8,6 +8,9 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AppLogic.Services
 {
+    /// <summary>
+    /// Service for building AI prompts based on weather and air quality data.
+    /// </summary>
     public static class AiPromptBuilder
     {
         public static string BuildWeatherPrompt(WeatherData weather)

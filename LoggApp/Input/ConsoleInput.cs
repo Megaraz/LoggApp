@@ -8,14 +8,22 @@ using AppLogic.Models.Entities;
 using AppLogic.Models.Enums;
 using AppLogic.Models.InputModels;
 using Microsoft.IdentityModel.Tokens;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Presentation.Input
 {
+    /// <summary>
+    /// Handles user input from the console, including validation and formatting for various input types.
+    /// </summary>
     internal class ConsoleInput
     {
-
         #region Input Methods
-        // Takes and validates user input for location.
+        /// <summary>
+        /// Takes and validates user input for location.
+        /// </summary>
+        /// <param name="header"></param>
+        /// <param name="newLocation"></param>
+        /// <returns></returns>
         public static string? Input_Location(string? header = null, bool newLocation = false)
         {
             string prompt;
@@ -30,13 +38,36 @@ namespace Presentation.Input
             return GetValidUserInput(header, prompt, MenuText.Error.InvalidUserCityInput);
 
         }
-        // Takes and validates user input for time of intake.
+
+
+        /// <summary>
+        /// Takes and validates user input for time of intake.
+        /// </summary>
+        /// <param name="header"></param>
+        /// <returns></returns>
         public static string? Input_TimeOfIntake(string? header = null)
         {
             return GetValidUserInput(header, MenuText.Prompt.EnterTimeOfIntake, MenuText.Error.InvalidTimeInput);
         }
 
-        // Takes and validates user input for username.
+
+        /// <summary>
+        /// Takes and validates user input for time of check-in.
+        /// </summary>
+        /// <param name="header"></param>
+        /// <returns></returns>
+        public static string? Input_TimeOfCheckIn(string? header = null)
+        {
+            return GetValidUserInput(header, MenuText.Prompt.EnterTimeOfCheckIn, MenuText.Error.InvalidTimeInput);
+        }
+
+
+        /// <summary>
+        /// Takes and validates user input for username.
+        /// </summary>
+        /// <param name="header"></param>
+        /// <param name="newUsername"></param>
+        /// <returns></returns>
         public static string? Input_Username(string? header = null, bool newUsername = false)
         {
             string prompt;
@@ -52,7 +83,12 @@ namespace Presentation.Input
 
         }
 
-        // Takes and validates user input for full UserInputModel.
+
+        /// <summary>
+        /// Takes and validates user input for full UserInputModel.
+        /// </summary>
+        /// <param name="header"></param>
+        /// <returns></returns>
         public static UserInputModel? Input_User(string? header = null)
         {
 
@@ -72,14 +108,27 @@ namespace Presentation.Input
                 CityName = city!
             };
 
-
             return userInputModel;
         }
 
-        // Takes- and validates user input for full DayCardInputModel.
+
+        /// <summary>
+        /// Takes- and validates user input for full DayCardInputModel.
+        /// </summary>
+        /// <typeparam name="TContext"></typeparam>
+        /// <param name="sessionContext"></param>
+        /// <returns></returns>
         public static DayCardInputModel? Input_DayCard<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             string? dateString = GetValidUserInput(null, MenuText.Prompt.CreateDayCard, MenuText.Error.InvalidDayCardInput)!;
+
+            if (!DateOnly.TryParse(dateString, out DateOnly parsedDate))
+            {
+                Console.Clear();
+                Console.WriteLine(MenuText.Error.InvalidDayCardInput);
+                Thread.Sleep(1500);
+                return null;
+            }
 
             DayCardInputModel? dayCardInputModel = null;
 
@@ -88,7 +137,7 @@ namespace Presentation.Input
                 dayCardInputModel = new DayCardInputModel()
                 {
                     UserId = sessionContext.CurrentUser!.Id,
-                    Date = DateOnly.Parse(dateString),
+                    Date = parsedDate,
                     Lat = sessionContext.CurrentUser.Lat,
                     Lon = sessionContext.CurrentUser.Lon
 
@@ -98,183 +147,404 @@ namespace Presentation.Input
             return dayCardInputModel;
         }
 
-        // Takes- and validates user input for full SleepInputModel.
-        public static SleepInputModel Input_Sleep()
+
+        /// <summary>
+        /// Takes- and validates user input for full SleepInputModel.
+        /// </summary>
+        /// <returns></returns>
+        public static SleepInputModel? Input_Sleep()
         {
             var model = new SleepInputModel();
-            string input;
+            string? input;
 
             Console.Clear();
 
             // Read SleepEnd (optional)
             Console.Write("Enter SleepEnd (HH:mm) (leave empty for null): ");
-            input = Console.ReadLine()!;
-            if (!string.IsNullOrWhiteSpace(input) && DateTime.TryParseExact(input, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime sleepEnd))
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
             {
+                if (!DateTime.TryParseExact(input, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime sleepEnd))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid SleepEnd input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
                 model.SleepEnd = sleepEnd;
             }
 
             // Read TotalSleepTime (optional) - format: HH:mm:ss
-            Console.Write("Enter TotalSleepTime (HH:mm) (leave empty for null): ");
-            input = Console.ReadLine()!;
-            if (!string.IsNullOrWhiteSpace(input) && TimeSpan.TryParse(input, out TimeSpan totalSleepTime))
+            Console.Write("Enter TotalSleepTime (HH:mm:ss) (leave empty for null): ");
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
             {
+                if (!TimeSpan.TryParse(input, out TimeSpan totalSleepTime))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid TotalSleepTime input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
                 model.TotalSleepTime = totalSleepTime;
             }
 
             // Read DeepSleepDuration (optional)
-            Console.Write("Enter DeepSleepDuration (HH:mm) (leave empty for null): ");
-            input = Console.ReadLine()!;
-            if (!string.IsNullOrWhiteSpace(input) && TimeSpan.TryParse(input, out TimeSpan deepSleep))
+            Console.Write("Enter DeepSleepDuration (HH:mm:ss) (leave empty for null): ");
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
             {
+                if (!TimeSpan.TryParse(input, out TimeSpan deepSleep))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid DeepSleepDuration input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
                 model.DeepSleepDuration = deepSleep;
             }
 
             // Read LightSleepDuration (optional)
-            Console.Write("Enter LightSleepDuration (HH:mm) (leave empty for null): ");
-            input = Console.ReadLine()!;
-            if (!string.IsNullOrWhiteSpace(input) && TimeSpan.TryParse(input, out TimeSpan lightSleep))
+            Console.Write("Enter LightSleepDuration (HH:mm:ss) (leave empty for null): ");
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
             {
+                if (!TimeSpan.TryParse(input, out TimeSpan lightSleep))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid LightSleepDuration input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
                 model.LightSleepDuration = lightSleep;
             }
 
             // Read RemSleepDuration (optional)
-            Console.Write("Enter RemSleepDuration (HH:mm) (leave empty for null): ");
-            input = Console.ReadLine()!;
-            if (!string.IsNullOrWhiteSpace(input) && TimeSpan.TryParse(input, out TimeSpan remSleep))
+            Console.Write("Enter RemSleepDuration (HH:mm:ss) (leave empty for null): ");
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
             {
+                if (!TimeSpan.TryParse(input, out TimeSpan remSleep))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid RemSleepDuration input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
                 model.RemSleepDuration = remSleep;
             }
 
             // Read SleepScore (optional)
             Console.Write("Enter SleepScore (leave empty for null): ");
-            input = Console.ReadLine()!;
-            if (!string.IsNullOrWhiteSpace(input) && int.TryParse(input, out int score))
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
             {
+                if (!int.TryParse(input, out int score))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid SleepScore input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
                 model.SleepScore = score;
             }
 
             // Read TimesWokenUp (optional)
             Console.Write("Enter TimesWokenUp (leave empty for null): ");
-            input = Console.ReadLine()!;
-            if (!string.IsNullOrWhiteSpace(input) && int.TryParse(input, out int times))
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
             {
+                if (!int.TryParse(input, out int times))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid TimesWokenUp input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
                 model.TimesWokenUp = times;
             }
 
             // Read AvgBPM (optional)
             Console.Write("Enter AvgBPM (leave empty for null): ");
-            input = Console.ReadLine()!;
-            if (!string.IsNullOrWhiteSpace(input) && int.TryParse(input, out int avgBpm))
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
             {
+                if (!int.TryParse(input, out int avgBpm))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid AvgBPM input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
                 model.AvgBPM = avgBpm;
             }
 
             // Read Avg02 (optional)
             Console.Write("Enter Avg02 (leave empty for null): ");
-            input = Console.ReadLine()!;
-            if (!string.IsNullOrWhiteSpace(input) && int.TryParse(input, out int avg02))
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
             {
+                if (!int.TryParse(input, out int avg02))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid Avg02 input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
                 model.Avg02 = avg02;
             }
 
             // Read AvgBreathsPerMin (optional)
             Console.Write("Enter AvgBreathsPerMin (leave empty for null): ");
-            input = Console.ReadLine()!;
-            if (!string.IsNullOrWhiteSpace(input) && int.TryParse(input, out int avgBreaths))
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
             {
+                if (!int.TryParse(input, out int avgBreaths))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid AvgBreathsPerMin input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
                 model.AvgBreathsPerMin = avgBreaths;
             }
 
             // Read PerceivedSleepQuality (optional)
             Console.Write("Enter PerceivedSleepQuality (Poor, Fair, Good, VeryGood, Excellent) (leave empty for null): ");
-            input = Console.ReadLine()!;
-            if (!string.IsNullOrWhiteSpace(input) && Enum.TryParse(typeof(PerceivedSleepQuality), input, true, out object quality))
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
             {
+                if (!Enum.TryParse(typeof(PerceivedSleepQuality), input, true, out object quality))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid PerceivedSleepQuality input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
                 model.PerceivedSleepQuality = (PerceivedSleepQuality)quality;
             }
 
             return model;
         }
-        // Takes- and validates user input for full ExerciseInputModel
-        public static ExerciseInputModel Input_Exercise(ExerciseInputModel inputModel)
+
+
+        /// <summary>
+        /// Takes- and validates user input for full ExerciseInputModel
+        /// </summary>
+        /// <param name="inputModel"></param>
+        /// <returns></returns>
+        public static ExerciseInputModel? Input_Exercise(ExerciseInputModel inputModel)
         {
+            string? input;
 
             Console.Write("Enter ExerciseType (Run, Walk, Stretch, Strength): ");
-            var exerciseTypeInput = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(exerciseTypeInput))
-                inputModel.ExerciseType = Enum.Parse<ExerciseType>(exerciseTypeInput, true);
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                if (!Enum.TryParse<ExerciseType>(input, true, out ExerciseType exType))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid ExerciseType input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
+                inputModel.ExerciseType = exType;
+            }
 
             Console.Write("Enter TrainingLoad (number): ");
-            var trainingLoadInput = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(trainingLoadInput))
-                inputModel.TrainingLoad = int.Parse(trainingLoadInput);
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                if (!int.TryParse(input, out int trainingLoad))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid TrainingLoad input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
+                inputModel.TrainingLoad = trainingLoad;
+            }
 
             Console.Write("Enter AvgHeartRate (number): ");
-            var avgHeartRateInput = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(avgHeartRateInput))
-                inputModel.AvgHeartRate = int.Parse(avgHeartRateInput);
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                if (!int.TryParse(input, out int avgHeart))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid AvgHeartRate input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
+                inputModel.AvgHeartRate = avgHeart;
+            }
 
-            Console.Write("Enter ClockIntensity (Easy, Intense, Aerobic, Anaerobic, VO2Max): ");
-            var clockIntensityInput = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(clockIntensityInput))
-                inputModel.ClockIntensity = Enum.Parse<CLOCK_Intensity>(clockIntensityInput, true);
+            Console.Write("Enter ActiveKcalBurned (int): ");
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                if (!int.TryParse(input, out int activeKcal))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid ActiveKcalBurned input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
+                inputModel.ActiveKcalBurned = activeKcal;
+            }
 
-            Console.Write("Enter ActiveKcalBurned (number): ");
-            var activeKcalInput = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(activeKcalInput))
-                inputModel.ActiveKcalBurned = int.Parse(activeKcalInput);
+            Console.Write("Enter Distance in Km (decimal): ");
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                if (!double.TryParse(input, out double distance))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid Distance input.");
+                    Thread.Sleep(1500);
+                    return null;
+                }
+                inputModel.DistanceInKm = distance;
+            }
 
-            Console.Write("Enter Distance (number): ");
-            var distanceInput = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(distanceInput))
-                inputModel.Distance = int.Parse(distanceInput);
+            Console.Write("Enter AvgKmTempo (mm:ss): ");
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                if (!TimeSpan.TryParse(input, out TimeSpan avgKmTempo))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid AvgKmTempo input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
+                inputModel.AvgKmTempo = avgKmTempo;
+            }
 
-            Console.Write("Enter AvgKmTempo (number): ");
-            var avgKmTempoInput = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(avgKmTempoInput))
-                inputModel.AvgKmTempo = int.Parse(avgKmTempoInput);
+            Console.Write("Enter Steps (int): ");
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                if (!int.TryParse(input, out int steps))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid Steps input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
+                inputModel.Steps = steps;
+            }
 
-            Console.Write("Enter Steps (number): ");
-            var stepsInput = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(stepsInput))
-                inputModel.Steps = int.Parse(stepsInput);
+            Console.Write("Enter AvgStepLength in cm (int): ");
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                if (!int.TryParse(input, out int avgStepLength))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid AvgStepLength input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
+                inputModel.AvgStepLengthInCm = avgStepLength;
+            }
 
-            Console.Write("Enter AvgStepLength (number): ");
-            var avgStepLengthInput = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(avgStepLengthInput))
-                inputModel.AvgStepLength = int.Parse(avgStepLengthInput);
-
-            Console.Write("Enter AvgStepPerMin (number): ");
-            var avgStepPerMinInput = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(avgStepPerMinInput))
-                inputModel.AvgStepPerMin = int.Parse(avgStepPerMinInput);
+            Console.Write("Enter AvgStepPerMin (int): ");
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                if (!int.TryParse(input, out int avgStepPerMin))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid AvgStepPerMin input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
+                inputModel.AvgStepPerMin = avgStepPerMin;
+            }
 
             return inputModel;
         }
-        // Takes- and validates user input for ActivityTime
-        internal static (TimeOnly? timeOf, TimeOnly? endTime, TimeSpan? duration) Input_ActivityTime()
+
+
+        /// <summary>
+        /// Takes- and validates user input for ActivityTime
+        /// </summary>
+        /// <returns></returns>
+        internal static (TimeOnly? timeOf, TimeOnly? endTime, TimeSpan? duration)? Input_ActivityTime()
         {
             TimeOnly? timeOf = null;
             TimeOnly? endTime = null;
             TimeSpan? duration = null;
 
+            string? input;
+
             Console.Clear();
 
             Console.Write("Enter TimeOf (HH:mm): ");
-            var timeOfInput = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(timeOfInput))
-                timeOf = TimeOnly.Parse(timeOfInput);
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                if (!TimeOnly.TryParse(input, out TimeOnly tOf))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid TimeOf input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
+                timeOf = tOf;
+            }
 
             Console.Write("Enter EndTime (HH:mm): ");
-            var endTimeInput = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(endTimeInput))
-                endTime = TimeOnly.Parse(endTimeInput);
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                if (!TimeOnly.TryParse(input, out TimeOnly eTime))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid EndTime input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
+                endTime = eTime;
+            }
 
-            Console.Write("Enter Duration (e.g., hh:mm:ss): ");
-            var durationInput = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(durationInput))
-                duration = TimeSpan.Parse(durationInput);
+            Console.Write("Enter Duration (e.g., hh:mm): ");
+            input = ReadLineWithEscape();
+            if (input == null) return null;
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                if (!TimeSpan.TryParse(input, out TimeSpan dur))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid Duration input.");
+                    System.Threading.Thread.Sleep(1500);
+                    return null;
+                }
+                duration = dur;
+            }
 
             if ((timeOf != null && endTime != null) && duration is null)
             {
@@ -282,9 +552,14 @@ namespace Presentation.Input
             }
 
             return (timeOf, endTime, duration);
-
         }
-        // Takes user input for confirmation(mainly for delete actions).
+
+
+        /// <summary>
+        /// Takes user input for confirmation(mainly for delete actions).
+        /// </summary>
+        /// <param name="prompt"></param>
+        /// <returns></returns>
         internal static bool Input_Confirmation(string? prompt = null)
         {
             ConsoleKey keyPress;
@@ -312,7 +587,13 @@ namespace Presentation.Input
             return isConfirm;
 
         }
-        // Main method to navigate/handle indexing for menu navigation.
+
+
+        /// <summary>
+        /// Processes user input to navigate through a menu, updating the current menu index based on arrow key presses.
+        /// </summary>
+        /// <param name="currentMenuIndex"></param>
+        /// <returns></returns>
         public static ConsoleKey InputToMenuIndex(ref int currentMenuIndex)
         {
 
@@ -340,10 +621,17 @@ namespace Presentation.Input
             return keyPress;
         }
 
-        // Gets valid user input from the console, ensuring it is not null or empty.
+
+        /// <summary>
+        /// Prompts the user for input with a header and prompt, validates the input, and returns it.
+        /// </summary>
+        /// <param name="header"></param>
+        /// <param name="prompt"></param>
+        /// <param name="errorMessage"></param>
+        /// <returns></returns>
         public static string? GetValidUserInput(string? header = null, string? prompt = null, string? errorMessage = null)
         {
-            string? userInput = null;
+            string? userInput;
             bool validInput;
 
             do
@@ -362,17 +650,8 @@ namespace Presentation.Input
 
                 }
 
-                var keyPress = Console.ReadKey();
-
-                if (keyPress.Key == ConsoleKey.Escape)
-                {
-                    break;
-                }
-                else if (char.IsLetterOrDigit(keyPress.KeyChar))
-                {
-                    userInput = keyPress.KeyChar.ToString();
-                    userInput += Console.ReadLine()!;
-                }
+                userInput = ReadLineWithEscape();
+                if (userInput == null) return null; // User pressed Escape
 
                 validInput = !string.IsNullOrWhiteSpace(userInput) && !string.IsNullOrEmpty(userInput);
 
@@ -390,6 +669,38 @@ namespace Presentation.Input
 
 
             return userInput;
+        }
+
+
+        /// <summary>
+        /// Reads a line of input from the console, allowing for Escape to cancel input.
+        /// </summary>
+        /// <returns></returns>
+        private static string? ReadLineWithEscape()
+        {
+            var input = new StringBuilder();
+            while (true)
+            {
+                var key = Console.ReadKey(intercept: true);
+                if (key.Key == ConsoleKey.Escape)
+                    return null; // User pressed Escape
+
+                if (key.Key == ConsoleKey.Enter)
+                    break;
+                // Handle Backspace(erase last character)
+                if (key.Key == ConsoleKey.Backspace && input.Length > 0)
+                {
+                    input.Length--;
+                    Console.Write("\b \b");
+                }
+                else if (!char.IsControl(key.KeyChar))
+                {
+                    input.Append(key.KeyChar);
+                    Console.Write(key.KeyChar);
+                }
+            }
+            Console.WriteLine();
+            return input.ToString();
         }
 
         #endregion

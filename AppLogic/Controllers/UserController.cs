@@ -10,6 +10,9 @@ using AppLogic.Models.InputModels;
 
 namespace AppLogic.Controllers
 {
+    /// <summary>
+    /// Controller for managing user accounts, including creating, updating, deleting, and retrieving user data.
+    /// </summary>
     public class UserController
     {
         private readonly IUserService _userService;

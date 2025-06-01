@@ -2,6 +2,9 @@
 
 namespace AppLogic.Models.DTOs.Detailed
 {
+    /// <summary>
+    /// DTO for detailed weather data, including various measurements such as temperature, humidity, precipitation, and more.
+    /// </summary>
     public class WeatherDataDetailed
     {
         public int? Time { get; set; }

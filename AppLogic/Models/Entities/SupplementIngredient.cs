@@ -1,5 +1,6 @@
 ﻿namespace AppLogic.Models.Entities
 {
+    // NOT IMPLEMENTED YET
     public class SupplementIngredient
     {
         public int Id { get; set; }

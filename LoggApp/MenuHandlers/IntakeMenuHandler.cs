@@ -11,8 +11,11 @@ using AppLogic.Models.InputModels;
 using Presentation.Input;
 using Presentation.MenuState_Enums;
 
-namespace Presentation
+namespace Presentation.MenuHandlers
 {
+    /// <summary>
+    /// Handles the intake-related menu states in the console application, specifically for caffeine drinks(for now).
+    /// </summary>
     public class IntakeMenuHandler : MenuHandlerBase
     {
         private readonly CaffeineDrinkController _caffeineDrinkController;
@@ -104,13 +107,6 @@ namespace Presentation
 
             return sessionContext;
         }
-
-        
-
-        //private TContext SupplementsOverviewMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         private TContext CaffeineOverviewMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
@@ -204,7 +200,7 @@ namespace Presentation
 
             ResetMenuStates(sessionContext);
 
-            sessionContext.Footer = sessionContext.CurrentCaffeineDrink!.ToString();
+            sessionContext.MainHeader = sessionContext.CurrentCaffeineDrink!.ToString();
 
             var drinkDetailsChoice = MenuNavigation.GetMenuValue(MenuText.NavOption.s_CaffeineDetailsMenu.ToList(), sessionContext);
 
@@ -231,6 +227,7 @@ namespace Presentation
             }
             return sessionContext;
         }
+
         private async Task<TContext> UpdateCaffeineDrinkAsync<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
@@ -240,13 +237,22 @@ namespace Presentation
 
             if (timeOf != null)
             {
+                if (!TimeOnly.TryParse(timeOf, out TimeOnly parsedTime))
+                {
+                    Console.Clear();
+                    Console.WriteLine(MenuText.Error.InvalidDayCardInput);
+                    Thread.Sleep(1500);
+                    sessionContext.IntakeMenuState = IntakeMenuState.CaffeineDrinkDetails;
+                    return sessionContext;
+                }
+
                 var sizeOfDrinkChoice = MenuNavigation.GetMenuValue(MenuText.NavOption.s_DrinkSize.ToList(), sessionContext);
 
                 if (sizeOfDrinkChoice != null)
                 {
                     var updateInputModel = new CaffeineDrinkInputModel()
                     {
-                        TimeOf = TimeOnly.Parse(timeOf)
+                        TimeOf = parsedTime
                     };
 
                     switch (sizeOfDrinkChoice)
@@ -297,6 +303,7 @@ namespace Presentation
             sessionContext.IntakeMenuState = IntakeMenuState.CaffeineOverview;
             return sessionContext;
         }
+
         private async Task<TContext> CreateCaffeineDrinkAsync<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
@@ -305,6 +312,15 @@ namespace Presentation
 
             if (timeOf != null)
             {
+                if (!TimeOnly.TryParse(timeOf, out TimeOnly parsedTime))
+                {
+                    Console.Clear();
+                    Console.WriteLine(MenuText.Error.InvalidDayCardInput);
+                    Thread.Sleep(1500);
+                    sessionContext.IntakeMenuState = IntakeMenuState.CaffeineOverview;
+                    return sessionContext;
+                }
+
                 var sizeOfDrinkChoice = MenuNavigation.GetMenuValue(MenuText.NavOption.s_DrinkSize.ToList(), sessionContext);
 
                 if (sizeOfDrinkChoice != null)

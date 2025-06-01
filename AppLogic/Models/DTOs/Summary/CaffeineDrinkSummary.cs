@@ -8,6 +8,9 @@ using AppLogic.Models.Entities;
 
 namespace AppLogic.Models.DTOs.Summary
 {
+    /// <summary>
+    /// DTO for summarizing caffeine drink information, including the time of consumption and estimated caffeine content.
+    /// </summary>
     public class CaffeineDrinkSummary
     {
 

@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AppLogic.Repositories
 {
+    /// <summary>
+    /// Repository for managing day cards, providing methods to retrieve, update, and manage day card entities.
+    /// </summary>
     public class DayCardRepo : GenericRepo<DayCard>, IDayCardRepo
     {
 
@@ -21,9 +24,10 @@ namespace AppLogic.Repositories
             try
             {
                 return await _dbContext.DayCards
-                    .Include(dc => dc.Activities)
+                    .Include(dc => dc.Exercises)
+                    .Include(dc => dc.Sleep)
                     .Include(dc => dc.CaffeineDrinks)
-                    .Include(dc => dc.Supplements)
+                    .Include(dc => dc.WellnessCheckIns)
                     .Include(dc => dc.WeatherData)
                     .Include(dc => dc.AirQualityData)
                     .AsSplitQuery()
@@ -43,9 +47,10 @@ namespace AppLogic.Repositories
             try
             {
                 return await _dbContext.DayCards
-                    .Include(dc => dc.Activities)
+                    .Include(dc => dc.Exercises)
+                    .Include(dc => dc.Sleep)
                     .Include(dc => dc.CaffeineDrinks)
-                    .Include(dc => dc.Supplements)
+                    .Include(dc => dc.WellnessCheckIns)
                     .Include(dc => dc.WeatherData)
                     .Include(dc => dc.AirQualityData)
                     .AsSplitQuery()
@@ -96,9 +101,10 @@ namespace AppLogic.Repositories
             try
             {
                 return await _dbContext.DayCards
-                    .Include(dc => dc.Activities)
+                    .Include(dc => dc.Exercises)
+                    .Include(dc => dc.Sleep)
                     .Include(dc => dc.CaffeineDrinks)
-                    .Include(dc => dc.Supplements)
+                    .Include(dc => dc.WellnessCheckIns)
                     .Include(dc => dc.WeatherData)
                     .Include(dc => dc.AirQualityData)
                     .AsSplitQuery()

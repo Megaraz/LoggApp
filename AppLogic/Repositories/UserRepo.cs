@@ -22,15 +22,13 @@ namespace AppLogic.Repositories
             {
                return await _dbContext.Users
                     .Include(u => u.DayCards!)
-                        .ThenInclude(dc => dc.Activities)
+                        .ThenInclude(dc => dc.Exercises)
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.Sleep)
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.WellnessCheckIns)
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.CaffeineDrinks)
-                    .Include(u => u.DayCards!)
-                        .ThenInclude(dc => dc.Supplements)
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.WeatherData)
                     .Include(u => u.DayCards!)
@@ -51,15 +49,13 @@ namespace AppLogic.Repositories
             {
                 return await _dbContext.Users
                     .Include(u => u.DayCards!)
-                        .ThenInclude(dc => dc.Activities)
+                        .ThenInclude(dc => dc.Exercises)
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.Sleep)
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.WellnessCheckIns)
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.CaffeineDrinks)
-                    .Include(u => u.DayCards!)
-                        .ThenInclude(dc => dc.Supplements)
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.WeatherData)
                     .Include(u => u.DayCards!)
@@ -80,17 +76,16 @@ namespace AppLogic.Repositories
         {
             try
             {
+                //return await _dbContext.Users.ToListAsync();
                 return await _dbContext.Users
                     .Include(u => u.DayCards!)
-                        .ThenInclude(dc => dc.Activities)
+                        .ThenInclude(dc => dc.Exercises)
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.Sleep)
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.WellnessCheckIns)
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.CaffeineDrinks)
-                    .Include(u => u.DayCards!)
-                        .ThenInclude(dc => dc.Supplements)
                     .Include(u => u.DayCards!)
                         .ThenInclude(dc => dc.WeatherData)
                     .Include(u => u.DayCards!)

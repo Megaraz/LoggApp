@@ -1,15 +1,21 @@
 ﻿using AppLogic;
 using AppLogic.Controllers;
+using AppLogic.Models.InputModels;
 using AppLogic.Repositories;
 using AppLogic.Repositories.Interfaces;
 using AppLogic.Services;
 using AppLogic.Services.Interfaces;
+using Presentation.MenuHandlers;
 using Presentation.MenuState_Enums;
 
 namespace Presentation
 {
+    /// <summary>
+    /// Main application class which initializes and runs the LoggApp application.
+    /// </summary>
     public class App
     {
+        #region FIELDS
         // Presentation, Context and Menu Handlers
         private LoggAppContext _dbContext;
         private SessionContext _sessionContext;
@@ -18,8 +24,9 @@ namespace Presentation
         private UserMenuHandler _userMenuHandler;
         private DayCardMenuHandler _dayCardMenuHandler;
         private IntakeMenuHandler _intakeMenuHandler;
-        private ActivityMenuHandler _activityMenuHandler;
+        private ExerciseMenuHandler _activityMenuHandler;
         private SleepMenuHandler _sleepMenuHandler;
+        private WellnessMenuHandler _wellnessMenuHandler;
         private OpenAiResponseClient _openAiResponseClient;
 
         // Repos
@@ -29,7 +36,6 @@ namespace Presentation
         private IWeatherRepo _weatherRepo;
         private IAirQualityRepo _airQualityRepo;
         private ISleepRepo _sleepRepo;
-        private IActivityRepo _activityRepo;
         private IExerciseRepo _exerciseRepo;
         private ISupplementRepo _supplementRepo;
         private IWellnessCheckInRepo _wellnessCheckInRepo;
@@ -42,7 +48,6 @@ namespace Presentation
         private IDayCardService _dayCardService;
         private ICaffeineDrinkService _caffeineDrinkService;
         private ISleepService _sleepService;
-        private IActivityService _activityService;
         private IExerciseService _exerciseService;
         private ISupplementService _supplementService;
         private IWellnessCheckInService _wellnessCheckInService;
@@ -50,23 +55,22 @@ namespace Presentation
         // Controllers
         private UserController _userController;
         private WeatherController _weatherController;
-        private AirQualityController _airQualityController;
         private DayCardController _dayCardController;
         private CaffeineDrinkController _caffeineDrinkController;
         private SleepController _sleepController;
-        private ActivityController _activityController;
         private ExerciseController _exerciseController;
-        private SupplementController _supplementController;
         private WellnessCheckInController _wellnessCheckInController;
-
+        #endregion
 
         public App(LoggAppContext dbContext)
         {
             _dbContext = dbContext;
-            
         }
-        
-        // Initialization Methods Below, I have them separate(instead of constructor) for clarity and intention.
+
+        #region INITIALIZATION METHODS
+        /// <summary>
+        /// Initializes the repositories by creating instances of each repository with the database context.
+        /// </summary>
         public void InitRepos()
         {
             _userRepo = new UserRepo(_dbContext);
@@ -77,12 +81,13 @@ namespace Presentation
             _openAiResponseClient = new OpenAiResponseClient();
 
             _sleepRepo = new SleepRepo(_dbContext);
-            _activityRepo = new ActivityRepo(_dbContext);
             _exerciseRepo = new ExerciseRepo(_dbContext);
             _supplementRepo = new SupplementRepo(_dbContext);
             _wellnessCheckInRepo = new WellnessCheckInRepo(_dbContext);
         }
-
+        /// <summary>
+        /// Initializes the services by creating instances of each service with their respective repositories.
+        /// </summary>
         public void InitServices()
         {
             _userService = new UserService(_userRepo);
@@ -91,40 +96,42 @@ namespace Presentation
             _caffeineDrinkService = new CaffeineDrinkService(_caffeineDrinkRepo);
 
             _sleepService = new SleepService(_sleepRepo);
-            _activityService = new ActivityService(_activityRepo);
             _exerciseService = new ExerciseService(_exerciseRepo);
             _supplementService = new SupplementService(_supplementRepo);
             _wellnessCheckInService = new WellnessCheckInService(_wellnessCheckInRepo);
 
-            _dayCardService = new DayCardService(_dayCardRepo, _weatherService, _airQualityService, _caffeineDrinkService, _exerciseService, _openAiResponseClient, _sleepService);
+            _dayCardService = new DayCardService(_dayCardRepo, _weatherService, _airQualityService, _openAiResponseClient);
         }
-
+        /// <summary>
+        /// Initializes the controllers by creating instances of each controller with their respective services.
+        /// </summary>
         public void InitControllers()
         {
             _userController = new UserController(_userService);
             _weatherController = new WeatherController(_weatherService);
-            _airQualityController = new AirQualityController(_airQualityService);
             _dayCardController = new DayCardController(_dayCardService);
             _caffeineDrinkController = new CaffeineDrinkController(_caffeineDrinkService);
 
             _sleepController = new SleepController(_sleepService);
-            _activityController = new ActivityController(_activityService);
             _exerciseController = new ExerciseController(_exerciseService);
-            _supplementController = new SupplementController(_supplementService);
             _wellnessCheckInController = new WellnessCheckInController(_wellnessCheckInService);
 
         }
 
+        /// <summary>
+        /// Initializes the presentation layer by setting up the menu handlers and session context.
+        /// </summary>
         public void InitPresentation()
         {
             _mainMenuHandler = new MainMenuHandler(_userController, _weatherController);
             _userMenuHandler = new UserMenuHandler(_dayCardController, _userController, _weatherController);
             _dayCardMenuHandler = new DayCardMenuHandler(_dayCardController);
             _intakeMenuHandler = new IntakeMenuHandler(_caffeineDrinkController);
-            _activityMenuHandler = new ActivityMenuHandler(_exerciseController);
+            _activityMenuHandler = new ExerciseMenuHandler(_exerciseController);
             _sleepMenuHandler = new SleepMenuHandler(_sleepController);
+            _wellnessMenuHandler = new WellnessMenuHandler(_wellnessCheckInController);
 
-            _menuRouterService = new MenuRouterService(_mainMenuHandler, _userMenuHandler, _dayCardMenuHandler, _intakeMenuHandler, _activityMenuHandler, _sleepMenuHandler);
+            _menuRouterService = new MenuRouterService(_mainMenuHandler, _userMenuHandler, _dayCardMenuHandler, _intakeMenuHandler, _activityMenuHandler, _sleepMenuHandler, _wellnessMenuHandler);
 
 
             _sessionContext = new SessionContext();
@@ -136,16 +143,15 @@ namespace Presentation
             _sessionContext.SleepMenuState = SleepMenuState.None;
 
         }
+        #endregion
 
         // Main run loop method.
         public async Task Run()
         {
-            
+            // Main loop for the application, it will keep running until the user chooses to exit.
             do
             {
                 _sessionContext = await _menuRouterService.MenuRouter(_sessionContext);
-
-
 
             } while (_sessionContext.MainMenuState != MainMenuState.Exit);
 

@@ -11,26 +11,24 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AppLogic.Services
 {
+    /// <summary>
+    /// Service for managing day cards, including creating, reading, updating, and deleting day cards.
+    /// </summary>
     public class DayCardService : IDayCardService
     {
-
+        #region FIELDS
         private readonly IDayCardRepo _dayCardRepo;
         private readonly IWeatherService _weatherService;
         private readonly IAirQualityService _airQualityService;
-        private readonly ICaffeineDrinkService _caffeineDrinkService;
-        private readonly IExerciseService _exerciseService;
-        private readonly ISleepService _sleepService;
         private readonly OpenAiResponseClient _aiClient;
+        #endregion
 
-        public DayCardService(IDayCardRepo dayCardRepo, IWeatherService weatherService, IAirQualityService airQualityService, ICaffeineDrinkService caffeineDrinkService, IExerciseService exerciseService, OpenAiResponseClient aiClient, ISleepService sleepService)
+        public DayCardService(IDayCardRepo dayCardRepo, IWeatherService weatherService, IAirQualityService airQualityService, OpenAiResponseClient aiClient)
         {
             _dayCardRepo = dayCardRepo;
             _weatherService = weatherService;
             _airQualityService = airQualityService;
-            _caffeineDrinkService = caffeineDrinkService;
-            _exerciseService = exerciseService;
             _aiClient = aiClient;
-            _sleepService = sleepService;
         }
 
         public async Task<DayCardDetailed> CreateNewDayCardAsync(int userId, DayCardInputModel dayCardInputModel)
@@ -45,14 +43,7 @@ namespace AppLogic.Services
         {
             DayCardDetailed dayCardDetailed = new(dayCard);
 
-            dayCardDetailed.TotalCaffeineInMg = dayCardDetailed.CaffeineDrinksSummaries?.Sum(x => x.EstimatedMgCaffeine);
-
-            dayCardDetailed.TotalExerciseTime = dayCardDetailed.ExercisesSummaries?
-                .Sum(x => (int)(x.Duration?.TotalMinutes ?? 0));
-
-            dayCardDetailed.TotalCaloriesBurned = dayCardDetailed.ExercisesSummaries?.Sum(x => x.ActiveKcalBurned);
-
-            dayCardDetailed.TotalSleepTime = (int)dayCard.Sleep?.TotalSleepTime?.Minutes!;
+            dayCardDetailed.UpdateTotalValues();
 
             return dayCardDetailed;
         }

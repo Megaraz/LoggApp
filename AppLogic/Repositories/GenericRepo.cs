@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AppLogic.Repositories
 {
+    /// <summary>
+    /// Generic repository for performing CRUD operations on entities of type T.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class GenericRepo<T> : IGenericRepo<T> where T : class
     {
         private readonly LoggAppContext _dbContext;

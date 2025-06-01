@@ -3,6 +3,9 @@ using AppLogic.Models.Entities;
 
 namespace AppLogic.Models.DTOs.Summary
 {
+    /// <summary>
+    /// DTO that represents a summary of a day card, including the number of entries and the date.
+    /// </summary>
     public class DayCardSummary
     {
         public int DayCardId { get; set; }
@@ -17,7 +20,10 @@ namespace AppLogic.Models.DTOs.Summary
             UserId = dayCard.UserId;
             Date = dayCard.Date;
 
-            Entries = (dayCard.Activities!.Count + dayCard.CaffeineDrinks!.Count + dayCard.Supplements!.Count);
+            Entries = (dayCard.Exercises?.Count ?? 0) + 
+                (dayCard.CaffeineDrinks?.Count ?? 0) +
+                (dayCard.WellnessCheckIns?.Count ?? 0) +
+                (dayCard.Sleep != null ? 1 : 0);
         }
 
         public DayCardSummary(DayCardDetailed dayCardDetailed)
@@ -25,12 +31,10 @@ namespace AppLogic.Models.DTOs.Summary
             UserId = dayCardDetailed.UserId;
             DayCardId = dayCardDetailed.DayCardId;
             Date = dayCardDetailed.Date;
-            Entries = (dayCardDetailed.CaffeineDrinksSummaries?.Count ?? 0) +
-                      (dayCardDetailed.ExercisesSummaries?.Count ?? 0) +
-                      (dayCardDetailed.SleepDetails != null ? 1 : 0) +
-                      (dayCardDetailed.AirQualitySummary != null ? 1 : 0) +
-                      (dayCardDetailed.PollenSummary != null ? 1 : 0) +
-                      (dayCardDetailed.WeatherSummary != null ? 1 : 0);
+            Entries =   (dayCardDetailed.CaffeineDrinksSummaries?.Count ?? 0) +
+                        (dayCardDetailed.WellnessCheckInsSummaries?.Count ?? 0) +
+                        (dayCardDetailed.ExercisesSummaries?.Count ?? 0) +
+                        (dayCardDetailed.SleepDetails != null ? 1 : 0);
         }
 
 

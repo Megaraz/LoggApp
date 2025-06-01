@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace AppLogic.Models.DTOs.Detailed
 {
+    /// <summary>
+    /// DTO for detailed pollen data, including hourly measurements of various pollen types.
+    /// </summary>
     public class PollenDataDetailed
     {
         public int? Time { get; set; }

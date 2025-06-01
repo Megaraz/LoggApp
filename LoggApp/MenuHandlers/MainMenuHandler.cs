@@ -15,8 +15,11 @@ using AppLogic.Repositories;
 using AppLogic.Models.InputModels;
 using Presentation.Input;
 
-namespace Presentation
+namespace Presentation.MenuHandlers
 {
+    /// <summary>
+    /// Handles the main menu state of the console application, allowing users to navigate through various options such as logging in, viewing all users, creating a new user, and checking today's weather.
+    /// </summary>
     public class MainMenuHandler : MenuHandlerBase
     {
 
@@ -53,6 +56,7 @@ namespace Presentation
             }
             return sessionContext;
         }
+
         public async Task<TContext> InitMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
@@ -131,8 +135,6 @@ namespace Presentation
             return sessionContext;
         }
 
-        
-
         private async Task<TContext> CreateNewUser<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
@@ -154,8 +156,12 @@ namespace Presentation
                 {
                     // Create a new user with the updated GeoResult, and sets the CurrentUser to the newly created one
                     sessionContext.CurrentUser = await _userController.CreateNewUserAsync(userInputModel);
-                    sessionContext.UserMenuState = UserMenuState.Overview;
 
+                    sessionContext.AllUsersSummary ??= new List<UserSummary>();
+
+                    sessionContext.AllUsersSummary.Add(new UserSummary(sessionContext.CurrentUser));    
+
+                    sessionContext.UserMenuState = UserMenuState.Overview;
                 }
             }
             else
@@ -180,13 +186,12 @@ namespace Presentation
             else
             {
                 sessionContext.MainMenuState = MainMenuState.AllUsers;
-                //sessionContext.CurrentMainMenu = MenuText.NavOption.s_AllUserMenu.ToList();
                 sessionContext.AllUsersSummary = allUsers;
-
             }
 
             return sessionContext;
         }
+
         private async Task<TContext> Login<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
@@ -199,7 +204,6 @@ namespace Presentation
 
                 if (resultUser == null)
                 {
-                    
                     Console.Clear();
                     Console.WriteLine(MenuText.Error.NoUserFound);
                     Thread.Sleep(1500);
@@ -220,7 +224,12 @@ namespace Presentation
             return sessionContext;
         }
 
-        
+        /// <summary>
+        /// Fetches today's weather for a given location input by the user, generates a summary using AI, and displays it.
+        /// </summary>
+        /// <typeparam name="TContext"></typeparam>
+        /// <param name="sessionContext"></param>
+        /// <returns></returns>
         private async Task<TContext> GetTodaysWeather<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             // Get basic user info/input
@@ -242,22 +251,15 @@ namespace Presentation
                     var weatherData = await _weatherController.GetWeatherDataAsync(lat, lon, date);
                     var prompt = AiPromptBuilder.BuildWeatherPrompt(weatherData);
 
-
                     var ai = new OpenAiResponseClient();
 
                     weatherData.AISummary = await ai.GenerateSummaryAsync(prompt);
 
                     WeatherDataSummary todayWeather = _weatherController.ConvertToDTO(weatherData);
 
-                    //var apiKey = Environment.GetEnvironmentVariable("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")
-                    //    ?? throw new InvalidOperationException("Sätt OPENAI_API_KEY!");
-
-                    
-
                     Console.WriteLine(todayWeather.ToString());
 
                     Console.ReadLine();
-
 
                     sessionContext.MainMenuState = MainMenuState.Main;
                 }

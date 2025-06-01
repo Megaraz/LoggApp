@@ -2,6 +2,10 @@
 
 namespace AppLogic.Models.Entities.WeatherAndAQI
 {
+    /// <summary>
+    /// Represents a block of hourly weather data, including various meteorological parameters.
+    /// JSON properties are mapped to the Open-Meteo API response structure.
+    /// </summary>
     public class WeatherDataHourlyBlock
     {
         [JsonIgnore]

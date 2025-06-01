@@ -2,6 +2,9 @@
 
 namespace AppLogic.Models.Entities
 {
+    /// <summary>
+    /// Entity representing a user in the application.
+    /// </summary>
     public class User
     {
         public int Id { get; set; }

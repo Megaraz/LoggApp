@@ -9,6 +9,9 @@ using AppLogic.Repositories.Interfaces;
 
 namespace AppLogic.Repositories
 {
+    /// <summary>
+    /// Repository for managing caffeine drink entities, providing methods for CRUD operations and specific updates.
+    /// </summary>
     public class CaffeineDrinkRepo : GenericRepo<CaffeineDrink>, ICaffeineDrinkRepo
     {
         private readonly LoggAppContext _dbContext;

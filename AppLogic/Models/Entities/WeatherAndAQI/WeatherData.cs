@@ -4,6 +4,10 @@ using AppLogic.Models.DTOs;
 
 namespace AppLogic.Models.Entities.WeatherAndAQI
 {
+    /// <summary>
+    /// Represents weather data associated with a specific day card, including geographical coordinates, time zone information, and hourly weather details.
+    /// JSON properties are mapped to the Open-Meteo API response structure.
+    /// </summary>
     public class WeatherData
     {
         public int Id { get; set; }

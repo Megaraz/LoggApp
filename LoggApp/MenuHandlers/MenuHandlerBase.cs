@@ -7,14 +7,27 @@ using AppLogic.Controllers;
 using Microsoft.Identity.Client;
 using Presentation.MenuState_Enums;
 
-namespace Presentation
+namespace Presentation.MenuHandlers
 {
+    /// <summary>
+    /// Base class for handling menu states in the console application.
+    /// </summary>
     public abstract class MenuHandlerBase
     {
-
+        /// <summary>
+        /// Handles the menu state for the given session context.
+        /// </summary>
+        /// <typeparam name="TContext"></typeparam>
+        /// <param name="sessionContext"></param>
+        /// <returns></returns>
         public abstract Task<TContext> HandleMenuState<TContext>(TContext sessionContext) where TContext : SessionContext;
 
-
+        /// <summary>
+        /// Resets the menu states and clears the session context properties to their default values.
+        /// </summary>
+        /// <typeparam name="TContext"></typeparam>
+        /// <param name="sessionContext"></param>
+        /// <returns></returns>
         protected static TContext ResetMenuStates<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             sessionContext.CurrentPrompt = string.Empty;
@@ -30,6 +43,8 @@ namespace Presentation
             sessionContext.IntakeMenuState = IntakeMenuState.None;
             sessionContext.ActivityMenuState = ActivityMenuState.None;
             sessionContext.SleepMenuState = SleepMenuState.None;
+            sessionContext.WellnessCheckInMenuState = WellnessCheckInMenuState.None;
+
             return sessionContext;
         }
 

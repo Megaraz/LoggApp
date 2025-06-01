@@ -9,6 +9,9 @@ using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Services
 {
+    /// <summary>
+    /// Service for managing user accounts, including registration, retrieval, updating, and deletion of user information.
+    /// </summary>
     public class UserService : IUserService
     {
 
@@ -18,7 +21,6 @@ namespace AppLogic.Services
         {
             _userRepository = userRepo;
         }
-        
 
 
         public async Task<UserDetailed> RegisterNewUserAsync(UserInputModel inputModel)
@@ -28,21 +30,9 @@ namespace AppLogic.Services
 
             newUser = await _userRepository.CreateAsync(newUser);
 
-            return new UserDetailed()
-            {
-                Id = newUser.Id,
-                Username = newUser.Username!,
-                CityName = newUser.CityName,
-                Lat = newUser.Lat,
-                Lon = newUser.Lon,
-                AllDayCardsSummary = newUser.DayCards!
-                    .Select(dayCard => new DayCardSummary(dayCard)).ToList(),
-                DayCardCount = newUser.DayCards?.Count ?? 0
-            };
+            return new UserDetailed(newUser);
 
         }
-
-
 
         public async Task<List<UserSummary>?> GetAllUsersIncludeAsync()
         {
@@ -52,25 +42,9 @@ namespace AppLogic.Services
             {
                 return null;
             }
+            
+            return users.Select(user => new UserSummary(user)).OrderBy(u => u.Username).ToList();
 
-            List<UserSummary> DTO_AllUsers = new List<UserSummary>();
-
-            foreach (var user in users)
-            {
-                DTO_AllUsers.Add
-                    (
-                        new UserSummary()
-                        {
-                            Id = user.Id,
-                            Username = user.Username!,
-                            CityName = user.CityName,
-                            DayCardCount = user.DayCards?.Count ?? 0,
-
-                        }
-                    );
-            }
-
-            return DTO_AllUsers.OrderBy(x => x.Username).ToList();
         }
 
         public async Task<UserDetailed?> GetUserByIdIncludeAsync(int id)
@@ -79,18 +53,7 @@ namespace AppLogic.Services
 
             if (user == null) return null;
 
-
-            return new UserDetailed()
-            {
-                Id = user!.Id,
-                Username = user.Username!,
-                CityName = user.CityName,
-                Lat = user.Lat,
-                Lon = user.Lon,
-                AllDayCardsSummary = user.DayCards!
-                    .Select(dayCard => new DayCardSummary(dayCard)).ToList(),
-                DayCardCount = user.DayCards?.Count ?? 0
-            };
+            return new UserDetailed(user);
         }
         public async Task<UserDetailed?> GetUserByUsernameIncludeAsync(string username)
         {
@@ -98,17 +61,7 @@ namespace AppLogic.Services
 
             if ( user == null ) return null;
 
-            return new UserDetailed()
-            {
-                Id = user.Id,
-                Username = user.Username!,
-                CityName = user.CityName,
-                Lat = user.Lat,
-                Lon = user.Lon,
-                AllDayCardsSummary = user.DayCards!
-               .Select(dayCard => new DayCardSummary(dayCard)).ToList(),
-                DayCardCount = user.DayCards?.Count ?? 0
-            };
+            return new UserDetailed(user);
         }
 
         public async Task<UserDetailed> UpdateUserAsync(int userId, UserInputModel inputModel)
@@ -119,17 +72,7 @@ namespace AppLogic.Services
             };
             user = await _userRepository.UpdateUserIncludeAsync(user);
 
-            return new UserDetailed()
-            {
-                Id = user.Id,
-                Username = user.Username!,
-                CityName = user.CityName,
-                Lat = user.Lat,
-                Lon = user.Lon,
-                AllDayCardsSummary = user.DayCards!
-                    .Select(dayCard => new DayCardSummary(dayCard)).ToList(),
-                DayCardCount = user.DayCards?.Count ?? 0
-            };
+            return new UserDetailed(user);
         }
 
         public async Task<bool> DeleteUserAsync(int userId)

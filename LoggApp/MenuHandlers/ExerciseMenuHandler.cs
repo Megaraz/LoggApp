@@ -11,13 +11,16 @@ using AppLogic.Models.InputModels;
 using Presentation.Input;
 using Presentation.MenuState_Enums;
 
-namespace Presentation
+namespace Presentation.MenuHandlers
 {
-    public class ActivityMenuHandler : MenuHandlerBase
+    /// <summary>
+    /// Handles the activity menu state for managing exercises(and later on other activites) within a day card context.
+    /// </summary>
+    public class ExerciseMenuHandler : MenuHandlerBase
     {
         private readonly ExerciseController _exerciseController;
 
-        public ActivityMenuHandler(ExerciseController exerciseController)
+        public ExerciseMenuHandler(ExerciseController exerciseController)
         {
             _exerciseController = exerciseController;
         }
@@ -31,7 +34,7 @@ namespace Presentation
                     break;
 
                 case ActivityMenuState.ShowAllExercises:
-                    sessionContext = ExerciseShowAllMenuHandler(sessionContext);
+                    sessionContext = await ExerciseShowAllMenuHandler(sessionContext);
                     break;
 
                 case ActivityMenuState.ExerciseDetails:
@@ -50,7 +53,6 @@ namespace Presentation
                     sessionContext = await DeleteExerciseAsync(sessionContext);
                     break;
 
-                    // Future implementation for Sleep can be added here.
             }
 
             return sessionContext;
@@ -87,11 +89,10 @@ namespace Presentation
             return sessionContext;
         }
 
-        private static TContext ExerciseShowAllMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
+        private async Task<TContext> ExerciseShowAllMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
 
-            // Assuming CurrentDayCard has an ExercisesSummary with ExerciseDetails list.
             if (sessionContext!.CurrentDayCard?.ExercisesSummaries != null &&
                 sessionContext.CurrentDayCard.ExercisesSummaries.Count > 0)
             {
@@ -101,7 +102,7 @@ namespace Presentation
 
                 if (exerciseMenuChoice != null)
                 {
-                    sessionContext.CurrentExercise = new ExerciseDetailed(exerciseMenuChoice);
+                    sessionContext.CurrentExercise = await _exerciseController.ReadSingleExerciseAsync(sessionContext.CurrentDayCard.DayCardId, exerciseMenuChoice.Id);
 
                     sessionContext.ActivityMenuState = ActivityMenuState.ExerciseDetails;
                 }
@@ -121,7 +122,7 @@ namespace Presentation
         {
             ResetMenuStates(sessionContext);
             // Display exercise details
-            sessionContext.Footer = sessionContext.CurrentExercise?.ToString() ?? "No exercise details available.";
+            sessionContext.MainHeader = sessionContext.CurrentExercise?.ToString() ?? "No exercise details available.";
 
             var detailsChoice = MenuNavigation.GetMenuValue(MenuText.NavOption.s_ExerciseDetailsMenu.ToList(), sessionContext);
 
@@ -152,41 +153,51 @@ namespace Presentation
             ResetMenuStates(sessionContext);
 
             // Obtain input details for the exercise
-            var (timeOf, endTime, duration) = ConsoleInput.Input_ActivityTime();
+            var activityTime = ConsoleInput.Input_ActivityTime();
 
-            if (timeOf != null || endTime != null || duration != null)
+            if (activityTime != null)
             {
-                var intensityChoice = MenuNavigation.GetMenuValue(MenuText.NavOption.s_ExercisePerceivedIntensity.ToList(), sessionContext);
-
-                if (intensityChoice != null)
+                var (timeOf, endTime, duration) = activityTime.Value;
+                if (timeOf != null || endTime != null || duration != null)
                 {
-                    var exerciseInputModel = new ExerciseInputModel
+                    var intensityChoice = MenuNavigation.GetMenuValue(MenuText.NavOption.s_ExercisePerceivedIntensity.ToList(), sessionContext);
+
+                    if (intensityChoice != null)
                     {
-                        TimeOf = timeOf,
-                        EndTime = endTime,
-                        Duration = duration
-                    };
-                    exerciseInputModel.PerceivedIntensity = GetPercIntensityChoice(intensityChoice);
+                        var exerciseInputModel = new ExerciseInputModel
+                        {
+                            TimeOf = timeOf,
+                            EndTime = endTime,
+                            Duration = duration
+                        };
+                        exerciseInputModel.PerceivedIntensity = GetPercIntensityChoice(intensityChoice);
 
-                    exerciseInputModel = ConsoleInput.Input_Exercise(exerciseInputModel);
+                        exerciseInputModel = ConsoleInput.Input_Exercise(exerciseInputModel);
 
-                    sessionContext.CurrentExercise = await _exerciseController.AddExerciseToDayCardAsync(sessionContext.CurrentDayCard!.DayCardId, exerciseInputModel);
+                        if (exerciseInputModel is null)
+                        {
+                            sessionContext.DayCardMenuState = DayCardMenuState.Overview;
+                            return sessionContext;
+                        }
 
-                    sessionContext.CurrentDayCard!.ExercisesSummaries ??= new List<ExerciseSummary>();
+                        sessionContext.CurrentExercise = await _exerciseController.AddExerciseToDayCardAsync(sessionContext.CurrentDayCard!.DayCardId, exerciseInputModel);
 
-                    sessionContext.CurrentDayCard!.ExercisesSummaries!
-                        .Add(new ExerciseSummary(sessionContext.CurrentExercise!));
+                        sessionContext.CurrentDayCard!.ExercisesSummaries ??= new List<ExerciseSummary>();
 
-                    sessionContext.CurrentDayCard.UpdateTotalValues();
+                        sessionContext.CurrentDayCard!.ExercisesSummaries!
+                            .Add(new ExerciseSummary(sessionContext.CurrentExercise!));
 
-                }
-                else
-                {
-                    sessionContext.ActivityMenuState = ActivityMenuState.ExerciseDetails;
+                        sessionContext.CurrentDayCard.UpdateTotalValues();
+
+                    }
+                    else
+                    {
+                        sessionContext.ActivityMenuState = ActivityMenuState.ExerciseDetails;
+                    }
                 }
             }
-
             sessionContext.ActivityMenuState = ActivityMenuState.ExerciseOverview;
+
             return sessionContext;
         }
 
@@ -223,49 +234,54 @@ namespace Presentation
         {
             ResetMenuStates(sessionContext);
 
-            var (timeOf, endTime, duration) = ConsoleInput.Input_ActivityTime();
+            var activityTime = ConsoleInput.Input_ActivityTime();
 
-            if (timeOf != null || endTime != null || duration != null)
+            if (activityTime != null)
             {
-                var intensityChoice = MenuNavigation.GetMenuValue(MenuText.NavOption.s_ExercisePerceivedIntensity.ToList(), sessionContext);
+                var (timeOf, endTime, duration) = activityTime.Value;
 
-                if (intensityChoice != null)
+                if (timeOf != null || endTime != null || duration != null)
                 {
-                    var updateInputModel = new ExerciseInputModel
+                    var intensityChoice = MenuNavigation.GetMenuValue(MenuText.NavOption.s_ExercisePerceivedIntensity.ToList(), sessionContext);
+
+                    if (intensityChoice != null)
                     {
-                        TimeOf = timeOf,
-                        EndTime = endTime,
-                        Duration = duration
-                    };
+                        var updateInputModel = new ExerciseInputModel
+                        {
+                            TimeOf = timeOf,
+                            EndTime = endTime,
+                            Duration = duration
+                        };
 
-                    updateInputModel.PerceivedIntensity = GetPercIntensityChoice(intensityChoice);
+                        updateInputModel.PerceivedIntensity = GetPercIntensityChoice(intensityChoice);
 
-                    updateInputModel = ConsoleInput.Input_Exercise(updateInputModel);
+                        updateInputModel = ConsoleInput.Input_Exercise(updateInputModel);
 
-                    sessionContext.CurrentExercise = await _exerciseController.UpdateExerciseAsync(sessionContext.CurrentExercise!.Id, updateInputModel);
+                        sessionContext.CurrentExercise = await _exerciseController.UpdateExerciseAsync(sessionContext.CurrentExercise!.Id, updateInputModel);
 
-                    Console.Clear();
-                    Console.WriteLine("EXERCISE UPDATED");
-                    Thread.Sleep(1500);
+                        Console.Clear();
+                        Console.WriteLine("EXERCISE UPDATED");
+                        Thread.Sleep(1500);
 
-                    var exerciseSummary = sessionContext.CurrentDayCard!.ExercisesSummaries!
-                        .FirstOrDefault(x => x.Id == sessionContext.CurrentExercise!.Id);
+                        var exerciseSummary = sessionContext.CurrentDayCard!.ExercisesSummaries!
+                            .FirstOrDefault(x => x.Id == sessionContext.CurrentExercise!.Id);
 
-                    if (exerciseSummary != null)
-                    {
-                        exerciseSummary.Id = sessionContext.CurrentExercise!.Id;
-                        exerciseSummary.DayCardId = sessionContext.CurrentDayCard.DayCardId;
-                        exerciseSummary.Duration = sessionContext.CurrentExercise!.Duration;
-                        exerciseSummary.ActiveKcalBurned = sessionContext.CurrentExercise.ActiveKcalBurned;
-                        exerciseSummary.PerceivedIntensity = sessionContext.CurrentExercise.PerceivedIntensity;
+                        if (exerciseSummary != null)
+                        {
+                            exerciseSummary.Id = sessionContext.CurrentExercise!.Id;
+                            exerciseSummary.DayCardId = sessionContext.CurrentDayCard.DayCardId;
+                            exerciseSummary.Duration = sessionContext.CurrentExercise!.Duration;
+                            exerciseSummary.ActiveKcalBurned = sessionContext.CurrentExercise.ActiveKcalBurned;
+                            exerciseSummary.PerceivedIntensity = sessionContext.CurrentExercise.PerceivedIntensity;
 
+                        }
+
+                        sessionContext.CurrentDayCard.UpdateTotalValues();
                     }
-
-                    sessionContext.CurrentDayCard.UpdateTotalValues();
-                }
-                else
-                {
-                    sessionContext.ActivityMenuState = ActivityMenuState.ExerciseDetails;
+                    else
+                    {
+                        sessionContext.ActivityMenuState = ActivityMenuState.ExerciseDetails;
+                    }
                 }
             }
 

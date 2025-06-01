@@ -2,6 +2,7 @@
 
 namespace AppLogic.Models.Entities
 {
+    // NOT IMPLEMENTED YET
     public class Medication : ITimeOfEntry, IDailyLogId
     {
         public int Id { get; set; }

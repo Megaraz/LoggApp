@@ -8,6 +8,9 @@ using AppLogic.Models.Entities.WeatherAndAQI;
 
 namespace AppLogic.Services.Interfaces
 {
+    /// <summary>
+    /// Service interface for retrieving air quality data based on geographical coordinates and date.
+    /// </summary>
     public interface IAirQualityService
     {
         Task<AirQualityData> GetAirQualityDataAsync(string lat, string lon, string date);

@@ -2,6 +2,10 @@
 
 namespace AppLogic.Models
 {
+    /// <summary>
+    /// Data fetched from open-meteo.com API, representing geographical information about a location.
+    /// JSON properties are named and mapped to match the API response structure.
+    /// </summary>
     public class GeoResult
     {
 

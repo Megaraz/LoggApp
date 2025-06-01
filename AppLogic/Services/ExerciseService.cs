@@ -12,6 +12,9 @@ using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Services
 {
+    /// <summary>
+    /// Service for managing exercises, including adding, updating, and deleting exercises associated with day cards.
+    /// </summary>
     public class ExerciseService : IExerciseService
     {
         private readonly IExerciseRepo _exerciseRepo;
@@ -36,9 +39,16 @@ namespace AppLogic.Services
             return await _exerciseRepo.DeleteAsync(exerciseId);
         }
 
+        public async Task<ExerciseDetailed?> ReadSingleExerciseAsync(int dayCardId, int exerciseId)
+        {
+            Exercise? exercise = await _exerciseRepo.GetExerciseById(dayCardId, exerciseId);
+
+            return exercise == null ? null : new ExerciseDetailed(exercise);
+        }
+
         public async Task<ExerciseDetailed?> UpdateExerciseAsync(int exerciseId, ExerciseInputModel updateInputModel)
         {
-            Exercise exercise = new(exerciseId, updateInputModel);
+            Exercise exercise = new(updateInputModel.DayCardId, updateInputModel);
 
             exercise.Id = exerciseId; 
 

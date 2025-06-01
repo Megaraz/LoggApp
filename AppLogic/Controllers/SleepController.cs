@@ -9,6 +9,9 @@ using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Controllers
 {
+    /// <summary>
+    /// Controller for managing sleep data, including adding, updating, and deleting sleep records associated with day cards.
+    /// </summary>
     public class SleepController
     {
         private ISleepService _sleepService;
@@ -21,6 +24,16 @@ namespace AppLogic.Controllers
         public async Task<SleepDetailed> AddSleepToDayCardAsync(int dayCardId, SleepInputModel sleepInputModel)
         {
             return await _sleepService.AddSleepToDayCardAsync(dayCardId, sleepInputModel);
+        }
+
+        public async Task<bool> DeleteSleepAsync(int id)
+        {
+            return await _sleepService.DeleteSleepAsync(id);
+        }
+
+        public async Task<SleepDetailed?> UpdateSleepAsync(int id, SleepInputModel sleepInputModel)
+        {
+            return await _sleepService.UpdateSleepAsync(id, sleepInputModel);
         }
     }
 }

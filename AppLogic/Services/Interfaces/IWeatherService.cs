@@ -10,6 +10,9 @@ using AppLogic.Models.Entities.WeatherAndAQI;
 
 namespace AppLogic.Services.Interfaces
 {
+    /// <summary>
+    /// Service interface for fetching weather data and geographical information based on city names.
+    /// </summary>
     public interface IWeatherService
     {
         Task<GeoResultResponse> GetGeoResultAsync(string city);

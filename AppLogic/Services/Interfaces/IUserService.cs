@@ -9,6 +9,9 @@ using AppLogic.Models.InputModels;
 
 namespace AppLogic.Services.Interfaces
 {
+    /// <summary>
+    /// Service interface for managing user accounts, including registration, retrieval, updating, and deletion of user data.
+    /// </summary>
     public interface IUserService
     {
 

@@ -7,6 +7,9 @@ using AppLogic.Models.Entities;
 
 namespace AppLogic.Repositories.Interfaces
 {
+    /// <summary>
+    /// Repository interface for managing day cards, providing methods to retrieve, update, and manage day card entities.
+    /// </summary>
     public interface IDayCardRepo : IGenericRepo<DayCard>
     {
         Task<DayCard?> GetDayCardByDateIncludeAsync(DateOnly date, int userId);

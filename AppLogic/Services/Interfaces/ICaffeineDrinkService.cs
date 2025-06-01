@@ -10,6 +10,9 @@ using AppLogic.Models.InputModels;
 
 namespace AppLogic.Services.Interfaces
 {
+    /// <summary>
+    /// Service interface for managing caffeine drink data, including adding, updating, and deleting caffeine drinks associated with day cards.
+    /// </summary>
     public interface ICaffeineDrinkService
     {
         Task<CaffeineDrinkDetailed> AddCaffeineDrinkToDayCardAsync(int dayCardId, CaffeineDrinkInputModel model);

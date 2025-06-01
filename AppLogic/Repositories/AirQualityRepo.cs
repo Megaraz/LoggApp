@@ -5,6 +5,9 @@ using AppLogic.Repositories.Interfaces;
 
 namespace AppLogic.Repositories
 {
+    /// <summary>
+    /// Repository for managing air quality data, including fetching data from the Open-Meteo API.
+    /// </summary>
     public class AirQualityRepo : GenericRepo<AirQualityData>, IAirQualityRepo
     {
 

@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AppLogic.Migrations;
 using AppLogic.Models.DTOs.Detailed;
 using AppLogic.Models.Entities.WeatherAndAQI;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AppLogic.Models.DTOs.Summary
 {
+    /// <summary>
+    /// DTO for summarizing pollen data, including detailed pollen measurements for different types of pollen and an AI-generated summary.
+    /// </summary>
     public class PollenDataSummary : IPromptRenderable
     {
         public int AirQualityId { get; set; }

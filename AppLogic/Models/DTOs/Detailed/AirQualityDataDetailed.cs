@@ -2,6 +2,9 @@
 
 namespace AppLogic.Models.DTOs.Detailed
 {
+    /// <summary>
+    /// DTO for detailed air quality data, including various measurements such as UVI, AQI, PM2.5, Ozone, CO, NO2, and Dust.
+    /// </summary>
     public class AirQualityDataDetailed
     {
         /// <summary>

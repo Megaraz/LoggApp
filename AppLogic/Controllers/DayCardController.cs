@@ -10,6 +10,9 @@ using AppLogic.Models.InputModels;
 
 namespace AppLogic.Controllers
 {
+    /// <summary>
+    /// Controller for managing day cards, including creating, reading, updating, and deleting day cards.
+    /// </summary>
     public class DayCardController
     {
 

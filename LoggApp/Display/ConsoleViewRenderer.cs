@@ -7,10 +7,13 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Presentation.Display
 {
+    /// <summary>
+    /// Handles the rendering of console views, including displaying menus and statistics.
+    /// </summary>
     internal class ConsoleViewRenderer
     {
-
         #region Display Methods
+
         // MAIN DISPLAY METHOD
         // Displays the current menu with the given index highlighted.
         public static void DisplayMenu<T>(List<T> currentMenu, ref int CurrentMenuIndex, SessionContext sessionContext)
@@ -93,7 +96,12 @@ namespace Presentation.Display
             }
         }
 
-        // Draws a frame with stats within
+        /// <summary>
+        /// Draws a stats window on the console, displaying various statistics such as user count in the database.
+        /// </summary>
+        /// <param name="sessionContext"></param>
+        /// <param name="windowWidth"></param>
+        /// <param name="windowTop"></param>
         public static void DrawStatsWindow(SessionContext sessionContext, int windowWidth = 25, int windowTop = 3)
         {
             // Calculate left position for the stats window to be placed at the right side of the console.

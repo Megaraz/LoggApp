@@ -9,6 +9,9 @@ using AppLogic.Models.Enums;
 
 namespace AppLogic.Models.DTOs.Summary
 {
+    /// <summary>
+    /// Represents a summary of an exercise, including its duration, perceived intensity, and active calories burned.
+    /// </summary>
     public class ExerciseSummary
     {
         public int Id { get; set; }

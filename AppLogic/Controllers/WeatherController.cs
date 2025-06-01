@@ -11,6 +11,9 @@ using AppLogic.Services.Interfaces;
 
 namespace AppLogic.Controllers
 {
+    /// <summary>
+    /// Controller for managing weather data and geographical information.
+    /// </summary>
     public class WeatherController
     {
 

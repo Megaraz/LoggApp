@@ -8,6 +8,9 @@ using AppLogic.Models.Enums;
 
 namespace AppLogic.Models.DTOs.Detailed
 {
+    /// <summary>
+    /// DTO for detailed caffeine drink information, including the time of consumption and estimated caffeine content.
+    /// </summary>
     public class CaffeineDrinkDetailed
     {
 
@@ -17,7 +20,6 @@ namespace AppLogic.Models.DTOs.Detailed
         public TimeOnly? TimeOf { get; set; }
 
         public int? EstimatedMgCaffeine { get; set; }
-
 
         public CaffeineDrinkDetailed(CaffeineDrinkSummary caffeineDrinkSummary)
         {
