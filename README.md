@@ -1,4 +1,4 @@
-﻿MockDataInject.sql contains mockdata for the database.
+﻿MockDataInsert.sql contains mockdata for the database.
 First run update-database to create the database "HealthLoggApp", then run the MockDataInject.sql to populate it with mock data.
 
 The main focus of this project is to build a logg application to log daily data. It's focus is on health and wellness.
