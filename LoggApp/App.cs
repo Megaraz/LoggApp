@@ -37,7 +37,6 @@ namespace Presentation
         private IAirQualityRepo _airQualityRepo;
         private ISleepRepo _sleepRepo;
         private IExerciseRepo _exerciseRepo;
-        private ISupplementRepo _supplementRepo;
         private IWellnessCheckInRepo _wellnessCheckInRepo;
 
 
@@ -49,7 +48,6 @@ namespace Presentation
         private ICaffeineDrinkService _caffeineDrinkService;
         private ISleepService _sleepService;
         private IExerciseService _exerciseService;
-        private ISupplementService _supplementService;
         private IWellnessCheckInService _wellnessCheckInService;
 
         // Controllers
@@ -82,7 +80,6 @@ namespace Presentation
 
             _sleepRepo = new SleepRepo(_dbContext);
             _exerciseRepo = new ExerciseRepo(_dbContext);
-            _supplementRepo = new SupplementRepo(_dbContext);
             _wellnessCheckInRepo = new WellnessCheckInRepo(_dbContext);
         }
         /// <summary>
@@ -97,7 +94,6 @@ namespace Presentation
 
             _sleepService = new SleepService(_sleepRepo);
             _exerciseService = new ExerciseService(_exerciseRepo);
-            _supplementService = new SupplementService(_supplementRepo);
             _wellnessCheckInService = new WellnessCheckInService(_wellnessCheckInRepo);
 
             _dayCardService = new DayCardService(_dayCardRepo, _weatherService, _airQualityService, _openAiResponseClient);

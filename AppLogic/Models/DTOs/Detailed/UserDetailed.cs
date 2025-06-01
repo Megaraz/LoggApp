@@ -13,7 +13,6 @@ namespace AppLogic.Models.DTOs.Detailed
         public string? CityName { get; set; }
         public double? Lat { get; set; }
         public double? Lon { get; set; }
-
         public int? DayCardCount { get; set; }
 
         public List<DayCardSummary>? AllDayCardsSummary { get; set; }
