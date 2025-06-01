@@ -16,6 +16,6 @@ namespace AppLogic.Services.Interfaces
         Task<List<DayCardSummary>?> ReadAllDayCardsAsync(int userId);
         Task<DayCardDetailed?> ReadSingleDayCardAsync(int id, int userId);
         Task<DayCardDetailed?> ReadSingleDayCardAsync(DateOnly date, int userId);
-        Task<DayCardDetailed> UpdateDayCardAsync(int dayCardId, DayCardInputModel input);
+        Task<DayCardDetailed> UpdateDayCardDateAsync(int dayCardId, DayCardInputModel input);
     }
 }

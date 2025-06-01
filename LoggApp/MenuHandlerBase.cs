@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Controllers;
+using Microsoft.Identity.Client;
 using Presentation.MenuState_Enums;
 
 namespace Presentation
@@ -19,69 +20,19 @@ namespace Presentation
             sessionContext.CurrentPrompt = string.Empty;
             sessionContext.MainHeader = string.Empty;
             sessionContext.SubHeader = string.Empty;
+            sessionContext.MainContent = string.Empty;
             sessionContext.ErrorMessage = string.Empty;
+            sessionContext.Footer = string.Empty;
 
             sessionContext.MainMenuState = MainMenuState.None;
             sessionContext.UserMenuState = UserMenuState.None;
             sessionContext.DayCardMenuState = DayCardMenuState.None;
             sessionContext.IntakeMenuState = IntakeMenuState.None;
+            sessionContext.ActivityMenuState = ActivityMenuState.None;
+            sessionContext.SleepMenuState = SleepMenuState.None;
             return sessionContext;
         }
 
-        protected static T? GetMenuValue<T>(List<T> currentMenu, SessionContext sessionContext)
-        {
-            List<string> currentMenuStringList = currentMenu.Select(x => x?.ToString()).ToList()!;
-
-
-            ConsoleKey keyPress;
-            int currentIndex = 0;
-            do
-            {
-
-                View.DisplayMenu(currentMenuStringList, ref currentIndex, sessionContext.CurrentPrompt!, sessionContext.MainHeader!, sessionContext.SubHeader, sessionContext.ErrorMessage);
-                keyPress = View.InputToMenuIndex(ref currentIndex);
-
-                if (keyPress == ConsoleKey.Escape)
-                {
-                    if (sessionContext.MainMenuState != MainMenuState.None)
-                    {
-                        if (sessionContext.MainMenuState == MainMenuState.Main)
-                        {
-                            sessionContext.MainMenuState = MainMenuState.Exit;
-                        }
-                        else
-                        {
-                            sessionContext.MainMenuState = MainMenuState.Back;
-
-                        }
-                    }
-                    if (sessionContext.UserMenuState != UserMenuState.None)
-                    {
-                        sessionContext.MainMenuState = MainMenuState.SpecificUser;
-                    }
-                    if (sessionContext.DayCardMenuState != DayCardMenuState.None)
-                    {
-                        sessionContext.UserMenuState = UserMenuState.AllDayCards;
-                    }
-                    if (sessionContext.IntakeMenuState != IntakeMenuState.None)
-                    {
-                        sessionContext.DayCardMenuState = DayCardMenuState.Overview;
-                    }
-                }
-
-
-            } while (keyPress != ConsoleKey.Enter && keyPress != ConsoleKey.Escape);
-
-            if (keyPress != ConsoleKey.Escape)
-            {
-                return currentMenu[currentIndex]!;
-
-            }
-            else
-            {
-                return default;
-            }
-
-        }
+        
     }
 }

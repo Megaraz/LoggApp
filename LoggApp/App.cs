@@ -8,16 +8,18 @@ using Presentation.MenuState_Enums;
 
 namespace Presentation
 {
-    internal class App
+    public class App
     {
         // Presentation, Context and Menu Handlers
         private LoggAppContext _dbContext;
         private SessionContext _sessionContext;
-        private View _view;
+        private MenuRouterService _menuRouterService;
         private MainMenuHandler _mainMenuHandler;
         private UserMenuHandler _userMenuHandler;
         private DayCardMenuHandler _dayCardMenuHandler;
         private IntakeMenuHandler _intakeMenuHandler;
+        private ActivityMenuHandler _activityMenuHandler;
+        private SleepMenuHandler _sleepMenuHandler;
         private OpenAiResponseClient _openAiResponseClient;
 
         // Repos
@@ -64,6 +66,7 @@ namespace Presentation
             
         }
         
+        // Initialization Methods Below, I have them separate(instead of constructor) for clarity and intention.
         public void InitRepos()
         {
             _userRepo = new UserRepo(_dbContext);
@@ -86,13 +89,14 @@ namespace Presentation
             _weatherService = new WeatherService(_weatherRepo);
             _airQualityService = new AirQualityService(_airQualityRepo);
             _caffeineDrinkService = new CaffeineDrinkService(_caffeineDrinkRepo);
-            _dayCardService = new DayCardService(_dayCardRepo, _weatherService, _airQualityService, _caffeineDrinkService, _openAiResponseClient);
 
             _sleepService = new SleepService(_sleepRepo);
             _activityService = new ActivityService(_activityRepo);
             _exerciseService = new ExerciseService(_exerciseRepo);
             _supplementService = new SupplementService(_supplementRepo);
             _wellnessCheckInService = new WellnessCheckInService(_wellnessCheckInRepo);
+
+            _dayCardService = new DayCardService(_dayCardRepo, _weatherService, _airQualityService, _caffeineDrinkService, _exerciseService, _openAiResponseClient, _sleepService);
         }
 
         public void InitControllers()
@@ -117,30 +121,29 @@ namespace Presentation
             _userMenuHandler = new UserMenuHandler(_dayCardController, _userController, _weatherController);
             _dayCardMenuHandler = new DayCardMenuHandler(_dayCardController);
             _intakeMenuHandler = new IntakeMenuHandler(_caffeineDrinkController);
-            _view = new View(_mainMenuHandler, _userMenuHandler, _dayCardMenuHandler, _intakeMenuHandler);
+            _activityMenuHandler = new ActivityMenuHandler(_exerciseController);
+            _sleepMenuHandler = new SleepMenuHandler(_sleepController);
+
+            _menuRouterService = new MenuRouterService(_mainMenuHandler, _userMenuHandler, _dayCardMenuHandler, _intakeMenuHandler, _activityMenuHandler, _sleepMenuHandler);
 
 
             _sessionContext = new SessionContext();
             _sessionContext.MainMenuState = MainMenuState.Main;
-            _sessionContext.MainHeader = MenuText.Header.InitMenu;
             _sessionContext.UserMenuState = UserMenuState.None;
             _sessionContext.DayCardMenuState = DayCardMenuState.None;
             _sessionContext.IntakeMenuState = IntakeMenuState.None;
+            _sessionContext.ActivityMenuState = ActivityMenuState.None;
+            _sessionContext.SleepMenuState = SleepMenuState.None;
 
         }
 
-        //public async Task ReloadAll()
-        //{
-        //    _sessionContext.AllUsersSummary = await _userController.GetAllUsersIncludeAsync();
-        //    //_sessionContext.
-        //}
-
+        // Main run loop method.
         public async Task Run()
         {
             
             do
             {
-                _sessionContext = await _view.Start(_sessionContext);
+                _sessionContext = await _menuRouterService.MenuRouter(_sessionContext);
 
 
 

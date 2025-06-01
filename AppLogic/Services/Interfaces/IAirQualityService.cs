@@ -12,8 +12,5 @@ namespace AppLogic.Services.Interfaces
     {
         Task<AirQualityData> GetAirQualityDataAsync(string lat, string lon, string date);
 
-        PollenDataSummary ConvertToPollenDTO(AirQualityData airQuality);
-
-        AirQualityDataSummary ConvertToAQDTO(AirQualityData airQuality);
     }
 }

@@ -12,6 +12,8 @@ namespace AppLogic.Repositories.Interfaces
         Task<DayCard?> GetDayCardByDateIncludeAsync(DateOnly date, int userId);
         Task<DayCard?> GetDayCardByIdIncludeAsync(int id, int userId);
         Task<List<DayCard>?> GetAllDayCardsIncludeAsync(int userId);
+
+        Task<DayCard> UpdateDayCardAsync(DayCard updatedDayCard);
     }
 
 }

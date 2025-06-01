@@ -12,11 +12,7 @@ namespace AppLogic.Services.Interfaces
 {
     public interface IWeatherService
     {
-
         Task<GeoResultResponse> GetGeoResultAsync(string city);
-
         Task<WeatherData> GetWeatherDataAsync(string lat, string lon, string date);
-
-        WeatherDataSummary ConvertToDTO(WeatherData weatherData);
     }
 }

@@ -26,9 +26,9 @@ namespace AppLogic.Controllers
 
         }
 
-        public async Task<DayCardDetailed> UpdateDayCardAsync(int dayCardId, DayCardInputModel input)
+        public async Task<DayCardDetailed> UpdateDayCardDateAsync(int dayCardId, DayCardInputModel input)
         {
-            return await _dayCardService.UpdateDayCardAsync(dayCardId, input);
+            return await _dayCardService.UpdateDayCardDateAsync(dayCardId, input);
         }
 
         public async Task<bool> DeleteDayCardAsync(int dayCardId)

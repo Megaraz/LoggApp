@@ -2,9 +2,11 @@
 using AppLogic.Controllers;
 using AppLogic.Models;
 using AppLogic.Models.DTOs;
+using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.InputModels;
 using AppLogic.Services;
 using Microsoft.IdentityModel.Tokens;
+using Presentation.Input;
 using Presentation.MenuState_Enums;
 
 namespace Presentation
@@ -24,7 +26,7 @@ namespace Presentation
             switch (sessionContext.DayCardMenuState)
             {
                 case DayCardMenuState.Overview:
-                    sessionContext = SpecificDayCardMenuHandler(sessionContext);
+                    sessionContext = DayCardOverviewMenuHandler(sessionContext);
                     break;
 
 
@@ -39,23 +41,7 @@ namespace Presentation
                 case DayCardMenuState.WeatherDetails:
                     sessionContext = WeatherDetailsMenuHandler(sessionContext);
                     break;
-                //// EXERCISE
-                //case DayCardMenuState.AddExercise:
-                //    sessionContext = await ExerciseCreateMenuHandler(sessionContext);
-                //    break;
-
-                //case DayCardMenuState.ExerciseDetails:
-                //    sessionContext = await ExerciseDetailsMenuHandler(sessionContext);
-                //    break;
-
-                //// SLEEP
-                //case DayCardMenuState.AddSleep:
-                //    sessionContext = await SleepCreateMenuHandler(sessionContext);
-                //    break;
-                //case DayCardMenuState.SleepDetails:
-                //    sessionContext = await SleepDetailsMenuHandler;
-                //    break;
-
+                
                 case DayCardMenuState.UpdateDayCard:
                     sessionContext = await UpdateDayCardDateAsync(sessionContext);
                     break;
@@ -76,26 +62,32 @@ namespace Presentation
             ResetMenuStates(sessionContext);
 
             // Get user input for date
-            DayCardInputModel? dayCardInputModel = View.Input_DayCard(sessionContext);
+            DayCardInputModel? dayCardInputModel = ConsoleInput.Input_DayCard(sessionContext);
 
             if (dayCardInputModel != null)
             {
-                sessionContext.CurrentDayCard = await _dayCardController.CreateNewDayCardAsync(sessionContext.CurrentUser!.Id, dayCardInputModel);
-                sessionContext.DayCardMenuState = DayCardMenuState.Overview;
+                
+                sessionContext.CurrentDayCard = await _dayCardController.UpdateDayCardDateAsync(sessionContext.CurrentDayCard!.DayCardId, dayCardInputModel);
 
+                // Update client-side on the current user aswell
+                sessionContext.CurrentUser!.AllDayCardsSummary!
+                    .FirstOrDefault(x => x.DayCardId == sessionContext.CurrentDayCard.DayCardId)!.Date = sessionContext.CurrentDayCard.Date;
+
+                sessionContext.DayCardMenuState = DayCardMenuState.Overview;
             }
             else
             {
-                sessionContext.MainMenuState = MainMenuState.SpecificUser;
+                sessionContext.DayCardMenuState = DayCardMenuState.Overview;
             }
             return sessionContext;
         }
 
         private async Task<TContext> DayCardDeleteMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
+            ResetMenuStates(sessionContext);
 
             // Get user input for confirmation
-            bool confirmDelete = View.Input_Confirmation(MenuText.Prompt.DeleteDayCardConfirmation);
+            bool confirmDelete = ConsoleInput.Input_Confirmation(MenuText.Prompt.DeleteDayCardConfirmation);
 
             if (confirmDelete)
             {
@@ -103,7 +95,7 @@ namespace Presentation
 
                 if (dayCardDelete)
                 {
-                    sessionContext.CurrentUser = null;
+                    sessionContext.CurrentDayCard = null;
                     Console.Clear();
                     Console.WriteLine(MenuText.Header.DayCardDeleted);
                     Thread.Sleep(1500);
@@ -124,7 +116,7 @@ namespace Presentation
             return sessionContext;
         }
 
-        public static TContext SpecificDayCardMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
+        public static TContext DayCardOverviewMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
             sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.CurrentUser!.ToString()}\n";
@@ -138,16 +130,26 @@ namespace Presentation
 
             };
 
-            if (sessionContext.CurrentDayCard.SupplementsSummary != null)
+            if (sessionContext.CurrentDayCard.SleepDetails is null)
             {
-                specificDayCardMenu.Add(MenuText.NavOption.Supplements);
+                specificDayCardMenu.Add(MenuText.NavOption.AddSleep);
             }
             else
             {
-                specificDayCardMenu.Add(MenuText.NavOption.AddSupplements);
+                specificDayCardMenu.Add(MenuText.NavOption.SleepDetails);
             }
 
-            if (sessionContext.CurrentDayCard.CaffeineDrinksSummary != null && sessionContext.CurrentDayCard.CaffeineDrinksSummary.CaffeineDrinksDetails.Count > 0)
+
+            if (sessionContext.CurrentDayCard.ExercisesSummaries != null && sessionContext.CurrentDayCard.ExercisesSummaries.Count > 0)
+            {
+                specificDayCardMenu.Add(MenuText.NavOption.Exercise);
+            }
+            else
+            {
+                specificDayCardMenu.Add(MenuText.NavOption.AddExercise);
+            }
+
+            if (sessionContext.CurrentDayCard.CaffeineDrinksSummaries != null && sessionContext.CurrentDayCard.CaffeineDrinksSummaries.Count > 0)
             {
                 specificDayCardMenu.Add(MenuText.NavOption.CaffeineDrinks);
             }
@@ -158,10 +160,11 @@ namespace Presentation
 
 
             specificDayCardMenu.Add(MenuText.NavOption.Back);
+            specificDayCardMenu.Add(MenuText.NavOption.ChangeDayCardDate);
             specificDayCardMenu.Add(MenuText.NavOption.DeleteDayCard);
 
 
-            var specUserChoice = GetMenuValue(specificDayCardMenu, sessionContext);
+            var specUserChoice = MenuNavigation.GetMenuValue(specificDayCardMenu, sessionContext);
 
             if (specUserChoice != null)
             {
@@ -179,35 +182,33 @@ namespace Presentation
                         sessionContext.DayCardMenuState = DayCardMenuState.PollenDetails;
                         break;
 
-                    case MenuText.NavOption.Supplements:
-                        ResetMenuStates(sessionContext);
-                        sessionContext.IntakeMenuState = IntakeMenuState.SupplementsOverview;
+                    case MenuText.NavOption.AddSleep:
+                        sessionContext.SleepMenuState = SleepMenuState.AddSleep;
                         break;
 
-                    case MenuText.NavOption.AddSupplements:
-                        ResetMenuStates(sessionContext);
-                        sessionContext.IntakeMenuState = IntakeMenuState.AddSupplements;
+                    case MenuText.NavOption.SleepDetails:
+                        sessionContext.SleepMenuState = SleepMenuState.SleepDetails;
                         break;
 
                     case MenuText.NavOption.CaffeineDrinks:
-                        ResetMenuStates(sessionContext);
                         sessionContext.IntakeMenuState = IntakeMenuState.CaffeineOverview;
                         break;
 
                     case MenuText.NavOption.AddCaffeine:
-                        ResetMenuStates(sessionContext);
                         sessionContext.IntakeMenuState = IntakeMenuState.AddCaffeineDrink;
                         break;
 
+                    case MenuText.NavOption.AddExercise:
+                        sessionContext.ActivityMenuState = ActivityMenuState.AddExercise;
+                        break;
+
                     case MenuText.NavOption.Exercise:
-                        sessionContext.DayCardMenuState = DayCardMenuState.ExerciseDetails;
+                        sessionContext.ActivityMenuState = ActivityMenuState.ExerciseOverview;
                         break;
 
-                    case MenuText.NavOption.ComputerActivity:
-                        sessionContext.DayCardMenuState = DayCardMenuState.ComputerActivity;
-                        break;
 
-                    case MenuText.NavOption.Sleep:
+                    case MenuText.NavOption.ChangeDayCardDate:
+                        sessionContext.DayCardMenuState = DayCardMenuState.UpdateDayCard;
                         break;
 
                     case MenuText.NavOption.DeleteDayCard:
@@ -229,6 +230,7 @@ namespace Presentation
         }
         private TContext WeatherDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
+            ResetMenuStates(sessionContext);
             Console.Clear();
             Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.CurrentUser!.ToString()}");
             Console.WriteLine(sessionContext.CurrentDayCard.WeatherSummary.ToString());
@@ -238,6 +240,7 @@ namespace Presentation
         }
         private TContext AirQualityDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
+            ResetMenuStates(sessionContext);
             Console.Clear();
             Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.CurrentUser!.ToString()}");
             Console.WriteLine(sessionContext.CurrentDayCard.AirQualitySummary.ToString());
@@ -248,6 +251,7 @@ namespace Presentation
 
         private TContext PollenDetailsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
+            ResetMenuStates(sessionContext);
             Console.Clear();
             Console.WriteLine(MenuText.Header.SpecificUser + $"{sessionContext.CurrentUser!.ToString()}");
             Console.WriteLine(sessionContext.CurrentDayCard.PollenSummary.ToString());
@@ -256,9 +260,9 @@ namespace Presentation
             return sessionContext;
         }
 
-        
 
-        
+
+
 
     }
 

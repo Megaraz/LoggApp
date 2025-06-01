@@ -4,6 +4,7 @@ using AppLogic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppLogic.Migrations
 {
     [DbContext(typeof(LoggAppContext))]
-    partial class LoggAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250531090206_Sleep_TotalSleepTime_Adjusted")]
+    partial class Sleep_TotalSleepTime_Adjusted
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

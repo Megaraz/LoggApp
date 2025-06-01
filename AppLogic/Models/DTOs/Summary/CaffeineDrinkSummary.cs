@@ -4,38 +4,40 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Models.DTOs.Detailed;
+using AppLogic.Models.Entities;
 
 namespace AppLogic.Models.DTOs.Summary
 {
     public class CaffeineDrinkSummary
     {
 
-        public int? DayCardId { get; set; }
+        public int Id { get; set; }
+        public int DayCardId { get; set; }
+        public TimeOnly? TimeOf { get; set; }
+        public int? EstimatedMgCaffeine { get; set; }
 
-        public List<CaffeineDrinkDetailed> CaffeineDrinksDetails { get; set; } = new List<CaffeineDrinkDetailed>();
+        public CaffeineDrinkSummary(CaffeineDrink drink)
+        {
+            Id = drink.Id;
+            DayCardId = drink.DayCardId!;
+            TimeOf = drink.TimeOf;
+            EstimatedMgCaffeine = drink.EstimatedMgCaffeine;
+        }
 
-        public int? TotalCaffeineInMg { get; set; }
-
-
+        public CaffeineDrinkSummary(CaffeineDrinkDetailed caffeineDrinkDetailed)
+        {
+            Id = caffeineDrinkDetailed.Id;
+            DayCardId = caffeineDrinkDetailed.DayCardId;
+            TimeOf = caffeineDrinkDetailed.TimeOf;
+            EstimatedMgCaffeine = caffeineDrinkDetailed.EstimatedMgCaffeine;
+        }
 
         public override string ToString()
         {
             var sb = new StringBuilder();
 
-            var props = typeof(CaffeineDrinkDetailed).GetProperties();
-            string mainHeader = string.Empty;
+            sb.Append($"{Id}\t{TimeOf}\t{EstimatedMgCaffeine}mg\n");
 
-            foreach (var prop in props)
-            {
-                mainHeader += prop.Name.ToUpper() + '\t';
-            }
-
-            sb.AppendLine(mainHeader);
-
-            foreach (var drink in CaffeineDrinksDetails)
-            {
-                sb.AppendLine($"{drink}");
-            }
 
             return sb.ToString();
 

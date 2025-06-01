@@ -29,5 +29,10 @@ namespace AppLogic.Controllers
         {
             return await _caffeineDrinkService.DeleteCaffeineDrinkAsync(caffeineDrinkId);
         }
+
+        public async Task<CaffeineDrinkDetailed?> UpdateCaffeineDrinkAsync(int caffeineDrinkId, CaffeineDrinkInputModel updateInputModel)
+        {
+            return await _caffeineDrinkService.UpdateCaffeineDrinkAsync(caffeineDrinkId, updateInputModel);
+        }
     }
 }

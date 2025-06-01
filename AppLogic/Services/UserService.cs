@@ -35,15 +35,9 @@ namespace AppLogic.Services
                 CityName = newUser.CityName,
                 Lat = newUser.Lat,
                 Lon = newUser.Lon,
-                DayCardSummary = newUser.DayCards!
-                    .Select(d => new DayCardSummary
-                    {
-                        DayCardId = d.Id,
-                        UserId = d.UserId,
-                        Date = d.Date,
-                        Entries = (d.Activities!.Count + d.CaffeineDrinks!.Count + d.Supplements!.Count)
-
-                    }).ToList()
+                AllDayCardsSummary = newUser.DayCards!
+                    .Select(dayCard => new DayCardSummary(dayCard)).ToList(),
+                DayCardCount = newUser.DayCards?.Count ?? 0
             };
 
         }
@@ -93,15 +87,9 @@ namespace AppLogic.Services
                 CityName = user.CityName,
                 Lat = user.Lat,
                 Lon = user.Lon,
-                DayCardSummary = user.DayCards!
-                    .Select(d => new DayCardSummary
-                    {
-                        DayCardId = d.Id,
-                        UserId = d.UserId,
-                        Date = d.Date,
-                        Entries = (d.Activities!.Count + d.CaffeineDrinks!.Count + d.Supplements!.Count)
-
-                    }).ToList()
+                AllDayCardsSummary = user.DayCards!
+                    .Select(dayCard => new DayCardSummary(dayCard)).ToList(),
+                DayCardCount = user.DayCards?.Count ?? 0
             };
         }
         public async Task<UserDetailed?> GetUserByUsernameIncludeAsync(string username)
@@ -117,15 +105,9 @@ namespace AppLogic.Services
                 CityName = user.CityName,
                 Lat = user.Lat,
                 Lon = user.Lon,
-                DayCardSummary = user.DayCards!
-               .Select(d => new DayCardSummary
-               {
-                   DayCardId = d.Id,
-                   UserId = d.UserId,
-                   Date = d.Date,
-                   Entries = (d.Activities!.Count + d.CaffeineDrinks!.Count + d.Supplements!.Count)
-
-               }).ToList()
+                AllDayCardsSummary = user.DayCards!
+               .Select(dayCard => new DayCardSummary(dayCard)).ToList(),
+                DayCardCount = user.DayCards?.Count ?? 0
             };
         }
 
@@ -144,15 +126,9 @@ namespace AppLogic.Services
                 CityName = user.CityName,
                 Lat = user.Lat,
                 Lon = user.Lon,
-                DayCardSummary = user.DayCards!
-                    .Select(d => new DayCardSummary
-                    {
-                        DayCardId = d.Id,
-                        UserId = d.UserId,
-                        Date = d.Date,
-                        Entries = (d.Activities!.Count + d.CaffeineDrinks!.Count + d.Supplements!.Count)
-
-                    }).ToList()
+                AllDayCardsSummary = user.DayCards!
+                    .Select(dayCard => new DayCardSummary(dayCard)).ToList(),
+                DayCardCount = user.DayCards?.Count ?? 0
             };
         }
 

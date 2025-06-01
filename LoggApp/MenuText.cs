@@ -17,12 +17,15 @@
 
             public const string AllDayCards = "DAYCARD ID\tDATE\t\tENTRIES";
 
+            public const string AllExercises = "EXERCISE ID\t\tDURATION\tINTENSITY";
+
             public const string UserDeleted = "USER DELETED SUCCESSFULLY!";
             public const string CaffeineDrinkDeleted = "CAFFEINE DRINK DELETED SUCCESSFULLY!";
             public const string DayCardDeleted = "DAYCARD DELETED SUCCESSFULLY!";
+            public const string ExerciseDeleted = "EXERCISE DELETED SUCCESSFULLY!";
 
 
-            public static string SpecificUser = "ID".PadRight(6) + "USERNAME".PadRight(12) + "CITY\n\n";
+            public static string SpecificUser = "ID".PadRight(6) + "USERNAME".PadRight(12) + "CITY".PadRight(15) + "DAYCARDS\n\n";
             public static string AllUsers = "ID".PadRight(6) + "USERNAME".PadRight(12) + "CITY".PadRight(15) + "DAYCARDS";
 
 
@@ -48,6 +51,7 @@
             public const string DeleteUserConfirmation = "ARE YOU SURE YOU WANT TO DELETE THIS USER? (Y/N)";
             public const string DeleteCaffeineDrinkConfirmation = "ARE YOU SURE YOU WANT TO DELETE THIS CAFFEINE DRINK? (Y/N)";
             public const string DeleteDayCardConfirmation = "ARE YOU SURE YOU WANT TO DELETE THIS DAYCARD? (Y/N)";
+            public const string DeleteExerciseConfirmation = "ARE YOU SURE YOU WANT TO DELETE THIS EXERCISE? (Y/N)";
 
 
         }
@@ -69,6 +73,7 @@
             public const string UserDeleteFailed = "USER DELETE FAILED, PLEASE TRY AGAIN";
             public const string CaffeineDrinkDeleteFailed = "CAFFEINE DRINK DELETE FAILED, PLEASE TRY AGAIN";
             public const string DayCardDeleteFailed = "DAYCARD DELETE FAILED, PLEASE TRY AGAIN";
+            public const string ExerciseDeleteFailed = "EXERCISE DELETE FAILED, PLEASE TRY AGAIN";
 
 
         }
@@ -94,11 +99,18 @@
             public const string DrinkMedium = "[MEDIUM]";
             public const string DrinkSmall = "[SMALL]";
 
+            public const string ExerciseRelaxed = "[RELAXED]";
+            public const string ExerciseLight = "[LIGHT]";
+            public const string ExerciseModerate = "[MODERATE]";
+            public const string ExerciseIntense = "[INTENSE]";
+            public const string ExerciseMaxEffort = "[MAX EFFORT]";
+
 
             public const string CreateNewDayCard = "[CREATE NEW DAYCARD]";
             public const string SearchDayCard = "[SEARCH DAYCARD]";
             public const string ShowAllDayCards = "[SHOW ALL DAYCARDS]";
             public const string DeleteDayCard = "[DELETE DAYCARD]";
+            public const string ChangeDayCardDate = "[CHANGE DAYCARD DATE]";
 
             public const string Weather = "[WEATHER SPECIFICS]";
             public const string AirQuality = "[AIRQUALITY SPECIFICS]";
@@ -106,7 +118,7 @@
             public const string Supplements = "[SUPPLEMENTS]";
             public const string CaffeineDrinks = "[CAFFEINEDRINKS]";
             public const string Exercise = "[EXERCISE]";
-            public const string Sleep = "[SLEEP]";
+            public const string SleepDetails = "[SLEEP DETAILS]";
             public const string ComputerActivity = "[COMPUTER ACTIVITY]";
 
             public const string AddSupplements = "[ADD SUPPLEMENTS]";
@@ -120,6 +132,17 @@
             public const string AddIngredient = "[ADD INGREDIENT]";
             public const string DeleteSupplement = "[DELETE SUPPLEMENT]";
 
+
+            public const string UpdateSleep = "[EDIT SLEEP]";
+            public const string DeleteSleep = "[DELETE SLEEP]";
+            public const string AddSleep = "[ADD SLEEP]";
+
+            public const string UpdateExercise = "[EDIT EXERCISE]";
+            public const string DeleteExercise = "[DELETE EXERCISE]";
+
+            public const string ShowAllExercise = "[SHOW ALL EXERCISE]";
+            public const string AddExercise = "[ADD EXERCISE]";
+
             public const string Back = "[BACK]";
 
             // STATIC MENU OPTIONS
@@ -127,11 +150,18 @@
             public static string[] s_AllUserMenu = [Login, CreateNewUser];
             public static string[] s_SpecificUserMenu = [CreateNewDayCard, SearchDayCard, UserSettings];
             public static string[] s_UserSettingsMenu = [UpdateUsername, UpdateLocation, DeleteUser];
-            public static string[] s_SpecificDayCardMenu = [Weather, AirQuality, Pollen, Supplements, CaffeineDrinks, Exercise, ComputerActivity, Sleep];
+            public static string[] s_SpecificDayCardMenu = [Weather, AirQuality, Pollen, Supplements, CaffeineDrinks, Exercise, ComputerActivity, SleepDetails];
 
             public static string[] s_CaffeineOverviewMenu = [ShowAllCaffeineDrinks, AddCaffeine, Back];
 
+            public static string[] s_ExerciseOverviewMenu = [ShowAllExercise, AddExercise, Back];
+            public static string[] s_ExerciseDetailsMenu = [UpdateExercise, DeleteExercise, Back];
+
+            public static string[] s_SleepDetailsMenu = [UpdateSleep, DeleteSleep, Back];
+
             public static string[] s_DrinkSize = [DrinkLarge, DrinkMedium, DrinkSmall];
+
+            public static string[] s_ExercisePerceivedIntensity = [ExerciseRelaxed, ExerciseLight, ExerciseModerate, ExerciseIntense, ExerciseMaxEffort];
 
             public static string[] s_CaffeineDetailsMenu = [UpdateCaffeineDrink, DeleteCaffeineDrink, Back];
             public static string[] s_SupplementDetailsMenu = [UpdateSupplement, DeleteSupplement, AddIngredient, Back];

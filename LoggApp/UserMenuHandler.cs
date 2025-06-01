@@ -9,6 +9,7 @@ using AppLogic.Models;
 using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.InputModels;
 using Microsoft.IdentityModel.Tokens;
+using Presentation.Input;
 using Presentation.MenuState_Enums;
 
 namespace Presentation
@@ -30,12 +31,16 @@ namespace Presentation
         {
             switch (sessionContext.UserMenuState)
             {
+                case UserMenuState.Overview:
+                    sessionContext = UserOverviewMenuHandler(sessionContext);
+                    break;
+
                 case UserMenuState.AllDayCards:
                     sessionContext = await AllDayCardsMenuHandler(sessionContext);
                     break;
 
                 case UserMenuState.CreateNewDayCard:
-                    sessionContext = await CreateDayCardMenuHandler(sessionContext);
+                    sessionContext = await CreateDayCardMenuHandlerAsync(sessionContext);
                     break;
                 case UserMenuState.SearchDayCard:
                     break;
@@ -49,13 +54,63 @@ namespace Presentation
             return sessionContext;
 
         }
+        public TContext UserOverviewMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
+        {
+            ResetMenuStates(sessionContext);
+            sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.CurrentUser!.ToString()}\n";
 
+            var specificUserMenu = MenuText.NavOption.s_SpecificUserMenu.ToList();
+
+            if (sessionContext.CurrentUser.AllDayCardsSummary!.Count > 0)
+            {
+                //sessionContext.SubHeader = "Number of Daycards: " + sessionContext.DTO_CurrentUser.DTO_AllDayCards.Count + "\n";
+                specificUserMenu = specificUserMenu.Prepend(MenuText.NavOption.ShowAllDayCards).ToList();
+            }
+
+            specificUserMenu.Add(MenuText.NavOption.Back);
+
+            var specUserChoice = MenuNavigation.GetMenuValue(specificUserMenu, sessionContext);
+
+            if (specUserChoice != null)
+            {
+                switch (specUserChoice)
+                {
+                    case MenuText.NavOption.CreateNewDayCard:
+                        sessionContext.UserMenuState = UserMenuState.CreateNewDayCard;
+                        break;
+
+                    case MenuText.NavOption.ShowAllDayCards:
+                        sessionContext.UserMenuState = UserMenuState.AllDayCards;
+                        break;
+
+                    case MenuText.NavOption.SearchDayCard:
+                        sessionContext.UserMenuState = UserMenuState.SearchDayCard;
+                        break;
+
+                    case MenuText.NavOption.UserSettings:
+                        sessionContext.UserMenuState = UserMenuState.UserSettings;
+                        break;
+
+                    case MenuText.NavOption.Back:
+                        sessionContext.MainMenuState = MainMenuState.AllUsers;
+                        break;
+                }
+
+            }
+            else
+            {
+                sessionContext.MainMenuState = MainMenuState.AllUsers;
+            }
+
+
+            return sessionContext;
+        }
         public async Task<TContext> UserSettingsMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
 
             // Get the selected menu option from the user
-            var settingChoice = GetMenuValue(MenuText.NavOption.s_UserSettingsMenu.ToList(), sessionContext);
+            var settingChoice = MenuNavigation.GetMenuValue(MenuText.NavOption.s_UserSettingsMenu.ToList(), sessionContext);
 
             // If the user selected a valid option(not Key.Escape), proceed.
             if (settingChoice is not null)
@@ -77,7 +132,7 @@ namespace Presentation
             }
             else
             {
-                sessionContext.MainMenuState = MainMenuState.SpecificUser;
+                sessionContext.UserMenuState = UserMenuState.Overview;
             }
 
             return sessionContext;
@@ -87,7 +142,7 @@ namespace Presentation
         {
 
             // Get user input for confirmation
-            bool confirmDelete = View.Input_Confirmation(MenuText.Prompt.DeleteUserConfirmation);
+            bool confirmDelete = ConsoleInput.Input_Confirmation(MenuText.Prompt.DeleteUserConfirmation);
 
             bool userDeleted = false;
 
@@ -101,7 +156,7 @@ namespace Presentation
                     // CLIENT SIDE
                     var userSummary = sessionContext.AllUsersSummary?.FirstOrDefault(u => u.Id == sessionContext.CurrentUser!.Id);
 
-                    // Remove the deleted user from the AllUsersSummary list
+                    // Remove the deleted user from the AllUsersSummary list, client-side
                     if (userSummary != null)
                     {
                         sessionContext.AllUsersSummary?.Remove(userSummary);
@@ -137,7 +192,7 @@ namespace Presentation
         private async Task<TContext> UpdateUserNameAsync<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             // Get user input for username
-            string? usernameInput = View.Input_Username(MenuText.Header.CurrentUserName + sessionContext.CurrentUser!.Username, true);
+            string? usernameInput = ConsoleInput.Input_Username(MenuText.Header.CurrentUserName + sessionContext.CurrentUser!.Username, true);
 
             if (usernameInput is not null)
             {
@@ -169,7 +224,7 @@ namespace Presentation
                 Console.WriteLine();
                 Console.WriteLine("USERNAME UPDATED");
                 Thread.Sleep(1500);
-                sessionContext.UserMenuState = UserMenuState.UserSettings;
+                sessionContext.UserMenuState = UserMenuState.Overview;
             }
             else
             {
@@ -181,7 +236,7 @@ namespace Presentation
         private async Task<TContext> UpdateUserLocationAsync<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             // Get user input for geocode/location search
-            string? locationInput = View.Input_Location(MenuText.Header.CurrentLocation + sessionContext.CurrentUser!.CityName, true);
+            string? locationInput = ConsoleInput.Input_Location(MenuText.Header.CurrentLocation + sessionContext.CurrentUser!.CityName, true);
 
 
             if (locationInput is not null)
@@ -194,19 +249,20 @@ namespace Presentation
 
 
                 // User chooses a Location from the list of locations
-                userInputModel.GeoResult = GetMenuValue(geoResultResponse.Results, sessionContext)!;
+                userInputModel.GeoResult = MenuNavigation.GetMenuValue(geoResultResponse.Results, sessionContext)!;
 
                 if (userInputModel.GeoResult is not null)
                 {
                     sessionContext.CurrentUser = await _userController.UpdateUserAsync(sessionContext.CurrentUser!.Id, userInputModel);
 
-                    //var userSummary = sessionContext.AllUsersSummary?.FirstOrDefault(u => u.Id == sessionContext.CurrentUser!.Id);
+                    // UPDATE CLIENT-SIDE
+                    var userSummary = sessionContext.AllUsersSummary?.FirstOrDefault(u => u.Id == sessionContext.CurrentUser!.Id);
 
-                    //// Update Cityname on client side as well
-                    //if (userSummary != null)
-                    //{
-                    //    userSummary.CityName = sessionContext.CurrentUser.CityName;
-                    //}
+                    // Update Cityname on client-side
+                    if (userSummary != null)
+                    {
+                        userSummary.CityName = sessionContext.CurrentUser.CityName;
+                    }
 
                     Console.WriteLine();
                     Console.WriteLine("LOCATION UPDATED");
@@ -225,17 +281,17 @@ namespace Presentation
         {
 
             ResetMenuStates(sessionContext);
-            if (sessionContext.CurrentUser!.DayCardSummary == null || sessionContext.CurrentUser.DayCardSummary.Count == 0)
+            if (sessionContext.CurrentUser!.AllDayCardsSummary == null || sessionContext.CurrentUser.AllDayCardsSummary.Count == 0)
             {
                 sessionContext.ErrorMessage = MenuText.Error.NoDayCardsFound;
-                sessionContext.MainMenuState = MainMenuState.SpecificUser;
+                sessionContext.UserMenuState = UserMenuState.Overview;
             }
             else
             {
                 sessionContext.MainHeader = sessionContext.MainHeader = MenuText.Header.SpecificUser + $"{sessionContext.CurrentUser!.ToString()}\n";
                 sessionContext.SubHeader = MenuText.Header.AllDayCards;
 
-                var dayCardChoice = GetMenuValue(sessionContext!.CurrentUser!.DayCardSummary!, sessionContext);
+                var dayCardChoice = MenuNavigation.GetMenuValue(sessionContext!.CurrentUser!.AllDayCardsSummary!, sessionContext);
 
                 if (dayCardChoice != null)
                 {
@@ -244,7 +300,7 @@ namespace Presentation
                 }
                 else
                 {
-                    sessionContext.MainMenuState = MainMenuState.SpecificUser;
+                    sessionContext.UserMenuState = UserMenuState.Overview;
                 }
 
 
@@ -253,22 +309,34 @@ namespace Presentation
             return sessionContext;
         }
 
-        public async Task<TContext> CreateDayCardMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
+        public async Task<TContext> CreateDayCardMenuHandlerAsync<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
             //sessionContext.MainHeader = MenuText.Prompt.CreateDayCard;
-            DayCardInputModel? dayCardInputModel = View.Input_DayCard(sessionContext);
+            DayCardInputModel? dayCardInputModel = ConsoleInput.Input_DayCard(sessionContext);
 
             if (dayCardInputModel != null)
             {
                 sessionContext.CurrentDayCard = await _dayCardController.CreateNewDayCardAsync(sessionContext.CurrentUser!.Id, dayCardInputModel);
+
+                // BELOW CODE IS FOR CLIENT-SIDE UPDATING ALL INSTANCES WHERE NEW DAYCARD SHOULD BE
+
+                sessionContext.CurrentUser.AllDayCardsSummary ??= new List<DayCardSummary>();
+
+                sessionContext.CurrentUser.AllDayCardsSummary
+                    .Add(new DayCardSummary(sessionContext.CurrentDayCard));
+
+                sessionContext.CurrentUser.DayCardCount = sessionContext.CurrentUser.AllDayCardsSummary.Count; // Update the DayCardCount of the CurrentUser
+
+                sessionContext.AllUsersSummary! // Update the User within the All Users list, with the new DayCard count
+                    .FirstOrDefault(u => u.Id == sessionContext.CurrentUser!.Id)!.DayCardCount = (int)sessionContext.CurrentUser.DayCardCount;
 
                 sessionContext.DayCardMenuState = DayCardMenuState.Overview;
 
             }
             else
             {
-                sessionContext.MainMenuState = MainMenuState.SpecificUser;
+                sessionContext.UserMenuState = UserMenuState.Overview;
             }
 
             return sessionContext;

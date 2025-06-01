@@ -35,44 +35,41 @@ namespace AppLogic.Services
 
             return new CaffeineDrinkDetailed()
             {
-                DayCardId = (int)caffeineDrink!.DayCardId!,
-                CaffeineDrinkId = caffeineDrink.Id,
+                DayCardId = caffeineDrink!.DayCardId!,
+                Id = caffeineDrink.Id,
                 TimeOf = caffeineDrink.TimeOf,
                 EstimatedMgCaffeine = caffeineDrink.EstimatedMgCaffeine,
                 
             };
         }
 
-        public CaffeineDrinkSummary ConvertToSummaryDTO(List<CaffeineDrink> caffeineDrinks)
-        {
-
-            CaffeineDrinkSummary CaffeineDrinksSummary = new CaffeineDrinkSummary();
-
-            foreach (var drink in caffeineDrinks)
-            {
-                CaffeineDrinksSummary
-                    .CaffeineDrinksDetails
-                        .Add
-                        (
-                            new CaffeineDrinkDetailed()
-                            {
-                                DayCardId = (int)drink.DayCardId!,
-                                CaffeineDrinkId = drink.Id,
-                                TimeOf = drink.TimeOf,
-                                EstimatedMgCaffeine = drink.EstimatedMgCaffeine,
-                                
-                            }
-                        );
-            }
-            CaffeineDrinksSummary.TotalCaffeineInMg = caffeineDrinks.Sum(x => x.EstimatedMgCaffeine);
-            return CaffeineDrinksSummary;
-
-        }
-
         public async Task<bool> DeleteCaffeineDrinkAsync(int caffeineDrinkId)
         {
 
             return await _caffeineDrinkRepo.DeleteAsync(caffeineDrinkId);
+        }
+
+        public async Task<CaffeineDrinkDetailed?> UpdateCaffeineDrinkAsync(int caffeineDrinkId, CaffeineDrinkInputModel updateInputModel)
+        {
+            CaffeineDrink updatedCaffeineDrink = new(
+                updateInputModel.DayCardId,
+                updateInputModel.TimeOf,
+                updateInputModel.SizeOfDrink,
+                updateInputModel.TypeOfDrink
+            );
+            updatedCaffeineDrink.Id = caffeineDrinkId;
+
+            updatedCaffeineDrink = await _caffeineDrinkRepo.UpdateCaffeineDrinkAsync(updatedCaffeineDrink);
+
+            return new CaffeineDrinkDetailed()
+            {
+                DayCardId = updatedCaffeineDrink!.DayCardId!,
+                Id = updatedCaffeineDrink.Id,
+                TimeOf = updatedCaffeineDrink.TimeOf,
+                EstimatedMgCaffeine = updatedCaffeineDrink.EstimatedMgCaffeine,
+
+            };
+
         }
     }
 }

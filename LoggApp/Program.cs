@@ -20,7 +20,6 @@ namespace Presentation
 
             await app.Run();
 
-
         }
 
     }

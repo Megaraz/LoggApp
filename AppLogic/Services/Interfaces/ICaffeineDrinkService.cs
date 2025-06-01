@@ -13,8 +13,7 @@ namespace AppLogic.Services.Interfaces
     public interface ICaffeineDrinkService
     {
         Task<CaffeineDrinkDetailed> AddCaffeineDrinkToDayCardAsync(int dayCardId, CaffeineDrinkInputModel model);
-
-        CaffeineDrinkSummary ConvertToSummaryDTO(List<CaffeineDrink> caffeineDrinks);
         Task<bool> DeleteCaffeineDrinkAsync(int caffeineDrinkId);
+        Task<CaffeineDrinkDetailed?> UpdateCaffeineDrinkAsync(int caffeineDrinkId, CaffeineDrinkInputModel updateInputModel);
     }
 }

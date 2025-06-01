@@ -3,7 +3,6 @@
     public enum MainMenuState
     {
         Main,
-        SpecificUser,
         AllUsers,
         TodaysWeather,
         Back,
@@ -13,6 +12,7 @@
 
     public enum UserMenuState
     {
+        Overview,
         AllDayCards,
         CreateNewDayCard,
         SpecificDayCard,
@@ -27,13 +27,7 @@
         WeatherDetails,
         AirQualityDetails,
         PollenDetails,
-        AddWellnessCheckIn,
-        WellnessCheckInDetails,
-        ExerciseDetails,
-        AddExercise,
-        ComputerActivity,
-        AddSleep,
-        SleepDetails,
+        //ComputerActivity,
         UpdateDayCard,
         DeleteDayCard,
         None
@@ -55,5 +49,24 @@
         None
     }
 
+    public enum ActivityMenuState
+    {
+        ExerciseOverview,
+        AddExercise,
+        ShowAllExercises,
+        ExerciseDetails,
+        UpdateExercise,
+        DeleteExercise,
+        None
+    }
+
+    public enum SleepMenuState
+    {
+        SleepDetails,
+        AddSleep,
+        UpdateSleep,
+        DeleteSleep,
+        None
+    }
 
 }

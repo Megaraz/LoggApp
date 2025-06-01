@@ -12,13 +12,13 @@ namespace AppLogic.Models.DTOs.Detailed
 
         public int? DayCardCount { get; set; }
 
-        public List<DayCardSummary>? DayCardSummary { get; set; }
+        public List<DayCardSummary>? AllDayCardsSummary { get; set; }
 
 
         public override string ToString()
         {
             return $"[{Id.ToString()}]" + string.Empty.PadRight(3) +
-                $"{Username?.PadRight(12)}{CityName}";
+                $"{Username?.PadRight(12)}{CityName?.PadRight(15)}{DayCardCount?.ToString()}";
         }
     }
 }

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AppLogic.Models.Entities;
 
 namespace AppLogic.Repositories.Interfaces
 {
-    public interface IExerciseRepo
+    public interface IExerciseRepo : IGenericRepo<Exercise>
     {
+        Task<Exercise> UpdateExerciseAsync(Exercise exercise);
     }
 }

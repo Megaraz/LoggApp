@@ -23,7 +23,7 @@ namespace AppLogic.Controllers
 
         public WeatherDataSummary ConvertToDTO(WeatherData weatherData)
         {
-            return _weatherService.ConvertToDTO(weatherData);
+            return new WeatherDataSummary(weatherData);
         }
 
         public async Task<WeatherData> GetWeatherDataAsync(string lat, string lon, string date)

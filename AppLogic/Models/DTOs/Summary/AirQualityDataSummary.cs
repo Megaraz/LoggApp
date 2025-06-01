@@ -1,5 +1,7 @@
 ﻿using System.Text;
+using AppLogic.Migrations;
 using AppLogic.Models.DTOs.Detailed;
+using AppLogic.Models.Entities.WeatherAndAQI;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AppLogic.Models.DTOs.Summary
@@ -12,6 +14,59 @@ namespace AppLogic.Models.DTOs.Summary
         public List<AirQualityDataDetailed>? AirQualityDetails { get; set; } = new List<AirQualityDataDetailed>();
 
         public string? AISummary { get; set; }
+
+
+        public AirQualityDataSummary(AirQualityData airQuality)
+        {
+            var block = airQuality.HourlyBlock ?? throw new ArgumentNullException(nameof(airQuality));
+            var units = airQuality.HourlyUnits ?? throw new ArgumentNullException(nameof(airQuality));
+
+
+            AISummary = airQuality.AQI_AISummary;
+            AirQualityDetails = block.Time
+                .Select((time, i) => new AirQualityDataDetailed()
+                {
+                    Time = time.Hour,
+
+                    UVI = new Measurement<double?>
+                    {
+                        Value = block.UVI.ElementAtOrDefault(i),
+                        Unit = units.UVI
+                    },
+                    AQI = new Measurement<double?>
+                    {
+                        Value = block.AQI.ElementAtOrDefault(i),
+                        Unit = units.AQI
+                    },
+                    PM25 = new Measurement<double?>
+                    {
+                        Value = block.PM25.ElementAtOrDefault(i),
+                        Unit = units.PM25
+                    },
+                    Ozone = new Measurement<double?>
+                    {
+                        Value = block.Ozone.ElementAtOrDefault(i),
+                        Unit = units.Ozone
+                    },
+                    CO = new Measurement<double?>
+                    {
+                        Value = block.CarbonMonoxide.ElementAtOrDefault(i),
+                        Unit = units.CO
+                    },
+                    NO2 = new Measurement<double?>
+                    {
+                        Value = block.NitrogenDioxide.ElementAtOrDefault(i),
+                        Unit = units.NO2
+                    },
+                    Dust = new Measurement<double?>
+                    {
+                        Value = block.Dust.ElementAtOrDefault(i),
+                        Unit = units.Dust
+                    }
+
+                }).
+                ToList();
+        }
 
         public string ToPrompt()
         => ToString();

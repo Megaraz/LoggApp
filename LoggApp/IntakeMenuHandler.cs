@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppLogic.Controllers;
+using AppLogic.Models.DTOs.Detailed;
+using AppLogic.Models.DTOs.Summary;
 using AppLogic.Models.Enums;
 using AppLogic.Models.InputModels;
+using Presentation.Input;
 using Presentation.MenuState_Enums;
 
 namespace Presentation
@@ -44,7 +47,7 @@ namespace Presentation
                     break;
 
                 case IntakeMenuState.DeleteCaffeineDrink:
-                    sessionContext = await DeleteCaffeineDrinkAsyc(sessionContext); 
+                    sessionContext = await DeleteCaffeineDrinkAsyc(sessionContext);
                     break;
 
                 case IntakeMenuState.CaffeineEmpty:
@@ -52,9 +55,9 @@ namespace Presentation
                     break;
 
 
-                case IntakeMenuState.SupplementsOverview:
-                    sessionContext = SupplementsOverviewMenuHandler(sessionContext);
-                    break;
+                //case IntakeMenuState.SupplementsOverview:
+                //    sessionContext = SupplementsOverviewMenuHandler(sessionContext);
+                //    break;
 
 
             }
@@ -65,14 +68,18 @@ namespace Presentation
         private async Task<TContext> DeleteCaffeineDrinkAsyc<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             // Get user input for confirmation
-            bool confirmDelete = View.Input_Confirmation(MenuText.Prompt.DeleteCaffeineDrinkConfirmation);
+            bool confirmDelete = ConsoleInput.Input_Confirmation(MenuText.Prompt.DeleteCaffeineDrinkConfirmation);
 
             bool drinkDeleted = false;
 
             if (confirmDelete)
             {
-                sessionContext?.CurrentDayCard?.CaffeineDrinksSummary?.CaffeineDrinksDetails.Remove(sessionContext.CurrentCaffeineDrink!);
-                drinkDeleted = await _caffeineDrinkController.DeleteCaffeineDrinkAsync(sessionContext!.CurrentCaffeineDrink!.CaffeineDrinkId);
+                var drinkSummary = sessionContext?.CurrentDayCard?.CaffeineDrinksSummaries?
+                    .FirstOrDefault(cd => cd.Id == sessionContext!.CurrentCaffeineDrink!.Id)!;
+
+                sessionContext!.CurrentDayCard!.CaffeineDrinksSummaries?.Remove(drinkSummary);
+
+                drinkDeleted = await _caffeineDrinkController.DeleteCaffeineDrinkAsync(sessionContext!.CurrentCaffeineDrink!.Id);
 
                 if (drinkDeleted)
                 {
@@ -98,21 +105,18 @@ namespace Presentation
             return sessionContext;
         }
 
-        private async Task<TContext> UpdateCaffeineDrinkAsync<TContext>(TContext sessionContext) where TContext : SessionContext
-        {
-            throw new NotImplementedException();
-        }
+        
 
-        private TContext SupplementsOverviewMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
-        {
-            throw new NotImplementedException();
-        }
+        //private TContext SupplementsOverviewMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         private TContext CaffeineOverviewMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
 
-            var caffeineMenuChoice = GetMenuValue(MenuText.NavOption.s_CaffeineOverviewMenu.ToList(), sessionContext);
+            var caffeineMenuChoice = MenuNavigation.GetMenuValue(MenuText.NavOption.s_CaffeineOverviewMenu.ToList(), sessionContext);
 
             if (caffeineMenuChoice != null)
             {
@@ -136,29 +140,28 @@ namespace Presentation
                 sessionContext.DayCardMenuState = DayCardMenuState.Overview;
             }
 
-
             return sessionContext;
         }
 
         private static TContext CaffeineShowAllMenuHandler<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
-            if (sessionContext!.CurrentDayCard!.CaffeineDrinksSummary != null && sessionContext.CurrentDayCard.CaffeineDrinksSummary.CaffeineDrinksDetails.Count > 0)
+            if (sessionContext!.CurrentDayCard!.CaffeineDrinksSummaries != null && sessionContext.CurrentDayCard.CaffeineDrinksSummaries.Count > 0)
             {
                 sessionContext.MainHeader = "Caffeine Drinks " + sessionContext.CurrentDayCard.Date + ":\n";
 
-                var caffeineMenuChoice = GetMenuValue(sessionContext.CurrentDayCard.CaffeineDrinksSummary.CaffeineDrinksDetails, sessionContext);
+                var caffeineMenuChoice = MenuNavigation.GetMenuValue(sessionContext.CurrentDayCard.CaffeineDrinksSummaries, sessionContext);
 
                 if (caffeineMenuChoice != null)
                 {
-                    sessionContext.CurrentCaffeineDrink = caffeineMenuChoice;
+                    sessionContext.CurrentCaffeineDrink = new CaffeineDrinkDetailed(caffeineMenuChoice);
+
                     sessionContext.IntakeMenuState = IntakeMenuState.CaffeineDrinkDetails;
                 }
                 else
                 {
                     sessionContext.IntakeMenuState = IntakeMenuState.CaffeineOverview;
                 }
-
             }
             else
             {
@@ -174,7 +177,7 @@ namespace Presentation
 
             sessionContext.MainHeader = "No Caffeine Drinks found for this daycard.\n";
 
-            var emptyCaffeineMenuChoice = GetMenuValue(MenuText.NavOption.s_CaffeineOverviewMenu.ToList(), sessionContext);
+            var emptyCaffeineMenuChoice = MenuNavigation.GetMenuValue(MenuText.NavOption.s_CaffeineOverviewMenu.ToList(), sessionContext);
 
             if (emptyCaffeineMenuChoice != null)
             {
@@ -200,7 +203,10 @@ namespace Presentation
         {
 
             ResetMenuStates(sessionContext);
-            var drinkDetailsChoice = GetMenuValue(MenuText.NavOption.s_CaffeineDetailsMenu.ToList(), sessionContext);
+
+            sessionContext.Footer = sessionContext.CurrentCaffeineDrink!.ToString();
+
+            var drinkDetailsChoice = MenuNavigation.GetMenuValue(MenuText.NavOption.s_CaffeineDetailsMenu.ToList(), sessionContext);
 
             if (drinkDetailsChoice is not null)
             {
@@ -218,7 +224,6 @@ namespace Presentation
                         sessionContext.IntakeMenuState = IntakeMenuState.CaffeineOverview;
                         break;
                 }
-
             }
             else
             {
@@ -226,16 +231,81 @@ namespace Presentation
             }
             return sessionContext;
         }
+        private async Task<TContext> UpdateCaffeineDrinkAsync<TContext>(TContext sessionContext) where TContext : SessionContext
+        {
+            ResetMenuStates(sessionContext);
 
+            // Re-input the standard values as a whole
+            string? timeOf = ConsoleInput.Input_TimeOfIntake();
+
+            if (timeOf != null)
+            {
+                var sizeOfDrinkChoice = MenuNavigation.GetMenuValue(MenuText.NavOption.s_DrinkSize.ToList(), sessionContext);
+
+                if (sizeOfDrinkChoice != null)
+                {
+                    var updateInputModel = new CaffeineDrinkInputModel()
+                    {
+                        TimeOf = TimeOnly.Parse(timeOf)
+                    };
+
+                    switch (sizeOfDrinkChoice)
+                    {
+                        case MenuText.NavOption.DrinkMedium:
+                            updateInputModel.SizeOfDrink = SizeOfDrink.Medium;
+                            break;
+                        case MenuText.NavOption.DrinkSmall:
+                            updateInputModel.SizeOfDrink = SizeOfDrink.Small;
+                            break;
+                        case MenuText.NavOption.DrinkLarge:
+                            updateInputModel.SizeOfDrink = SizeOfDrink.Large;
+                            break;
+                    }
+
+                    // Assuming a controller method exists for updating a caffeine drink.
+                    sessionContext.CurrentCaffeineDrink = await _caffeineDrinkController
+                        .UpdateCaffeineDrinkAsync(sessionContext.CurrentCaffeineDrink!.Id, updateInputModel);
+
+                    Console.Clear();
+                    Console.WriteLine("CAFFEINE DRINK UPDATED");
+                    Thread.Sleep(1500);
+
+
+
+                    // Update the drink details in the current day card.
+                    var drinkSummary = sessionContext.CurrentDayCard!.CaffeineDrinksSummaries!
+                        .FirstOrDefault(x => x.Id == sessionContext.CurrentCaffeineDrink!.Id);
+
+                    if (drinkSummary != null)
+                    {
+                        // Update the drink details with the new values.
+                        drinkSummary.DayCardId = sessionContext.CurrentCaffeineDrink!.DayCardId;
+                        drinkSummary.TimeOf = sessionContext.CurrentCaffeineDrink!.TimeOf;
+                        drinkSummary.EstimatedMgCaffeine = sessionContext.CurrentCaffeineDrink!.EstimatedMgCaffeine;
+                        
+                    }
+
+                    sessionContext.CurrentDayCard!.UpdateTotalValues();
+
+                }
+                else
+                {
+                    sessionContext.IntakeMenuState = IntakeMenuState.CaffeineDrinkDetails;
+                }
+            }
+
+            sessionContext.IntakeMenuState = IntakeMenuState.CaffeineOverview;
+            return sessionContext;
+        }
         private async Task<TContext> CreateCaffeineDrinkAsync<TContext>(TContext sessionContext) where TContext : SessionContext
         {
             ResetMenuStates(sessionContext);
 
-            string? timeOf = View.Input_TimeOfIntake();
+            string? timeOf = ConsoleInput.Input_TimeOfIntake();
 
             if (timeOf != null)
             {
-                var sizeOfDrinkChoice = GetMenuValue(MenuText.NavOption.s_DrinkSize.ToList(), sessionContext);
+                var sizeOfDrinkChoice = MenuNavigation.GetMenuValue(MenuText.NavOption.s_DrinkSize.ToList(), sessionContext);
 
                 if (sizeOfDrinkChoice != null)
                 {
@@ -259,39 +329,26 @@ namespace Presentation
                             break;
                     }
 
-                    //sessionContext
-                    //    .DayCardDetailed!
-                    //        .CaffeineDrinksSummary!
-                    //            .CaffeineDrinksDetails
-                    //                .Add
-                    //                (await _caffeineDrinkController
-                    //                    .AddCaffeineDrinkToDayCardAsync
-                    //                    (sessionContext.DayCardDetailed!.DayCardId,
-                    //                        caffeineDrinkInputModel
-                    //                    )
-                    //                );
                     sessionContext.CurrentCaffeineDrink = await _caffeineDrinkController
-                                        .AddCaffeineDrinkToDayCardAsync(sessionContext
-                                                                        .CurrentDayCard!.DayCardId,
-                                                                        caffeineDrinkInputModel
-                                                                        );
+                        .AddCaffeineDrinkToDayCardAsync(
+                            sessionContext.CurrentDayCard!.DayCardId,
+                            caffeineDrinkInputModel);
 
                     sessionContext
                         .CurrentDayCard!
-                            .CaffeineDrinksSummary!
-                                .CaffeineDrinksDetails
-                                    .Add(sessionContext.CurrentCaffeineDrink!);
+                            .CaffeineDrinksSummaries!
+                                    .Add(new CaffeineDrinkSummary(sessionContext.CurrentCaffeineDrink));
 
-                    sessionContext.CurrentDayCard!.CaffeineDrinksSummary.TotalCaffeineInMg += sessionContext.CurrentCaffeineDrink.EstimatedMgCaffeine;
+                    sessionContext.CurrentDayCard!.UpdateTotalValues();
+
+                    sessionContext.CurrentUser!.AllDayCardsSummary!
+                        .FirstOrDefault(x => x.DayCardId == sessionContext.CurrentDayCard!.DayCardId)!.Entries++;
                 }
                 else
                 {
                     sessionContext.IntakeMenuState = IntakeMenuState.CaffeineDrinkDetails;
-
                 }
-
             }
-
             sessionContext.IntakeMenuState = IntakeMenuState.CaffeineOverview;
 
             return sessionContext;

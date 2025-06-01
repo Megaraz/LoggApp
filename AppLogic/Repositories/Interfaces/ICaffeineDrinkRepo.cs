@@ -9,5 +9,6 @@ namespace AppLogic.Repositories.Interfaces
 {
     public interface ICaffeineDrinkRepo : IGenericRepo<CaffeineDrink>
     {
+        Task<CaffeineDrink> UpdateCaffeineDrinkAsync(CaffeineDrink updatedCaffeineDrink);
     }
 }
