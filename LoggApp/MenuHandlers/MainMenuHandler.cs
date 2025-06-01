@@ -121,7 +121,7 @@ namespace Presentation.MenuHandlers
                 if (userChoice != null)
                 {
                     sessionContext
-                        .CurrentUser = await _userController.ReadUserSingleAsync(userChoice.Id);
+                        .CurrentUser = await _userController.GetUserDetailed(userChoice.Id);
 
                     sessionContext
                         .UserMenuState = UserMenuState.Overview;
@@ -200,9 +200,10 @@ namespace Presentation.MenuHandlers
             if (username != null)
             {
 
-                UserDetailed? resultUser = await _userController.ReadUserSingleAsync(username);
+                //UserDetailed? userDetailed = await _userController.ReadUserSingleAsync(username);
+                UserDetailed? userDetailed = await _userController.GetUserDetailed(username);
 
-                if (resultUser == null)
+                if (userDetailed == null)
                 {
                     Console.Clear();
                     Console.WriteLine(MenuText.Error.NoUserFound);
@@ -212,7 +213,7 @@ namespace Presentation.MenuHandlers
                 }
                 else
                 {
-                    sessionContext.CurrentUser = resultUser;
+                    sessionContext.CurrentUser = userDetailed;
                     sessionContext.UserMenuState = UserMenuState.Overview;
                 }
             }

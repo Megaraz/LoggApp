@@ -16,7 +16,10 @@ namespace AppLogic.Models.DTOs.Detailed
         public int? DayCardCount { get; set; }
 
         public List<DayCardSummary>? AllDayCardsSummary { get; set; }
-
+        public string? SleepLastWeek { get; internal set; }
+        public string? WellnessLastWeek { get; internal set; }
+        public string? ExerciseLastWeek { get; internal set; }
+        public string? CaffeineLastWeek { get; internal set; }
 
         public UserDetailed(User user)
         {
@@ -39,7 +42,10 @@ namespace AppLogic.Models.DTOs.Detailed
         public override string ToString()
         {
             return $"[{Id.ToString()}]" + string.Empty.PadRight(3) +
-                $"{Username?.PadRight(12)}{CityName?.PadRight(15)}{DayCardCount?.ToString()}";
+                $"{Username?.PadRight(12)}{CityName?.PadRight(15)}{DayCardCount?.ToString()}\n\n" +
+                "STATS OVERVIEW LAST WEEK:\n\n" +
+                $"Sleep: {SleepLastWeek}\nWellness: {WellnessLastWeek}\n" +
+                $"Exercise: {ExerciseLastWeek}\nCaffeine: {CaffeineLastWeek}";
         }
     }
 }

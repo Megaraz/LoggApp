@@ -12,6 +12,7 @@ namespace AppLogic.Repositories.Interfaces
         Task<List<User>?> GetAllUsersIncludeAsync();
 
         Task<User> UpdateUserIncludeAsync(User user);
+        Task<List<DayCard>> GetLast7DayCardsAsync(int userId);
     }
 
 }

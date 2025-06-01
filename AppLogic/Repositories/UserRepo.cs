@@ -140,7 +140,31 @@ namespace AppLogic.Repositories
                 throw new ArgumentException($"Something went wrong, {e.Message}");
             }
         }
-           
+
+        public Task<List<DayCard>> GetLast7DayCardsAsync(int userId)
+        {
+            try
+            {
+                return _dbContext.DayCards
+                    .Where(dc => dc.UserId == userId)
+                    .OrderByDescending(dc => dc.Date)
+                    .Take(7)
+                    .Include(dc => dc.Exercises)
+                    .Include(dc => dc.Sleep)
+                    .Include(dc => dc.WellnessCheckIns)
+                    .Include(dc => dc.CaffeineDrinks)
+                    .Include(dc => dc.WeatherData)
+                    .Include(dc => dc.AirQualityData)
+                    .ToListAsync();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         #endregion
     }
 }

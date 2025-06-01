@@ -70,5 +70,14 @@ namespace AppLogic.Controllers
             return await _userService.GetUserByUsernameIncludeAsync(username)!;
 
         }
+
+        public async Task<UserDetailed?> GetUserDetailed(int userId)
+        {
+            return await _userService.GetUserDetailedWithStatsAsync(userId);
+        }
+        public async Task<UserDetailed?> GetUserDetailed(string username)
+        {
+            return await _userService.GetUserDetailedWithStatsAsync(username);
+        }
     }
 }

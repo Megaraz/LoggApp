@@ -26,5 +26,8 @@ namespace AppLogic.Services.Interfaces
         Task<UserDetailed> UpdateUserAsync(int userId, UserInputModel inputModel);
 
         Task<bool> DeleteUserAsync(int userId);
+
+        Task<UserDetailed?> GetUserDetailedWithStatsAsync(int userId);
+        Task<UserDetailed?> GetUserDetailedWithStatsAsync(string username);
     }
 }
