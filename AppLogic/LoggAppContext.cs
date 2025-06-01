@@ -86,7 +86,6 @@ namespace AppLogic
         {
 
             optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=HealthLogApp;Trusted_Connection=True;TrustServerCertificate=True;");
-            //optionsBuilder.UseSqlServer(@"Server=tcp:rlack.database.windows.net,1433;Initial Catalog=HealthLogg;Persist Security Info=False;User ID=rlack;Password=Tellus46;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
         }
     }
