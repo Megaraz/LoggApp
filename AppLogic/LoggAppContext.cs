@@ -78,7 +78,6 @@ namespace AppLogic
                 .WithMany(dc => dc.CaffeineDrinks)
                 .HasForeignKey(cd => cd.DayCardId)
                 .OnDelete(DeleteBehavior.Cascade);
-
         }
 
 
