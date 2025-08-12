@@ -253,7 +253,12 @@ namespace Presentation.MenuHandlers
 
                     var ai = new OpenAiResponseClient();
 
-                    weatherData.AISummary = await ai.GenerateSummaryAsync(prompt);
+                    if (ai != null)
+                    {
+                        weatherData.AISummary = await ai.GenerateSummaryAsync(prompt);
+
+                    }
+
 
                     WeatherDataSummary todayWeather = _weatherController.ConvertToDTO(weatherData);
 
