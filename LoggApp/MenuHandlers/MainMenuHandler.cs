@@ -262,6 +262,8 @@ namespace Presentation.MenuHandlers
 
                     WeatherDataSummary todayWeather = _weatherController.ConvertToDTO(weatherData);
 
+                    Console.Clear();
+                    Console.WriteLine("Weather for " + geoResult.Name);
                     Console.WriteLine(todayWeather.ToString());
 
                     Console.ReadLine();

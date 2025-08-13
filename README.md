@@ -14,6 +14,12 @@
 
 ---
 
+## 🌦️ Demo – Get Weather for Today
+Below is a short demo showing how the app fetches weather data from multiple APIs and generates an AI-based summary.
+![Weather Demo](LoggApp-demo.gif)
+
+---
+
 ## 📦 Getting Started
 
 Follow these steps to get the project up and running:
